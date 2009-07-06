@@ -115,8 +115,8 @@ Dummy object
 from __future__ import with_statement
 from contextlib import contextmanager
 
-STOPCRIATION = False
-CRIATION = True
+STOPCREATION = False
+CREATION = True
 
 
 class Dummy(object):
@@ -158,15 +158,15 @@ class Stub(object):
     in for the test.
     """
     __properties__ = {}
-    __status__ = CRIATION
+    __status__ = CREATION
 
     def __exit__(self):
-        self.__status__ = STOPCRIATION
+        self.__status__ = STOPCREATION
         for name, value in self.__properties__.items():
             value.__exit__()
 
     def  __getattr__(self, attr):
-        if attr.startswith("__") and not self.__status__ is CRIATION:
+        if attr.startswith("__") and not self.__status__ is CREATION:
             raise AttributeError, (
             "type object '%s' has no attribute '%s'") %(
                                     self.__name__, attr)
@@ -179,13 +179,13 @@ class Stub(object):
 
 class Attribute(object):
     args = []
-    __status__ = CRIATION
+    __status__ = CREATION
     kargs = {}
     result = None
     property = True
 
     def __call__(self, *args, **kargs):
-        if self.__status__ == CRIATION:
+        if self.__status__ == CREATION:
             self.property = False
             self.args = args
             self.kargs = kargs
@@ -197,7 +197,7 @@ class Attribute(object):
         self.result = result
 
     def __exit__(self):
-        self.__status__ = STOPCRIATION
+        self.__status__ = STOPCREATION
 
 @contextmanager
 def stub():
@@ -213,14 +213,14 @@ class Mock(object):
     """
     #TODO: mock  __getitem__ == []
     #TODO: mock + - * / ...
-    __status__ = CRIATION
+    __status__ = CREATION
     __expectations__ = []
 
     def __getattr__(self, attr):
         if  attr.startswith("__"):
             return self.__getMockAttr(self, attr)
         else:
-            if self.__status__ is CRIATION:
+            if self.__status__ is CREATION:
                 return self.__getMockAttrCriation(attr)
             else:
                 return self.__getMockedAttrExpectation(attr)
@@ -249,7 +249,7 @@ class Mock(object):
         if attr.startswith("__"):
             self.__setMockAttr(attr, value)
         else:
-            if self.__status__ is CRIATION:
+            if self.__status__ is CREATION:
                 self.__setMockAttrCriation(attr, value)
             else:
                 self.__setMockedAttrExpectation(attr, value)
@@ -272,7 +272,7 @@ class Mock(object):
         call)
 
     def __exit__(self):
-        self.__status__ = STOPCRIATION
+        self.__status__ = STOPCREATION
         for attr, value in self.__expectations__:
             if isinstance(value, Attribute):
                 value.__exit__()
