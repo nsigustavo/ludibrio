@@ -221,7 +221,7 @@ class Mock(object):
             return self.__getMockAttr(self, attr)
         else:
             if self.__status__ is CREATION:
-                return self.__getMockAttrCriation(attr)
+                return self.__getMockAttrCreation(attr)
             else:
                 return self.__getMockedAttrExpectation(attr)
 
@@ -233,7 +233,7 @@ class Mock(object):
             ob = self.__expectations__.pop()[1]
             return ob.result if ob.property else ob
 
-    def __getMockAttrCriation(self, attr):
+    def __getMockAttrCreation(self, attr):
         ob_attr = Attribute()
         self.__expectations__ = (
             [(attr,ob_attr)] + self.__expectations__)
@@ -250,7 +250,7 @@ class Mock(object):
             self.__setMockAttr(attr, value)
         else:
             if self.__status__ is CREATION:
-                self.__setMockAttrCriation(attr, value)
+                self.__setMockAttrCreation(attr, value)
             else:
                 self.__setMockedAttrExpectation(attr, value)
 
@@ -259,7 +259,7 @@ class Mock(object):
            or not self.__expectations__.pop() == (attr, value)):
             self.__error("%s = %s"%( attr, value))
 
-    def __setMockAttrCriation(self, attr, value):
+    def __setMockAttrCreation(self, attr, value):
         self.__expectations__ = (
             [(attr, value)] + self.__expectations__)
 
