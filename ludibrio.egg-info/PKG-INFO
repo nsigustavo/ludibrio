@@ -1,0 +1,11 @@
+Metadata-Version: 1.0
+Name: ludibrio
+Version: 0.0dev
+Summary: Platform for test doubles in Python (mocks, stubs, fakes, and dummies)
+Home-page: nsigustavo.blogspot.com
+Author: nsigustavo@gmail.com
+Author-email: Gustavo Rezende
+License: GPL
+Description: UNKNOWN
+Keywords: mock stub fake dummy dobles mocks
+Platform: UNKNOWN
