@@ -3,18 +3,20 @@
 Workflow basico de criacao dos objetos (Mock, Stub)
     class controlled_execution:
         def __enter__(self):
-            set things up (CREATION)
+            set things up "RECORDING"
             return thing
         def __exit__(self, type, value, traceback):
-            tear things down (STOPCREATION)
+            tear things down "STOPRECORD"
 
     with controlled_execution() as thing:
-         record
+         RECORD
 
 """
 from __future__ import with_statement
-STOPCREATION = False
-CREATION = True
+from inspect import getframeinfo
+from sys import _getframe as getframe
+STOPRECORD = False
+RECORDING = True
 
 
 class Dummy(object):
@@ -66,11 +68,11 @@ class Stub(object):
     __properties__ = {}
 
     def __enter__(self):
-        self.__flag__ = CREATION
+        self.__recording__ = RECORDING
         return self
 
     def  __getattr__(self, attr):
-        if attr.startswith("__") and not self.__flag__ is CREATION:
+        if attr.startswith("__") and not self.__recording__:
             raise AttributeError, (
             "type object '%s' has no attribute '%s'") %(
                                     self.__name__, attr)
@@ -84,20 +86,20 @@ class Stub(object):
         if type is not None:
             raise RuntimeError("Don't Create False Expectations: %s"
                 %str(value))
-        self.__flag__ = STOPCREATION
+        self.__recording__ = STOPRECORD
         for name, value in self.__properties__.items():
             value.__exit__()
 
 
 class Attribute(object):
     _args = []
-    __flag__ = CREATION
+    __recording__ = RECORDING
     _kargs = {}
     result = None
     property = True
 
     def __call__(self, *args, **kargs):
-        if self.__flag__ == CREATION:
+        if self.__recording__ == RECORDING:
             self.property = False
             self._args = args
             self._kargs = kargs
@@ -109,7 +111,7 @@ class Attribute(object):
         self.result = result
 
     def __exit__(self):
-        self.__flag__ = STOPCREATION
+        self.__recording__ = STOPRECORD
 
 
 class Mock(object):
@@ -122,26 +124,43 @@ class Mock(object):
     #TODO: mock + - * / ...
 
     def __enter__(self):
-        self.__flag__ = CREATION
+        self.__recording__ = RECORDING
         return self
 
     def __getattr__(self, attr):
-        if  attr.startswith("__"):
+        if  attr.startswith("__") and attr.endswith("__"):
             return self.__getBaseAttr(attr)
         else:
-            if self.__flag__ is CREATION:
+            if self.__recording__:
                 return self.__getMockAttrCreating(attr)
             else:
                 return self.__getMockedAttrExpectation(attr)
 
     def __setattr__(self, attr, value):
-        if attr.startswith("__"):
+        if attr.startswith("__") and attr.endswith("__"):
             self.__setBaseAttr(attr, value)
         else:
-            if self.__flag__ is CREATION:
+            if self.__recording__:
                 self.__setMockAttrCreating(attr, value)
             else:
                 self.__setMockedAttrExpectation(attr, value)
+
+    def __call__(self, *args, **kargs):
+            functionCalled = getframeinfo(getframe(0)).function # functionCalled == __call__ or alias
+            if self.__recording__:
+                return self.__getMockAttrCreating(functionCalled)( *args, **kargs)
+            else:
+                return self.__getMockedAttrExpectation(functionCalled)( *args, **kargs)
+
+    __item__ = __contains__ = __eq__ = __ge__ = __getitem__ = __xor__ =\
+    __gt__ = __le__ = __len__ = __lt__ = __ne__ = __setitem__ =        \
+    __delattr__ = __delitem__ = __add__ = __and__ = __delattr__ =      \
+    __div__ = __divmod__ = __floordiv__ = __invert__ = __sub__ =       \
+    __long__ = __lshift__ = __mod__ = __mul__ = __neg__ = __or__ =     \
+    __pos__ = __pow__ = __radd__ = __rand__ = __rdiv__ = __rfloordiv__=\
+    __rlshift__ = __rmod__ = __rmul__ = __ror__ = __rrshift__ =        \
+    __rshift__ = __rsub__ = __rtruediv__ = __rxor__ =  __sizeof__ =    \
+     __truediv__ = __call__
 
     def __rshift__(self, result):
         self.result = result
@@ -150,10 +169,12 @@ class Mock(object):
         if type is not None:
             raise RuntimeError("Don't Create False Expectations: %s"
                 %str(value))
-        self.__flag__ = STOPCREATION
+        self.__recording__ = STOPRECORD
         for attr, value in self.__expectations__:
             if isinstance(value, Attribute):
                 value.__exit__()
+
+
 
     def __getMockedAttrExpectation(self, attr):
         if (not self.__expectations__

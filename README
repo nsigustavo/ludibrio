@@ -6,11 +6,6 @@ specification of the calls they are expected to receive.
 
 >>> from ludibrio import Mock
 
->>> with Mock() as Greetings:
-...     greetings = Greetings(thoo=2)
-
->>> greetings = Greetings(thoo=2)
-
 >>> with Mock() as greetings:
 ...     greetings.excuse_me() >> 'Com licença'
 ...     greetings.hello('Gustavo') >> 'Ola, Gustavo'
@@ -48,6 +43,39 @@ Traceback (most recent call last):
 AssertionError: Object's mocks are not pre-programmed with expectations:hello
 
 
+
+    >>> with Mock() as listing:
+    ...     listing[1] >> 'um'
+    ...     listing[1:4] >> ['dois', 'tres', 'quatro']
+    ...     listing['quatro'] >> 4
+
+    >>> print listing[1]
+    um
+    >>> print listing[1:4]
+    ['dois', 'tres', 'quatro']
+    >>> print listing['quatro']
+    4
+
+
+    >>> with Mock() as callable:
+    ...     callable(two=2) >> 2
+
+    >>> callable(two=2)
+    2
+
+
+    >>> with Mock() as operator:
+    ...     operator * 4 >> 4
+    ...     operator + 4 >> 5
+    ...     operator ** 4 >> 1
+
+    >>> operator * 4
+    4
+    >>> operator + 4
+    5
+    >>> operator ** 4
+    1
+    
 Stubs
 =====
 Stubs provide canned answers to calls made during the test,
