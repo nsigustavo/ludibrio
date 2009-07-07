@@ -9,9 +9,12 @@ def read(*rnames):
     return file(os.path.join(os.path.dirname(__file__), *rnames)).read()
 
 
-long_description = (
+text = (
     read('README')
     )
+init = text.find('"""')
+fim = text.find('"""', init+1)
+long_description = text[init:fim]
 
 
 setup(name='ludibrio',

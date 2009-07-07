@@ -15,4 +15,7 @@ Dummy
 Dummy objects are passed around but never validated.
 
 """
+>>> 1
+>>> 2
+>>> 3
 from ludibrio import Mock, mock, Stub, stub, Dummy
