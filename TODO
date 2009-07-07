@@ -1,0 +1,57 @@
+
+TODO
+====
+
+1. 'Mock' object does not support indexing
+
+    >>> with Mock() as greetings:
+    ...     greetings[1] >> 'um'
+
+    >>> print greetings[1]
+    um
+
+
+2. 'Mock' object is not callable
+
+    >>> with Mock() as greetings:
+    ...     greetings(two=2) >> 2
+
+    >>> greetings(two=2)
+    2
+
+
+3. 'Mock' object is not criation instance of class
+
+    >>> with Mock() as Greetings:
+    ...     greetings = Greetings(tree=3)
+
+    >>> Greetings(thoo=2)
+    <ludibrio.Mock object at ...>
+
+
+4. 'Mock' object does not define this operator
+
+    >>> with Mock() as greetings:
+    ...     greetings * 4 >> 4
+
+    >>> greetings * 4
+    4
+
+5. 'Mock' object has no attribute 'Mock'
+
+    >>> with Mock() as MySQLdb:
+    ...     con = MySQLdb.connect('servidor', ' usuario', 'senha')
+    ...     con.select_db('banco de dados')
+    ...     cursor = con.cursor()
+    ...     cursor.execute('ALGUM SQL')
+    ...     cursor.fetchall() >> [1,2,3,4,5]
+
+    >>> con = MySQLdb.connect('servidor', ' usuario', 'senha')
+    >>> con.select_db('banco de dados')
+    >>> cursor = con.cursor()
+    >>> cursor.execute('ALGUM SQL')
+    >>> cursor.fetchall()
+    [1,2,3,4,5]
+
+
+
