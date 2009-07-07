@@ -4,9 +4,9 @@ Mocks are what we are talking about here:
 objects pre-programmed with expectations which form a
 specification of the calls they are expected to receive.
 
->>> from ludibrio import mock
+>>> from ludibrio import Mock
 
->>> with mock() as greetings:
+>>> with Mock() as greetings:
 ...     greetings.excuse_me() >> 'Com licença'
 ...     greetings.hello('Gustavo') >> 'Ola, Gustavo'
 ...     greetings.see_you_soon >> 'Até logo'
@@ -31,7 +31,7 @@ Traceback (most recent call last):
 AssertionError: Object's mocks are not pre-programmed with expectations:see_you_soon
 
 
->>> with mock() as greetings:
+>>> with Mock() as greetings:
 ...     greetings.excuse_me() >> 'Com licença'
 ...     greetings.see_you_soon >> 'Até logo'
 
@@ -49,9 +49,9 @@ Stubs
 Stubs provide canned answers to calls made during the test,
 usually not responding at all to anything outside what's programmed in for the test.
 
->>> from ludibrio import stub
+>>> from ludibrio import Stub
 
->>> with stub() as greetings:
+>>> with Stub() as greetings:
 ...     greetings.excuse_me() >> 'Com licença'
 ...     greetings.hello('Gustavo') >> 'Ola, Gustavo'
 ...     greetings.see_you_soon = 'Até logo'

@@ -1,8 +1,18 @@
 #-*- coding:utf-8 -*-
+"""
+Workflow basico de criacao dos objetos (Mock, Stub)
+    class controlled_execution:
+        def __enter__(self):
+            set things up (CREATION)
+            return thing
+        def __exit__(self, type, value, traceback):
+            tear things down (STOPCREATION)
 
+    with controlled_execution() as thing:
+         record
+
+"""
 from __future__ import with_statement
-from contextlib import contextmanager
-
 STOPCREATION = False
 CREATION = True
 
@@ -40,7 +50,7 @@ class Dummy(object):
     __item__ = __contains__ = __eq__ = __ge__ = __getitem__ =          \
     __gt__ = __le__ = __len__ = __lt__ = __ne__ = __setitem__ =        \
     __delattr__ = __delitem__ = __add__ = __and__ = __delattr__ =      \
-    __div__ = __divmod__ = __floordiv__ = __invert__ =     \
+    __div__ = __divmod__ = __floordiv__ = __invert__ =                 \
     __long__ = __lshift__ = __mod__ = __mul__ = __neg__ = __or__ =     \
     __pos__ = __pow__ = __radd__ = __rand__ = __rdiv__ = __rfloordiv__=\
     __rlshift__ = __rmod__ = __rmul__ = __ror__ = __rrshift__ =        \
@@ -54,15 +64,13 @@ class Stub(object):
     in for the test.
     """
     __properties__ = {}
-    __status__ = CREATION
 
-    def __exit__(self):
-        self.__status__ = STOPCREATION
-        for name, value in self.__properties__.items():
-            value.__exit__()
+    def __enter__(self):
+        self.__flag__ = CREATION
+        return self
 
     def  __getattr__(self, attr):
-        if attr.startswith("__") and not self.__status__ is CREATION:
+        if attr.startswith("__") and not self.__flag__ is CREATION:
             raise AttributeError, (
             "type object '%s' has no attribute '%s'") %(
                                     self.__name__, attr)
@@ -72,16 +80,24 @@ class Stub(object):
         self.__properties__[attr]=ob_attr
         return ob_attr
 
+    def __exit__(self, type, value, traceback):
+        if type is not None:
+            raise RuntimeError("Don't Create False Expectations: %s"
+                %str(value))
+        self.__flag__ = STOPCREATION
+        for name, value in self.__properties__.items():
+            value.__exit__()
+
 
 class Attribute(object):
     _args = []
-    __status__ = CREATION
+    __flag__ = CREATION
     _kargs = {}
     result = None
     property = True
 
     def __call__(self, *args, **kargs):
-        if self.__status__ == CREATION:
+        if self.__flag__ == CREATION:
             self.property = False
             self._args = args
             self._kargs = kargs
@@ -93,14 +109,7 @@ class Attribute(object):
         self.result = result
 
     def __exit__(self):
-        self.__status__ = STOPCREATION
-
-
-@contextmanager
-def stub():
-    stub_obj=Stub()
-    yield stub_obj
-    stub_obj.__exit__()
+        self.__flag__ = STOPCREATION
 
 
 class Mock(object):
@@ -108,19 +117,43 @@ class Mock(object):
     objects pre-programmed with expectations which form a
     specification of the calls they are expected to receive.
     """
+    __expectations__ = []
     #TODO: mock  __getitem__ == []
     #TODO: mock + - * / ...
-    __status__ = CREATION
-    __expectations__ = []
+
+    def __enter__(self):
+        self.__flag__ = CREATION
+        return self
 
     def __getattr__(self, attr):
         if  attr.startswith("__"):
-            return self.__getMockAttr(self, attr)
+            return self.__getBaseAttr(attr)
         else:
-            if self.__status__ is CREATION:
-                return self.__getMockAttrCriation(attr)
+            if self.__flag__ is CREATION:
+                return self.__getMockAttrCreating(attr)
             else:
                 return self.__getMockedAttrExpectation(attr)
+
+    def __setattr__(self, attr, value):
+        if attr.startswith("__"):
+            self.__setBaseAttr(attr, value)
+        else:
+            if self.__flag__ is CREATION:
+                self.__setMockAttrCreating(attr, value)
+            else:
+                self.__setMockedAttrExpectation(attr, value)
+
+    def __rshift__(self, result):
+        self.result = result
+
+    def __exit__(self, type, value, traceback):
+        if type is not None:
+            raise RuntimeError("Don't Create False Expectations: %s"
+                %str(value))
+        self.__flag__ = STOPCREATION
+        for attr, value in self.__expectations__:
+            if isinstance(value, Attribute):
+                value.__exit__()
 
     def __getMockedAttrExpectation(self, attr):
         if (not self.__expectations__
@@ -130,58 +163,28 @@ class Mock(object):
             ob = self.__expectations__.pop()[1]
             return ob.result if ob.property else ob
 
-    def __getMockAttrCriation(self, attr):
+    def __getMockAttrCreating(self, attr):
         ob_attr = Attribute()
         self.__expectations__ = (
             [(attr,ob_attr)] + self.__expectations__)
         return ob_attr
 
-    def __getMockAttr(self, attr):
-        return object.__getattr__(self, attr)
-
-    def __rshift__(self, result):
-        self.result = result
-
-    def __setattr__(self, attr, value):
-        if attr.startswith("__"):
-            self.__setMockAttr(attr, value)
-        else:
-            if self.__status__ is CREATION:
-                self.__setMockAttrCriation(attr, value)
-            else:
-                self.__setMockedAttrExpectation(attr, value)
+    def __getBaseAttr(self, attr):
+        return object.__getattribute__(self, attr)
 
     def __setMockedAttrExpectation(self, attr, value):
         if (not len(self.__expectations__)>=0
            or not self.__expectations__.pop() == (attr, value)):
             self.__error("%s = %s"%( attr, value))
 
-    def __setMockAttrCriation(self, attr, value):
+    def __setMockAttrCreating(self, attr, value):
         self.__expectations__ = (
             [(attr, value)] + self.__expectations__)
 
-    def __setMockAttr(self, attr, value):
+    def __setBaseAttr(self, attr, value):
         object.__setattr__(self, attr, value)
 
     def __error(self, call):
         raise AssertionError , (
         "Object's mocks are not pre-programmed with expectations:%s")%(
         call)
-
-    def __exit__(self):
-        self.__status__ = STOPCREATION
-        for attr, value in self.__expectations__:
-            if isinstance(value, Attribute):
-                value.__exit__()
-
-
-@contextmanager
-def mock():
-    mock_obj=Mock()
-    yield mock_obj
-    mock_obj.__exit__()
-
-
-if __name__ == '__main__':
-    import doctest
-    doctest.testmod()
