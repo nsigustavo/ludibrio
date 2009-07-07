@@ -1,3 +1,0 @@
-import doctest
-print doctest.testfile("../README", optionflag=doctest.REPORT_ONLY_FIRST_FAILURE)
-
