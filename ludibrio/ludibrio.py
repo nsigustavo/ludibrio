@@ -66,6 +66,7 @@ class Stub(object):
     in for the test.
     """
     __properties__ = {}
+    __recording__ = RECORDING
 
     def __enter__(self):
         self.__recording__ = RECORDING
@@ -120,8 +121,15 @@ class Mock(object):
     specification of the calls they are expected to receive.
     """
     __expectations__ = []
-    #TODO: mock  __getitem__ == []
-    #TODO: mock + - * / ...
+    __result__ = None
+    __recording__ = RECORDING
+    __args__ = []
+    __kargs__ = {}
+    __property__ = False
+
+    def __callArgsCreating(self, args, kargs):
+        self.__args__ = args
+        self.__kargs__ = kargs
 
     def __enter__(self):
         self.__recording__ = RECORDING
@@ -145,12 +153,17 @@ class Mock(object):
             else:
                 self.__setMockedAttrExpectation(attr, value)
 
+    def __validateArgs__(self, args, kargs):
+        return True
+
     def __call__(self, *args, **kargs):
-            functionCalled = getframeinfo(getframe(0)).function # functionCalled == __call__ or alias
-            if self.__recording__:
-                return self.__getMockAttrCreating(functionCalled)( *args, **kargs)
-            else:
-                return self.__getMockedAttrExpectation(functionCalled)( *args, **kargs)
+        self.__property__ = False
+        functionCalled = getframeinfo(getframe(0)).function
+        # functionCalled == __call__ or alias
+        if self.__recording__:
+            return self.__getMockAttrCreating(functionCalled, args, kargs)
+        else:
+            return self.__getMockedAttrExpectation(functionCalled, args, kargs)
 
     __item__ = __contains__ = __eq__ = __ge__ = __getitem__ = __xor__ =\
     __gt__ = __le__ = __len__ = __lt__ = __ne__ = __setitem__ =        \
@@ -163,29 +176,32 @@ class Mock(object):
      __truediv__ = __call__
 
     def __rshift__(self, result):
-        self.result = result
+        self.__property__ = True
+        self.__result__ = result
 
     def __exit__(self, type, value, traceback):
-        if type is not None:
-            raise RuntimeError("Don't Create False Expectations: %s"
-                %str(value))
+#        if type is not None:
+#            raise RuntimeError("Don't Create False Expectations: %s"
+#                %str(value))
         self.__recording__ = STOPRECORD
         for attr, value in self.__expectations__:
-            if isinstance(value, Attribute):
-                value.__exit__()
+            if isinstance(value, Mock):
+                value.__exit__(type, value, traceback)
 
 
 
-    def __getMockedAttrExpectation(self, attr):
+    def __getMockedAttrExpectation(self, attr, args=[], kargs={}):
         if (not self.__expectations__
-           or not self.__expectations__[-1][0] == attr):
+           or not self.__expectations__[-1][0] == attr
+           or not self.__validateArgs__(args, kargs)):
             self.__error("%s"%(attr))
         else:
             ob = self.__expectations__.pop()[1]
-            return ob.result if ob.property else ob
+            return ob.__result__ if ob.__property__ else ob
 
-    def __getMockAttrCreating(self, attr):
-        ob_attr = Attribute()
+    def __getMockAttrCreating(self, attr, args=[], kargs={}):
+        self.__callArgsCreating(args, kargs)
+        ob_attr = Mock()
         self.__expectations__ = (
             [(attr,ob_attr)] + self.__expectations__)
         return ob_attr

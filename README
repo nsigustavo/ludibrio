@@ -43,7 +43,6 @@ Traceback (most recent call last):
 AssertionError: Object's mocks are not pre-programmed with expectations:hello
 
 
-
     >>> with Mock() as listing:
     ...     listing[1] >> 'um'
     ...     listing[1:4] >> ['dois', 'tres', 'quatro']
@@ -75,7 +74,27 @@ AssertionError: Object's mocks are not pre-programmed with expectations:hello
     5
     >>> operator ** 4
     1
-    
+
+    >>> with Mock() as Greetings:
+    ...     greetings = Greetings(tree=3)
+
+    >>> greetings
+    <ludibrio.Mock object at ...>
+
+    >>> with Mock() as MySQLdb:
+    ...     con = MySQLdb.connect('servidor', ' usuario', 'senha')
+    ...     con.select_db('banco de dados') >> None
+    ...     cursor = con.cursor()
+    ...     cursor.execute('ALGUM SQL') >> None
+    ...     cursor.fetchall() >> [1,2,3,4,5]
+
+    >>> con = MySQLdb.connect('servidor', ' usuario', 'senha')
+    >>> con.select_db('banco de dados')
+    >>> cursor = con.cursor()
+    >>> cursor.execute('ALGUM SQL')
+    >>> cursor.fetchall()
+    [1, 2, 3, 4, 5]
+
 Stubs
 =====
 Stubs provide canned answers to calls made during the test,
