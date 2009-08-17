@@ -7,12 +7,12 @@ specification of the calls they are expected to receive.
 >>> from ludibrio import Mock
 
 >>> with Mock() as greetings:
-...     greetings.excuse_me() >> 'Com licença'
+...     greetings.excuse_me >> 'Com licença'
 ...     greetings.hello('Gustavo') >> 'Ola, Gustavo'
 ...     greetings.see_you_soon >> 'Até logo'
 ...     greetings.see_you_soon >> 'Até logo, denovo'
 
->>> print greetings.excuse_me()
+>>> print greetings.excuse_me
 Com licença
 
 >>> print greetings.hello('Gustavo')
@@ -27,7 +27,7 @@ Até logo, denovo
 >>> print greetings.see_you_soon
 Traceback (most recent call last):
 ...
-AssertionError: Object's mocks are not pre-programmed with expectations:see_you_soon
+AssertionError: Object's mocks are not pre-programmed with expectations
 
 
 >>> with Mock() as greetings:
@@ -40,8 +40,22 @@ Com licença
 >>> print greetings.hello('Gustavo Rezende')
 Traceback (most recent call last):
 ...
-AssertionError: Object's mocks are not pre-programmed with expectations:hello
+AssertionError: Object's mocks are not pre-programmed with expectations:
+__getattribute__(see_you_soon, )
+Expected:
+__getattribute__(hello, )
 
+
+>>> with Mock() as greetings:
+...     greetings.excuse_me(name='gustavo') >> 'Com licença'
+
+>>> greetings.excuse_me(name='Diego Manhães')
+Traceback (most recent call last):
+...
+AssertionError: Object's mocks are not pre-programmed with expectations:
+__call__(, name=gustavo)
+Expected:
+__call__(, name=Diego Manhães)
 
     >>> with Mock() as listing:
     ...     listing[1] >> 'um'
@@ -79,7 +93,7 @@ AssertionError: Object's mocks are not pre-programmed with expectations:hello
     ...     greetings = Greetings(tree=3)
 
     >>> greetings
-    <ludibrio.Mock object at ...>
+    Mock Object
 
     >>> with Mock() as MySQLdb:
     ...     con = MySQLdb.connect('servidor', ' usuario', 'senha')
@@ -94,6 +108,25 @@ AssertionError: Object's mocks are not pre-programmed with expectations:hello
     >>> cursor.execute('ALGUM SQL')
     >>> cursor.fetchall()
     [1, 2, 3, 4, 5]
+
+    >>> with Mock() as testeError:
+    ...     testeError.foo('bar') >> ArithmeticError('teste error')
+    >>> testeError.foo('bar')
+    Traceback (most recent call last):
+    ...
+    ArithmeticError: teste error
+
+
+    >>> with Mock() as teste:
+    ...     teste.called() >> 1
+    ...     teste.notcalled() >> 2
+    >>> teste.called()
+    1
+    >>> teste.validate()
+    Traceback (most recent call last):
+    ...
+    AssertionError: Object's mocks are not pre-programmed with expectations
+
 
 Stubs
 =====
@@ -123,14 +156,20 @@ Até logo
 
 Dummy
 =====
-Dummy objects are passed around but never validated.
+Dummy Objects are passed around but never validated.
 
 >>> from ludibrio import Dummy
 
 >>> Dummy()
-Dummy object
+Dummy Object
+
+>>> Dummy(repr="Objeto Idiota")
+Objeto Idiota
+
+
+
 >>> Dummy(1,2.3,"4",a=5.6, b=7, c="8 ...")
-Dummy object
+Dummy Object
 
 >>> def execute_but_not_validated(x):
 ...     x.write("teste")
@@ -141,46 +180,46 @@ Dummy object
 >>> dummy = Dummy()
 
 >>> dummy.executAnythingAndReturnDummyObject()
-Dummy object
+Dummy Object
 
 >>> dummy.foo()
-Dummy object
+Dummy Object
 >>> dummy.bar
-Dummy object
+Dummy Object
 >>> dummy.one.two.three()
-Dummy object
+Dummy Object
 
 >>> 1 + Dummy()
-Dummy object
+Dummy Object
 >>> Dummy() -1
-Dummy object
+Dummy Object
 
 >>> dummy = Dummy()
 >>> dummy ** 22 and dummy / dummy
-Dummy object
+Dummy Object
 
 >>> dummy * 69 or dummy // dummy == "Anything"
-Dummy object
+Dummy Object
 
 >>> list(Dummy())
-[Dummy object]
+[Dummy Object]
 >>> for i in Dummy():print i
-Dummy object
+Dummy Object
 >>> Dummy()[4]
-Dummy object
+Dummy Object
 >>> Dummy()[2:9]
-Dummy object
+Dummy Object
 >>> 8 in Dummy()
 True
 
 
 >>> dict(Dummy())
-{Dummy object: Dummy object}
+{Dummy Object: Dummy Object}
 
 >>> str(Dummy())
-'Dummy object'
+'Dummy Object'
 >>> Dummy() %(1, "Gustavo Rezende", 2.8)
-Dummy object
+Dummy Object
 
 >>> int(Dummy())
 1

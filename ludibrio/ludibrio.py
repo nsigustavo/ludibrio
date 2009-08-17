@@ -15,6 +15,9 @@ Workflow basico de criacao dos objetos (Mock, Stub)
 from __future__ import with_statement
 from inspect import getframeinfo
 from sys import _getframe as getframe
+from threading import Timer
+import inspect
+
 STOPRECORD = False
 RECORDING = True
 
@@ -22,12 +25,19 @@ RECORDING = True
 class Dummy(object):
     """Dummy objects are passed around, but never validated.
     """
+    __kargs__ = {}
+    __args__ = []
+    def __init__(self,  *args, **kargs):
+        self.__kargs__ = kargs
 
-    def __init__(self, *args, **kargs):
-        pass
-
-    def __getattr__(self, x):
-        return Dummy()
+    def __repr__(self):
+        return self.__kargs__.get('repr', 'Dummy Object')
+        
+    def __getattribute__(self, x):
+        if x in dir(Dummy):
+            return object.__getattribute__(self, x)
+        else:
+            return Dummy()
 
     def __call__(self, *args, **kargs):
         return Dummy()
@@ -36,32 +46,30 @@ class Dummy(object):
         yield Dummy()
 
     def __str__(self):
-        return 'Dummy object'
+        return  self.__kargs__.get('str', 'Dummy Object')
 
     def __int__(self):
-        return 1
+        return  self.__kargs__.get('int', 1)
 
     def __float__(self):
-        return 1.0
-
-    __repr__ = __str__
+        return  self.__kargs__.get('float', 1.0)
 
     def __nonzero__(self):
         return True
 
     __item__ = __contains__ = __eq__ = __ge__ = __getitem__ =          \
-    __gt__ = __le__ = __len__ = __lt__ = __ne__ = __setitem__ =        \
+    __gt__ = __le__ = __len__ = __lt__ = __ne__ =                      \
     __delattr__ = __delitem__ = __add__ = __and__ = __delattr__ =      \
     __div__ = __divmod__ = __floordiv__ = __invert__ =                 \
     __long__ = __lshift__ = __mod__ = __mul__ = __neg__ = __or__ =     \
     __pos__ = __pow__ = __radd__ = __rand__ = __rdiv__ = __rfloordiv__=\
     __rlshift__ = __rmod__ = __rmul__ = __ror__ = __rrshift__ =        \
-    __rshift__ = __rsub__ = __rtruediv__ = __rxor__ = __setattr__ =    \
+    __rshift__ = __rsub__ = __rtruediv__ = __rxor__ = __setitem__ =    \
     __sizeof__ = __sub__ = __truediv__ = __xor__ = __call__
 
 
 class Stub(object):
-    """Stubs provide canned answers to calls made during the test,
+    """Stubs provides canned answers to calls made during the test,
     usually not responding at all to anything outside what's programmed
     in for the test.
     """
@@ -120,50 +128,38 @@ class Mock(object):
     objects pre-programmed with expectations which form a
     specification of the calls they are expected to receive.
     """
-    __expectations__ = []
-    __result__ = None
+    __espectativa__ = [] # [ChamadaMockda(attribute, args, kargs),]
     __recording__ = RECORDING
-    __args__ = []
-    __kargs__ = {}
-    __property__ = False
 
-    def __callArgsCreating(self, args, kargs):
-        self.__args__ = args
+    __kargs__ = {}
+    __args__ = []
+    def __init__(self,  *args, **kargs):
+        self.__args__ = []
         self.__kargs__ = kargs
+        
+
+    def __repr__(self):
+        return self.__kargs__.get('repr', 'Mock Object')
 
     def __enter__(self):
+        self.__espectativa__ = []
         self.__recording__ = RECORDING
         return self
 
-    def __getattr__(self, attr):
-        if  attr.startswith("__") and attr.endswith("__"):
-            return self.__getBaseAttr(attr)
-        else:
-            if self.__recording__:
-                return self.__getMockAttrCreating(attr)
-            else:
-                return self.__getMockedAttrExpectation(attr)
-
-    def __setattr__(self, attr, value):
-        if attr.startswith("__") and attr.endswith("__"):
-            self.__setBaseAttr(attr, value)
-        else:
-            if self.__recording__:
-                self.__setMockAttrCreating(attr, value)
-            else:
-                self.__setMockedAttrExpectation(attr, value)
-
-    def __validateArgs__(self, args, kargs):
-        return True
-
     def __call__(self, *args, **kargs):
-        self.__property__ = False
-        functionCalled = getframeinfo(getframe(0)).function
-        # functionCalled == __call__ or alias
+        propriedade = getframeinfo(getframe(0)).function
+        # propriedade == __call__ or alias
+        return self.__propriedadeChamada(propriedade, args, kargs)
+
+    def __propriedadeChamada(self, propriedade, args=[], kargs={}):
         if self.__recording__:
-            return self.__getMockAttrCreating(functionCalled, args, kargs)
+            self.__criarEspectativa(ChamadaMockda(propriedade, args=args, kargs=kargs, retorno=self))
+            return self
         else:
-            return self.__getMockedAttrExpectation(functionCalled, args, kargs)
+            return self.__espectativaMockada(propriedade, args, kargs)
+
+    def __exit__(self, type, value, traceback):
+        self.__recording__ = STOPRECORD
 
     __item__ = __contains__ = __eq__ = __ge__ = __getitem__ = __xor__ =\
     __gt__ = __le__ = __len__ = __lt__ = __ne__ = __setitem__ =        \
@@ -173,55 +169,69 @@ class Mock(object):
     __pos__ = __pow__ = __radd__ = __rand__ = __rdiv__ = __rfloordiv__=\
     __rlshift__ = __rmod__ = __rmul__ = __ror__ = __rrshift__ =        \
     __rshift__ = __rsub__ = __rtruediv__ = __rxor__ =  __sizeof__ =    \
-     __truediv__ = __call__
-
-    def __rshift__(self, result):
-        self.__property__ = True
-        self.__result__ = result
-
-    def __exit__(self, type, value, traceback):
-#        if type is not None:
-#            raise RuntimeError("Don't Create False Expectations: %s"
-#                %str(value))
-        self.__recording__ = STOPRECORD
-        for attr, value in self.__expectations__:
-            if isinstance(value, Mock):
-                value.__exit__(type, value, traceback)
-
-
-
-    def __getMockedAttrExpectation(self, attr, args=[], kargs={}):
-        if (not self.__expectations__
-           or not self.__expectations__[-1][0] == attr
-           or not self.__validateArgs__(args, kargs)):
-            self.__error("%s"%(attr))
+    __truediv__ = __call__
+     
+    def __setattr__(self, attr, value):
+        if attr in dir(Mock):
+            object.__setattr__(self, attr, value)
         else:
-            ob = self.__expectations__.pop()[1]
-            return ob.__result__ if ob.__property__ else ob
+            self.__propriedadeChamada('__setattr__', args=[attr, value])
 
-    def __getMockAttrCreating(self, attr, args=[], kargs={}):
-        self.__callArgsCreating(args, kargs)
-        ob_attr = Mock()
-        self.__expectations__ = (
-            [(attr,ob_attr)] + self.__expectations__)
-        return ob_attr
+    def __criarEspectativa(self, attr):
+        self.__espectativa__.append(attr)
 
-    def __getBaseAttr(self, attr):
-        return object.__getattribute__(self, attr)
+    def __rshift__(self, resultado):
+            self.__espectativa__[-1].setResultado(resultado)
 
-    def __setMockedAttrExpectation(self, attr, value):
-        if (not len(self.__expectations__)>=0
-           or not self.__expectations__.pop() == (attr, value)):
-            self.__error("%s = %s"%( attr, value))
+    def __espectativaMockada(self, attr, args=[], kargs={}):
+        if not self.__espectativa__:
+            raise AssertionError("Object's mocks are not pre-programmed with expectations")
+        chamadaMockada = self.__espectativa__.pop(0)
+        return chamadaMockada.chamada(attr, args, kargs)
 
-    def __setMockAttrCreating(self, attr, value):
-        self.__expectations__ = (
-            [(attr, value)] + self.__expectations__)
+    def __getattr__(self, x):
+        return self.__propriedadeChamada('__getattribute__', [x])
 
-    def __setBaseAttr(self, attr, value):
-        object.__setattr__(self, attr, value)
+    def validate(self):
+        if self.__espectativa__:
+            raise AssertionError, "Object's mocks are not pre-programmed with expectations"
+    
+    def __del__(self):
+        if self.__espectativa__:
+            print "Object's mocks are not pre-programmed with expectations"
 
-    def __error(self, call):
-        raise AssertionError , (
-        "Object's mocks are not pre-programmed with expectations:%s")%(
-        call)
+class ChamadaMockda(object):
+    def __init__(self, atributo, args=[], kargs={}, retorno=None):
+        self.atributo = atributo
+        self.args = args
+        self.kargs = kargs
+        self.retorno = retorno
+    
+    def __repr__(self):
+        return str((self.atributo, self.args, self.kargs))
+
+    def setResultado(self, retorno):
+        self.retorno = retorno
+
+    def chamada(self, atributo, args=[], kargs={}):
+        if( self.atributo == atributo 
+        and self.args == args
+        and self.kargs == kargs):
+            if isinstance(self.retorno, Exception):
+                raise self.retorno
+            else:
+                return self.retorno
+        else:
+            self._erro(atributo, args, kargs)
+        
+    def _erro(self, atributo, args, kargs):
+        raise AssertionError, "Object's mocks are not pre-programmed with expectations:\n%s\nExpected:\n%s"%(
+            self._representacaoChamada(self.atributo, self.args, self.kargs),
+            self._representacaoChamada(atributo, args, kargs))
+
+    def _representacaoChamada(self, attribute, args, kargs):
+        return "%s(%s, %s)"%(
+            attribute, 
+            ", ".join(args), #args
+            ", ".join(["%s=%s"%(k,v) for k,v in kargs.items()])) #kargss
+
