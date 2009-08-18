@@ -15,8 +15,6 @@ Workflow basico de criacao dos objetos (Mock, Stub)
 from __future__ import with_statement
 from inspect import getframeinfo
 from sys import _getframe as getframe
-from threading import Timer
-import inspect
 
 STOPRECORD = False
 RECORDING = True
@@ -73,54 +71,78 @@ class Stub(object):
     usually not responding at all to anything outside what's programmed
     in for the test.
     """
-    __properties__ = {}
+    __espectativa__ = [] # [(attribute, args, kargs),]
     __recording__ = RECORDING
+    __kargs__ = {}
+    __args__ = []
+
+    __ultimapropriedadechamada__ = None
+    
+    def __init__(self,  *args, **kargs):
+        self.__args__ = []
+        self.__kargs__ = kargs
+
+    def __repr__(self):
+        return self.__kargs__.get('repr', 'Stub Object')
 
     def __enter__(self):
+        self.__espectativa__ = []
         self.__recording__ = RECORDING
         return self
 
-    def  __getattr__(self, attr):
-        if attr.startswith("__") and not self.__recording__:
-            raise AttributeError, (
-            "type object '%s' has no attribute '%s'") %(
-                                    self.__name__, attr)
-        if attr in self.__properties__.keys():
-            return self.__properties__[attr]
-        ob_attr = Attribute()
-        self.__properties__[attr]=ob_attr
-        return ob_attr
-
-    def __exit__(self, type, value, traceback):
-        if type is not None:
-            raise RuntimeError("Don't Create False Expectations: %s"
-                %str(value))
-        self.__recording__ = STOPRECORD
-        for name, value in self.__properties__.items():
-            value.__exit__()
-
-
-class Attribute(object):
-    _args = []
-    __recording__ = RECORDING
-    _kargs = {}
-    result = None
-    property = True
-
     def __call__(self, *args, **kargs):
-        if self.__recording__ == RECORDING:
-            self.property = False
-            self._args = args
-            self._kargs = kargs
+        propriedade = self.__ultimapropriedadechamada__ or getframeinfo(getframe(0)).function
+        # propriedade == __call__ or alias
+        self.__ultimapropriedadechamada__ = None
+        return self.__propriedadeChamada(propriedade, args, kargs)
+
+    def __propriedadeChamada(self, propriedade, args=[], kargs={}, retorno=None):
+        if self.__recording__:
+            self.__criarEspectativa([propriedade, args, kargs, retorno])
             return self
         else:
-            return self.result
+            return self.__valorEsperado(propriedade, args, kargs)
 
-    def __rshift__(self, result):
-        self.result = result
-
-    def __exit__(self):
+    def __exit__(self, type, value, traceback):
         self.__recording__ = STOPRECORD
+
+    __item__ = __contains__ = __eq__ = __ge__ = __getitem__ = __xor__ =\
+    __gt__ = __le__ = __len__ = __lt__ = __ne__ = __setitem__ =        \
+    __delattr__ = __delitem__ = __add__ = __and__ = __delattr__ =      \
+    __div__ = __divmod__ = __floordiv__ = __invert__ = __sub__ =       \
+    __long__ = __lshift__ = __mod__ = __mul__ = __neg__ = __or__ =     \
+    __pos__ = __pow__ = __radd__ = __rand__ = __rdiv__ = __rfloordiv__=\
+    __rlshift__ = __rmod__ = __rmul__ = __ror__ = __rrshift__ =        \
+    __rshift__ = __rsub__ = __rtruediv__ = __rxor__ =  __sizeof__ =    \
+    __truediv__ = __call__
+
+    def __setattr__(self, attr, value):
+        if attr in dir(Stub):
+            object.__setattr__(self, attr, value)
+        else:
+            self.__propriedadeChamada('__setattr__', args=[attr, value])
+
+    def __criarEspectativa(self, attr):
+        self.__espectativa__.append(attr)
+
+    def __rshift__(self, retorno):
+            self.__espectativa__[-1][3] = retorno
+    __lshift__ = __rshift__
+
+    def __valorEsperado(self, attr, args=[], kargs={}):
+        for position, (attrEsp, argsEsp, kargsEsp, retorno) in enumerate(self.__espectativa__):
+            if (attrEsp, argsEsp, kargsEsp) == (attr, args, kargs):
+                self.__vaParaOFinal(position)
+                return retorno
+        return Dummy()
+
+    def __vaParaOFinal(self, position):
+        self.__espectativa__.append(self.__espectativa__.pop(position))
+    
+
+    def __getattr__(self, x):
+        self.__ultimapropriedadechamada__ = x
+        return self.__propriedadeChamada('__getattribute__', (x,), retorno=self)
 
 
 class Mock(object):
@@ -133,10 +155,10 @@ class Mock(object):
 
     __kargs__ = {}
     __args__ = []
+        
     def __init__(self,  *args, **kargs):
         self.__args__ = []
         self.__kargs__ = kargs
-        
 
     def __repr__(self):
         return self.__kargs__.get('repr', 'Mock Object')
@@ -180,8 +202,9 @@ class Mock(object):
     def __criarEspectativa(self, attr):
         self.__espectativa__.append(attr)
 
-    def __rshift__(self, resultado):
-            self.__espectativa__[-1].setResultado(resultado)
+    def __rshift__(self, retorno):
+            self.__espectativa__[-1].setretorno(retorno)
+    __lshift__ = __rshift__
 
     def __espectativaMockada(self, attr, args=[], kargs={}):
         if not self.__espectativa__:
@@ -200,6 +223,7 @@ class Mock(object):
         if self.__espectativa__:
             print "Object's mocks are not pre-programmed with expectations"
 
+
 class ChamadaMockda(object):
     def __init__(self, atributo, args=[], kargs={}, retorno=None):
         self.atributo = atributo
@@ -210,7 +234,7 @@ class ChamadaMockda(object):
     def __repr__(self):
         return str((self.atributo, self.args, self.kargs))
 
-    def setResultado(self, retorno):
+    def setretorno(self, retorno):
         self.retorno = retorno
 
     def chamada(self, atributo, args=[], kargs={}):
