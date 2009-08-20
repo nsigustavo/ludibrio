@@ -15,9 +15,27 @@ Workflow basico de criacao dos objetos (Mock, Stub)
 from __future__ import with_statement
 from inspect import getframeinfo
 from sys import _getframe as getframe
+from types import MethodType, UnboundMethodType, FunctionType
 
+funcsType = [ MethodType, UnboundMethodType, FunctionType]
 STOPRECORD = False
 RECORDING = True
+
+class notCalleble(object):
+    def __call__(self, func):
+        def newmethod(dummy, *args, **kargs):
+            ob = dummy.__kargs__.get('must_not_be_used_by', None)
+            if ob:
+                if isinstance(ob, object):
+                    contexts = [getattr(ob, f).im_func.func_code for f in dir(ob) if type(getattr(ob, f)) in funcsType ]
+                else:
+                    contexts = [ob.im_func.func_code]
+                frame = getframe(1)
+                if frame.f_code in contexts:
+                    raise AttributeError, "Dummy Object must not be called"
+            return func(dummy, *args, **kargs)
+        return newmethod
+    def f(self):pass
 
 
 class Dummy(object):
@@ -25,30 +43,30 @@ class Dummy(object):
     """
     __kargs__ = {}
     __args__ = []
+
     def __init__(self,  *args, **kargs):
         self.__kargs__ = kargs
 
     def __repr__(self):
         return self.__kargs__.get('repr', 'Dummy Object')
-        
-    def __getattribute__(self, x):
-        if x in dir(Dummy):
-            return object.__getattribute__(self, x)
-        else:
-            return Dummy()
 
+    @notCalleble()
     def __call__(self, *args, **kargs):
         return Dummy()
 
+    @notCalleble()
     def __iter__(self):
         yield Dummy()
 
+    @notCalleble()
     def __str__(self):
         return  self.__kargs__.get('str', 'Dummy Object')
 
+    @notCalleble()
     def __int__(self):
         return  self.__kargs__.get('int', 1)
 
+    @notCalleble()
     def __float__(self):
         return  self.__kargs__.get('float', 1.0)
 
@@ -65,6 +83,12 @@ class Dummy(object):
     __rshift__ = __rsub__ = __rtruediv__ = __rxor__ = __setitem__ =    \
     __sizeof__ = __sub__ = __truediv__ = __xor__ = __call__
 
+    @notCalleble()
+    def __getattr__(self, x):
+        if x in dir(Dummy):
+            return object.__getattribute__(self, x)
+        else:
+            return Dummy()
 
 class Stub(object):
     """Stubs provides canned answers to calls made during the test.

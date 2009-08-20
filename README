@@ -136,9 +136,6 @@ specification of the calls they are expected to receive.
     171
 
 
-
-
-
 Dummy
 =====
 
@@ -205,6 +202,17 @@ Dummy Objects are passed around but never validated.
     >>> del dummy.anything
     >>> isinstance(Dummy(), str)
     False
+
+    >>> class A(object):
+    ...     def teste(self, dummy):return dummy.notshouldbeCalled()
+    >>> dummy = Dummy(must_not_be_used_by=A)
+    >>> a = A()
+    >>> a.teste(dummy)
+    Traceback (most recent call last):
+    ...
+    AttributeError: Dummy Object must not be called
+    >>> dummy.shouldbeCalled()
+    Dummy Object
 
 
 Stubs
