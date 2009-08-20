@@ -115,17 +115,28 @@ specification of the calls they are expected to receive.
     ...
     AssertionError: Object's mocks are not pre-programmed with expectations
 
+        
 
->>> with Mock() as count:
-...     count() >> 1
-...     count() >> 2
-...     count() >> 3
->>> count()
-1
->>> count()
-2
->>> count()
-3
+    >>> with Mock() as count:
+    ...     count() >> 1
+    ...     count() >> 2
+    ...     count() >> 3
+    >>> count()
+    1
+    >>> count()
+    2
+    >>> count()
+    3
+
+    >>> with Mock() as clock:
+    ...     from time import clock
+    ...     clock() >> 171
+    >>> from time import clock
+    >>> clock()
+    171
+
+
+
 
 
 Dummy
@@ -139,8 +150,6 @@ Dummy Objects are passed around but never validated.
     Dummy Object
     >>> Dummy(repr="Objeto Idiota")
     Objeto Idiota
-
-
 
     >>> Dummy(1,2.3,"4",a=5.6, b=7, c="8 ...")
     Dummy Object
@@ -201,8 +210,7 @@ Dummy Objects are passed around but never validated.
 Stubs
 =====
 
-Stubs provide canned answers to calls made during the test,
-usually not responding at all to anything outside what's programmed in for the test.
+Stubs provide canned answers to calls made during the test.
 
     >>> from ludibrio import Stub
 

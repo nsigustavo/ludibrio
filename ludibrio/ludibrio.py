@@ -67,9 +67,7 @@ class Dummy(object):
 
 
 class Stub(object):
-    """Stubs provides canned answers to calls made during the test,
-    usually not responding at all to anything outside what's programmed
-    in for the test.
+    """Stubs provides canned answers to calls made during the test.
     """
     __espectativa__ = [] # [(attribute, args, kargs),]
     __recording__ = RECORDING
@@ -145,6 +143,21 @@ class Stub(object):
         return self.__propriedadeChamada('__getattribute__', (x,), retorno=self)
 
 
+class SavedImport(object):
+
+    def __init__(self, mock):
+        self.mock = mock
+        self._import = __import__ = __builtins__['__import__']
+        __import__ = __builtins__['__import__'] = self
+
+    def __call__(self, name, globals={}, locals={}, fromlist=[], level=-1):
+        if fromlist is not None:
+            modulo = self._import(name, globals, locals, None, level)
+            setattr(modulo, fromlist[0], self.mock)
+        return self._import(name, globals, locals, fromlist, level)
+    def restaure(self):
+        __builtins__['__import__'] = __import__ = self._import
+
 class Mock(object):
     """Mocks are what we are talking about here:
     objects pre-programmed with expectations which form a
@@ -152,7 +165,7 @@ class Mock(object):
     """
     __espectativa__ = [] # [ChamadaMockda(attribute, args, kargs),]
     __recording__ = RECORDING
-
+    __import = None
     __kargs__ = {}
     __args__ = []
         
@@ -163,9 +176,14 @@ class Mock(object):
     def __repr__(self):
         return self.__kargs__.get('repr', 'Mock Object')
 
+    def __restaureImport(self):
+        self.__import.restaure()
+
+
     def __enter__(self):
         self.__espectativa__ = []
         self.__recording__ = RECORDING
+        self.__import = SavedImport(self)
         return self
 
     def __call__(self, *args, **kargs):
@@ -182,6 +200,7 @@ class Mock(object):
 
     def __exit__(self, type, value, traceback):
         self.__recording__ = STOPRECORD
+        self.__restaureImport()
 
     __item__ = __contains__ = __eq__ = __ge__ = __getitem__ = __xor__ =\
     __gt__ = __le__ = __len__ = __lt__ = __ne__ = __setitem__ =        \
