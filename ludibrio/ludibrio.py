@@ -113,7 +113,7 @@ class Stub(object):
         return self
 
     def __call__(self, *args, **kargs):
-        propriedade = self.__ultimapropriedadechamada__ or getframeinfo(getframe(0)).function
+        propriedade = self.__ultimapropriedadechamada__ or getframeinfo(getframe(0))[2]#nome da funcao chamada
         # propriedade == __call__ or alias
         self.__ultimapropriedadechamada__ = None
         return self.__propriedadeChamada(propriedade, args, kargs)
@@ -211,7 +211,7 @@ class Mock(object):
         return self
 
     def __call__(self, *args, **kargs):
-        propriedade = getframeinfo(getframe(0)).function
+        propriedade = getframeinfo(getframe(0))[2]# nome da funcao chamada
         # propriedade == __call__ or alias
         return self.__propriedadeChamada(propriedade, args, kargs)
 
