@@ -39,9 +39,19 @@ class notCalleble(object):
 
 
 class TestDouble(object):
+
+    __kargs__ = {}
+    __args__ = []
+
+    def __init__(self,  *args, **kargs):
+        self.__args__ = args or []
+        self.__kargs__ = kargs or {}
+    
+    def __repr__(self):
+        return self.__kargs__.get('repr', self.__class__.__name__ + ' Object')
     
     def __methodCalled__(self, *args, **kargs):
-        raise SyntaxError("invalid syntax")
+        raise SyntaxError("invalid syntax, Method Not Implemented")
     
     def __call__(self, *args, **kargs):
         return self.__methodCalled__(*args, **kargs)
@@ -56,18 +66,16 @@ class TestDouble(object):
     __rshift__ = __rsub__ = __rtruediv__ = __rxor__ = __setitem__ =    \
     __sizeof__ = __sub__ = __truediv__ = __xor__ = __call__
 
+    def __getattribute__(self, x):
+        if x == '__class__':
+            return self.__kargs__.get('type', type(self))
+        return object.__getattribute__(self, x)
+
+
 
 class Dummy(TestDouble):
     """Dummy objects are passed around, but never validated.
     """
-    __kargs__ = {}
-    __args__ = []
-
-    def __init__(self,  *args, **kargs):
-        self.__kargs__ = kargs
-
-    def __repr__(self):
-        return self.__kargs__.get('repr', 'Dummy Object')
 
     @notCalleble()
     def __methodCalled__(self, *args, **kargs):
@@ -106,17 +114,7 @@ class Stub(TestDouble):
     """
     __espectativa__ = [] # [(attribute, args, kargs),]
     __recording__ = RECORDING
-    __kargs__ = {}
-    __args__ = []
-
     __ultimapropriedadechamada__ = None
-    
-    def __init__(self,  *args, **kargs):
-        self.__args__ = []
-        self.__kargs__ = kargs
-
-    def __repr__(self):
-        return self.__kargs__.get('repr', 'Stub Object')
 
     def __enter__(self):
         self.__espectativa__ = []
@@ -191,16 +189,7 @@ class Mock(TestDouble):
     __espectativa__ = [] # [ChamadaMockda(attribute, args, kargs),]
     __recording__ = RECORDING
     __import = None
-    __kargs__ = {}
-    __args__ = []
     __ultimapropriedadechamada__ = None
-
-    def __init__(self,  *args, **kargs):
-        self.__args__ = []
-        self.__kargs__ = kargs
-
-    def __repr__(self):
-        return self.__kargs__.get('repr', 'Mock Object')
 
     def __restaureImport(self):
         self.__import.restaure()

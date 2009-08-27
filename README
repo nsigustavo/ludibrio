@@ -105,7 +105,6 @@ specification of the calls they are expected to receive.
     ...
     ArithmeticError: teste error
 
-
     >>> with Mock() as teste:
     ...     teste.called() << 1
     ...     teste.notcalled() << 2
@@ -148,8 +147,10 @@ Dummy Objects are passed around but never validated.
 
     >>> Dummy()
     Dummy Object
+
     >>> Dummy(repr="Objeto Idiota")
     Objeto Idiota
+
 
     >>> Dummy(1,2.3,"4",a=5.6, b=7, c="8 ...")
     Dummy Object
@@ -203,8 +204,12 @@ Dummy Objects are passed around but never validated.
     >>> bool(Dummy())
     True
     >>> del dummy.anything
+
     >>> isinstance(Dummy(), str)
     False
+
+    >>> isinstance(Dummy(type=str), str)
+    True
 
     >>> class A(object):
     ...     def teste(self, dummy):return dummy.notshouldbeCalled()
