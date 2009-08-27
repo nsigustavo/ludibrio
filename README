@@ -5,6 +5,7 @@ Mocks are what we are talking about here:
 objects pre-programmed with expectations which form a
 specification of the calls they are expected to receive.
 
+
     >>> from ludibrio import Mock
 
     >>> with Mock() as greetings:
@@ -35,9 +36,9 @@ specification of the calls they are expected to receive.
     Traceback (most recent call last):
     ...
     AssertionError: Object's mocks are not pre-programmed with expectations:
-    __getattribute__(see_you_soon, )
+    see_you_soon
     Expected:
-    __getattribute__(hello, )
+    hello
 
 
     >>> with Mock() as greetings:
@@ -46,9 +47,9 @@ specification of the calls they are expected to receive.
     Traceback (most recent call last):
     ...
     AssertionError: Object's mocks are not pre-programmed with expectations:
-    __call__(, name=gustavo)
+    excuse_me(, name=gustavo)
     Expected:
-    __call__(, name=Diego Manhães)
+    excuse_me(, name=Diego Manhães)
 
     >>> with Mock() as listing:
     ...     listing[1] >> 'um'
@@ -104,7 +105,6 @@ specification of the calls they are expected to receive.
     ...
     ArithmeticError: teste error
 
-
     >>> with Mock() as teste:
     ...     teste.called() << 1
     ...     teste.notcalled() << 2
@@ -131,9 +131,11 @@ specification of the calls they are expected to receive.
     >>> with Mock() as clock:
     ...     from time import clock
     ...     clock() >> 171
+
     >>> from time import clock
     >>> clock()
     171
+
 
 
 Dummy
@@ -145,8 +147,10 @@ Dummy Objects are passed around but never validated.
 
     >>> Dummy()
     Dummy Object
+
     >>> Dummy(repr="Objeto Idiota")
     Objeto Idiota
+
 
     >>> Dummy(1,2.3,"4",a=5.6, b=7, c="8 ...")
     Dummy Object
@@ -200,8 +204,12 @@ Dummy Objects are passed around but never validated.
     >>> bool(Dummy())
     True
     >>> del dummy.anything
+
     >>> isinstance(Dummy(), str)
     False
+
+    >>> isinstance(Dummy(type=str), str)
+    True
 
     >>> class A(object):
     ...     def teste(self, dummy):return dummy.notshouldbeCalled()
@@ -266,3 +274,5 @@ Stubs provide canned answers to calls made during the test.
     2
     >>> count()
     3
+
+
