@@ -36,9 +36,9 @@ specification of the calls they are expected to receive.
     Traceback (most recent call last):
     ...
     AssertionError: Object's mocks are not pre-programmed with expectations:
-    __getattribute__(see_you_soon, )
+    see_you_soon
     Expected:
-    __getattribute__(hello, )
+    hello
 
 
     >>> with Mock() as greetings:
@@ -47,9 +47,9 @@ specification of the calls they are expected to receive.
     Traceback (most recent call last):
     ...
     AssertionError: Object's mocks are not pre-programmed with expectations:
-    __call__(, name=gustavo)
+    excuse_me(, name=gustavo)
     Expected:
-    __call__(, name=Diego Manhães)
+    excuse_me(, name=Diego Manhães)
 
     >>> with Mock() as listing:
     ...     listing[1] >> 'um'
@@ -269,3 +269,5 @@ Stubs provide canned answers to calls made during the test.
     2
     >>> count()
     3
+
+

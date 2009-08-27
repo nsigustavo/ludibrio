@@ -38,7 +38,26 @@ class notCalleble(object):
     def f(self):pass
 
 
-class Dummy(object):
+class TestDouble(object):
+    
+    def __methodCalled__(self, *args, **kargs):
+        raise SyntaxError("invalid syntax")
+    
+    def __call__(self, *args, **kargs):
+        return self.__methodCalled__(*args, **kargs)
+    
+    __item__ = __contains__ = __eq__ = __ge__ = __getitem__ =          \
+    __gt__ = __le__ = __len__ = __lt__ = __ne__ =                      \
+    __delattr__ = __delitem__ = __add__ = __and__ = __delattr__ =      \
+    __div__ = __divmod__ = __floordiv__ = __invert__ =                 \
+    __long__ = __lshift__ = __mod__ = __mul__ = __neg__ = __or__ =     \
+    __pos__ = __pow__ = __radd__ = __rand__ = __rdiv__ = __rfloordiv__=\
+    __rlshift__ = __rmod__ = __rmul__ = __ror__ = __rrshift__ =        \
+    __rshift__ = __rsub__ = __rtruediv__ = __rxor__ = __setitem__ =    \
+    __sizeof__ = __sub__ = __truediv__ = __xor__ = __call__
+
+
+class Dummy(TestDouble):
     """Dummy objects are passed around, but never validated.
     """
     __kargs__ = {}
@@ -51,7 +70,7 @@ class Dummy(object):
         return self.__kargs__.get('repr', 'Dummy Object')
 
     @notCalleble()
-    def __call__(self, *args, **kargs):
+    def __methodCalled__(self, *args, **kargs):
         return Dummy()
 
     @notCalleble()
@@ -73,15 +92,6 @@ class Dummy(object):
     def __nonzero__(self):
         return True
 
-    __item__ = __contains__ = __eq__ = __ge__ = __getitem__ =          \
-    __gt__ = __le__ = __len__ = __lt__ = __ne__ =                      \
-    __delattr__ = __delitem__ = __add__ = __and__ = __delattr__ =      \
-    __div__ = __divmod__ = __floordiv__ = __invert__ =                 \
-    __long__ = __lshift__ = __mod__ = __mul__ = __neg__ = __or__ =     \
-    __pos__ = __pow__ = __radd__ = __rand__ = __rdiv__ = __rfloordiv__=\
-    __rlshift__ = __rmod__ = __rmul__ = __ror__ = __rrshift__ =        \
-    __rshift__ = __rsub__ = __rtruediv__ = __rxor__ = __setitem__ =    \
-    __sizeof__ = __sub__ = __truediv__ = __xor__ = __call__
 
     @notCalleble()
     def __getattr__(self, x):
@@ -90,7 +100,8 @@ class Dummy(object):
         else:
             return Dummy()
 
-class Stub(object):
+
+class Stub(TestDouble):
     """Stubs provides canned answers to calls made during the test.
     """
     __espectativa__ = [] # [(attribute, args, kargs),]
@@ -112,7 +123,7 @@ class Stub(object):
         self.__recording__ = RECORDING
         return self
 
-    def __call__(self, *args, **kargs):
+    def __methodCalled__(self, *args, **kargs):
         propriedade = self.__ultimapropriedadechamada__ or getframeinfo(getframe(0))[2]#nome da funcao chamada
         # propriedade == __call__ or alias
         self.__ultimapropriedadechamada__ = None
@@ -127,16 +138,6 @@ class Stub(object):
 
     def __exit__(self, type, value, traceback):
         self.__recording__ = STOPRECORD
-
-    __item__ = __contains__ = __eq__ = __ge__ = __getitem__ = __xor__ =\
-    __gt__ = __le__ = __len__ = __lt__ = __ne__ = __setitem__ =        \
-    __delattr__ = __delitem__ = __add__ = __and__ = __delattr__ =      \
-    __div__ = __divmod__ = __floordiv__ = __invert__ = __sub__ =       \
-    __long__ = __lshift__ = __mod__ = __mul__ = __neg__ = __or__ =     \
-    __pos__ = __pow__ = __radd__ = __rand__ = __rdiv__ = __rfloordiv__=\
-    __rlshift__ = __rmod__ = __rmul__ = __ror__ = __rrshift__ =        \
-    __rshift__ = __rsub__ = __rtruediv__ = __rxor__ =  __sizeof__ =    \
-    __truediv__ = __call__
 
     def __setattr__(self, attr, value):
         if attr in dir(Stub):
@@ -182,7 +183,7 @@ class SavedImport(object):
     def restaure(self):
         __builtins__['__import__'] = __import__ = self._import
 
-class Mock(object):
+class Mock(TestDouble):
     """Mocks are what we are talking about here:
     objects pre-programmed with expectations which form a
     specification of the calls they are expected to receive.
@@ -192,7 +193,8 @@ class Mock(object):
     __import = None
     __kargs__ = {}
     __args__ = []
-        
+    __ultimapropriedadechamada__ = None
+
     def __init__(self,  *args, **kargs):
         self.__args__ = []
         self.__kargs__ = kargs
@@ -210,8 +212,9 @@ class Mock(object):
         self.__import = SavedImport(self)
         return self
 
-    def __call__(self, *args, **kargs):
-        propriedade = getframeinfo(getframe(0))[2]# nome da funcao chamada
+    def __methodCalled__(self, *args, **kargs):
+        propriedade = self.__ultimapropriedadechamada__ or getframeinfo(getframe(0))[2]# nome da funcao chamada
+        self.__ultimapropriedadechamada__= None
         # propriedade == __call__ or alias
         return self.__propriedadeChamada(propriedade, args, kargs)
 
@@ -226,16 +229,6 @@ class Mock(object):
         self.__recording__ = STOPRECORD
         self.__restaureImport()
 
-    __item__ = __contains__ = __eq__ = __ge__ = __getitem__ = __xor__ =\
-    __gt__ = __le__ = __len__ = __lt__ = __ne__ = __setitem__ =        \
-    __delattr__ = __delitem__ = __add__ = __and__ = __delattr__ =      \
-    __div__ = __divmod__ = __floordiv__ = __invert__ = __sub__ =       \
-    __long__ = __lshift__ = __mod__ = __mul__ = __neg__ = __or__ =     \
-    __pos__ = __pow__ = __radd__ = __rand__ = __rdiv__ = __rfloordiv__=\
-    __rlshift__ = __rmod__ = __rmul__ = __ror__ = __rrshift__ =        \
-    __rshift__ = __rsub__ = __rtruediv__ = __rxor__ =  __sizeof__ =    \
-    __truediv__ = __call__
-     
     def __setattr__(self, attr, value):
         if attr in dir(Mock):
             object.__setattr__(self, attr, value)
@@ -256,6 +249,7 @@ class Mock(object):
         return chamadaMockada.chamada(attr, args, kargs)
 
     def __getattr__(self, x):
+        self.__ultimapropriedadechamada__ = x
         return self.__propriedadeChamada('__getattribute__', [x])
 
     def validate(self):
@@ -297,6 +291,8 @@ class ChamadaMockda(object):
             self._representacaoChamada(atributo, args, kargs))
 
     def _representacaoChamada(self, attribute, args, kargs):
+        if attribute == '__getattribute__':
+            return args[0]
         return "%s(%s, %s)"%(
             attribute, 
             ", ".join(args), #args
