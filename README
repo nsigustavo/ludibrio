@@ -40,7 +40,6 @@ specification of the calls they are expected to receive.
     Expected:
     hello
 
-
     >>> with Mock() as greetings:
     ...     greetings.excuse_me(name='gustavo') >> 'Com licença'
     >>> greetings.excuse_me(name='Diego Manhães')
@@ -62,12 +61,10 @@ specification of the calls they are expected to receive.
     >>> print listing['quatro']
     4
 
-
     >>> with Mock() as callable:
     ...     callable(two=2) >> 2
     >>> callable(two=2)
     2
-
 
     >>> with Mock() as operator:
     ...     operator * 4 >> 4
@@ -135,6 +132,7 @@ specification of the calls they are expected to receive.
     >>> from time import clock
     >>> clock()
     171
+
 
 
 
@@ -261,9 +259,6 @@ Stubs provide canned answers to calls made during the test.
     >>> greetings + 171 - greetings * 22
     Dummy Object
 
-
-
-
     >>> with Stub() as count:
     ...     count() >> 1
     ...     count() >> 2
@@ -276,3 +271,18 @@ Stubs provide canned answers to calls made during the test.
     3
 
 
+Spy
+===
+
+A test spy is similar to a stub, but besides giving clients an instance on which to invoke members, a spy will also record which members were invoked so that unit tests can verify that members were invoked as expected.
+
+    >>> from ludibrio import Spy
+
+    >>> import os
+    >>> with Spy(type=os) as os:
+    ...     os.times() >> (23.02, 1.29, 0.0, 0.0, 17186198.539999999)
+
+    >>> 'ludibrio' in os.getcwd()
+    True
+    >>> os.times()
+    (23.02, 1.29, 0.0, 0.0, 17186198.539999999)
