@@ -38,7 +38,7 @@ class notCalleble(object):
     def f(self):pass
 
 
-class TestDouble(object):
+class _TestDouble(object):
 
     __kargs__ = {}
     __args__ = []
@@ -72,8 +72,7 @@ class TestDouble(object):
         return object.__getattribute__(self, x)
 
 
-
-class Dummy(TestDouble):
+class Dummy(_TestDouble):
     """Dummy objects are passed around, but never validated.
     """
 
@@ -100,7 +99,6 @@ class Dummy(TestDouble):
     def __nonzero__(self):
         return True
 
-
     @notCalleble()
     def __getattr__(self, x):
         if x in dir(Dummy):
@@ -109,7 +107,7 @@ class Dummy(TestDouble):
             return Dummy()
 
 
-class Stub(TestDouble):
+class Stub(_TestDouble):
     """Stubs provides canned answers to calls made during the test.
     """
     __espectativa__ = [] # [(attribute, args, kargs),]
@@ -159,11 +157,23 @@ class Stub(TestDouble):
 
     def __vaParaOFinal(self, position):
         self.__espectativa__.append(self.__espectativa__.pop(position))
-    
 
     def __getattr__(self, x):
         self.__ultimapropriedadechamada__ = x
         return self.__propriedadeChamada('__getattribute__', (x,), retorno=self)
+
+
+class Spy(Stub):
+    def __init__(self, type , *args, **kargs):
+        kargs['type']=type
+        Stub(self, *args, **kargs)
+
+    def __valorEsperado(self, attr, args=[], kargs={}):
+        for position, (attrEsp, argsEsp, kargsEsp, retorno) in enumerate(self.__espectativa__):
+            if (attrEsp, argsEsp, kargsEsp) == (attr, args, kargs):
+                self.__vaParaOFinal(position)
+                return retorno
+        return getattr(self.__kargs__.get('type'), attr)(*args, **kargs)
 
 
 class SavedImport(object):
@@ -178,10 +188,12 @@ class SavedImport(object):
             modulo = self._import(name, globals, locals, None, level)
             setattr(modulo, fromlist[0], self.mock)
         return self._import(name, globals, locals, fromlist, level)
+
     def restaure(self):
         __builtins__['__import__'] = __import__ = self._import
 
-class Mock(TestDouble):
+
+class Mock(_TestDouble):
     """Mocks are what we are talking about here:
     objects pre-programmed with expectations which form a
     specification of the calls they are expected to receive.
@@ -193,7 +205,6 @@ class Mock(TestDouble):
 
     def __restaureImport(self):
         self.__import.restaure()
-
 
     def __enter__(self):
         self.__espectativa__ = []
