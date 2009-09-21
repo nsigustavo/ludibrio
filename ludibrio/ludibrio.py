@@ -20,7 +20,7 @@ from __future__ import with_statement
 from inspect import getframeinfo
 from sys import _getframe as getframe
 from types import MethodType, UnboundMethodType, FunctionType
-from _testedouble import _TestDouble
+from _testdouble import _TestDouble
 funcsType = [ MethodType, UnboundMethodType, FunctionType]
 STOPRECORD = False
 RECORDING = True
