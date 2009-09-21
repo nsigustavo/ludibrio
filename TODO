@@ -2,4 +2,7 @@
 TODO
 ====
 
+Mockar importes respeitando o escopo com frame, pode-se subistituir o importe e validar a achamada
+
+Spy ainda esta como protótipo
 

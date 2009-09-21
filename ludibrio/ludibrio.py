@@ -12,11 +12,15 @@ Workflow basico de criacao dos objetos (Mock, Stub)
          RECORD
 
 """
+
+#TODO: mockar importes respeitando o escopo com frame, pode-se subistituir o importe e validar a achamada
+#TODO: Spy ainda esta como protótipo
+
 from __future__ import with_statement
 from inspect import getframeinfo
 from sys import _getframe as getframe
 from types import MethodType, UnboundMethodType, FunctionType
-
+from _testedouble import _TestDouble
 funcsType = [ MethodType, UnboundMethodType, FunctionType]
 STOPRECORD = False
 RECORDING = True
@@ -37,39 +41,6 @@ class notCalleble(object):
         return newmethod
     def f(self):pass
 
-
-class _TestDouble(object):
-
-    __kargs__ = {}
-    __args__ = []
-
-    def __init__(self,  *args, **kargs):
-        self.__args__ = args or []
-        self.__kargs__ = kargs or {}
-    
-    def __repr__(self):
-        return self.__kargs__.get('repr', self.__class__.__name__ + ' Object')
-    
-    def __methodCalled__(self, *args, **kargs):
-        raise SyntaxError("invalid syntax, Method Not Implemented")
-    
-    def __call__(self, *args, **kargs):
-        return self.__methodCalled__(*args, **kargs)
-    
-    __item__ = __contains__ = __eq__ = __ge__ = __getitem__ =          \
-    __gt__ = __le__ = __len__ = __lt__ = __ne__ =                      \
-    __delattr__ = __delitem__ = __add__ = __and__ = __delattr__ =      \
-    __div__ = __divmod__ = __floordiv__ = __invert__ =                 \
-    __long__ = __lshift__ = __mod__ = __mul__ = __neg__ = __or__ =     \
-    __pos__ = __pow__ = __radd__ = __rand__ = __rdiv__ = __rfloordiv__=\
-    __rlshift__ = __rmod__ = __rmul__ = __ror__ = __rrshift__ =        \
-    __rshift__ = __rsub__ = __rtruediv__ = __rxor__ = __setitem__ =    \
-    __sizeof__ = __sub__ = __truediv__ = __xor__ = __call__
-
-    def __getattribute__(self, x):
-        if x == '__class__':
-            return self.__kargs__.get('type', type(self))
-        return object.__getattribute__(self, x)
 
 
 class Dummy(_TestDouble):
@@ -110,57 +81,71 @@ class Dummy(_TestDouble):
 class Stub(_TestDouble):
     """Stubs provides canned answers to calls made during the test.
     """
-    __espectativa__ = [] # [(attribute, args, kargs),]
+    __expectation__= [] # [(attribute, args, kargs),]
     __recording__ = RECORDING
-    __ultimapropriedadechamada__ = None
+    __lastPropertyCalled__ = None
+    __import__ = None
+
+
+    def __restaureImport(self):
+        self.__import__.restaure()
 
     def __enter__(self):
-        self.__espectativa__ = []
+        self.__expectation__= []
         self.__recording__ = RECORDING
+        self.__import__ = SavedImport(self)
         return self
 
     def __methodCalled__(self, *args, **kargs):
-        propriedade = self.__ultimapropriedadechamada__ or getframeinfo(getframe(0))[2]#nome da funcao chamada
-        # propriedade == __call__ or alias
-        self.__ultimapropriedadechamada__ = None
-        return self.__propriedadeChamada(propriedade, args, kargs)
+        property =  self.__lastPropertyCalled__ or getframeinfo(getframe(1))[2]#nome da funcao chamada
+        # property == __call__ or alias
+        self.__lastPropertyCalled__ = None
+        return self.__propertyCalled(property, args, kargs)
 
-    def __propriedadeChamada(self, propriedade, args=[], kargs={}, retorno=None):
+    def __propertyCalled(self, property, args=[], kargs={}, retorno=None):
         if self.__recording__:
-            self.__criarEspectativa([propriedade, args, kargs, retorno])
+            self.__newExpectation([property, args, kargs, retorno])
             return self
         else:
-            return self.__valorEsperado(propriedade, args, kargs)
+            return self.__expectationValue(property, args, kargs)
 
     def __exit__(self, type, value, traceback):
         self.__recording__ = STOPRECORD
+        self.__restaureImport()
 
     def __setattr__(self, attr, value):
         if attr in dir(Stub):
             object.__setattr__(self, attr, value)
         else:
-            self.__propriedadeChamada('__setattr__', args=[attr, value])
+            self.__propertyCalled('__setattr__', args=[attr, value])
 
-    def __criarEspectativa(self, attr):
-        self.__espectativa__.append(attr)
+    def __newExpectation(self, attr):
+        self.__expectation__.append(attr)
 
     def __rshift__(self, retorno):
-            self.__espectativa__[-1][3] = retorno
+            self.__expectation__[-1][3] = retorno
     __lshift__ = __rshift__
 
-    def __valorEsperado(self, attr, args=[], kargs={}):
-        for position, (attrEsp, argsEsp, kargsEsp, retorno) in enumerate(self.__espectativa__):
+    def __expectationValue(self, attr, args=[], kargs={}):
+        for position, (attrEsp, argsEsp, kargsEsp, retorno) in enumerate(self.__expectation__):
             if (attrEsp, argsEsp, kargsEsp) == (attr, args, kargs):
-                self.__vaParaOFinal(position)
+                self.__toTheEnd__(position)
                 return retorno
+
         return Dummy()
 
-    def __vaParaOFinal(self, position):
-        self.__espectativa__.append(self.__espectativa__.pop(position))
+    def __toTheEnd__(self, position):
+        self.__expectation__.append(self.__expectation__.pop(position))
 
     def __getattr__(self, x):
-        self.__ultimapropriedadechamada__ = x
-        return self.__propriedadeChamada('__getattribute__', (x,), retorno=self)
+        self.__lastPropertyCalled__ = x
+        return self.__propertyCalled('__getattribute__', (x,), retorno=self)
+
+    def __del__(self):
+        self._import.restoreObjet()
+
+
+
 
 
 class Spy(Stub):
@@ -168,62 +153,66 @@ class Spy(Stub):
         kargs['type']=type
         Stub(self, *args, **kargs)
 
-    def __valorEsperado(self, attr, args=[], kargs={}):
-        for position, (attrEsp, argsEsp, kargsEsp, retorno) in enumerate(self.__espectativa__):
+    def __expectationValue(self, attr, args=[], kargs={}):
+        for position, (attrEsp, argsEsp, kargsEsp, retorno) in enumerate(self.__expectation__):
             if (attrEsp, argsEsp, kargsEsp) == (attr, args, kargs):
-                self.__vaParaOFinal(position)
+                self.__toTheEnd(position)
                 return retorno
         return getattr(self.__kargs__.get('type'), attr)(*args, **kargs)
 
 
 class SavedImport(object):
 
-    def __init__(self, mock):
-        self.mock = mock
+    def __init__(self, testeDouble):
+        self.testeDouble = testeDouble
         self._import = __import__ = __builtins__['__import__']
         __import__ = __builtins__['__import__'] = self
 
     def __call__(self, name, globals={}, locals={}, fromlist=[], level=-1):
+        self.objetOriginal = self._import(name, globals, locals, fromlist, level)
         if fromlist is not None:
-            modulo = self._import(name, globals, locals, None, level)
-            setattr(modulo, fromlist[0], self.mock)
+            self.modulo = self._import(name, globals, locals, None, level)
+            self.objectName = fromlist[0]
+            setattr(self.modulo, self.objectName, self.testeDouble)
         return self._import(name, globals, locals, fromlist, level)
 
     def restaure(self):
         __builtins__['__import__'] = __import__ = self._import
 
+    def restoreObjet(self):
+        setattr(self.modulo, self.objectName, self.objetOriginal)
 
 class Mock(_TestDouble):
     """Mocks are what we are talking about here:
     objects pre-programmed with expectations which form a
     specification of the calls they are expected to receive.
     """
-    __espectativa__ = [] # [ChamadaMockda(attribute, args, kargs),]
+    __expectation__= [] # [ChamadaMockda(attribute, args, kargs),]
     __recording__ = RECORDING
-    __import = None
-    __ultimapropriedadechamada__ = None
+    __import__ = None
+    __lastPropertyCalled__ = None
 
     def __restaureImport(self):
-        self.__import.restaure()
+        self.__import__.restaure()
 
     def __enter__(self):
-        self.__espectativa__ = []
+        self.__expectation__= []
         self.__recording__ = RECORDING
-        self.__import = SavedImport(self)
+        self.__import__ = SavedImport(self)
         return self
 
     def __methodCalled__(self, *args, **kargs):
-        propriedade = self.__ultimapropriedadechamada__ or getframeinfo(getframe(0))[2]# nome da funcao chamada
-        self.__ultimapropriedadechamada__= None
-        # propriedade == __call__ or alias
-        return self.__propriedadeChamada(propriedade, args, kargs)
+        property = self.__lastPropertyCalled__ or getframeinfo(getframe(1))[2]# nome da funcao chamada
+        self.__lastPropertyCalled__= None
+        # property == __call__ or alias
+        return self.__propertyCalled(property, args, kargs)
 
-    def __propriedadeChamada(self, propriedade, args=[], kargs={}):
+    def __propertyCalled(self, property, args=[], kargs={}):
         if self.__recording__:
-            self.__criarEspectativa(ChamadaMockda(propriedade, args=args, kargs=kargs, retorno=self))
+            self.__newExpectation(ChamadaMockda(property, args=args, kargs=kargs, retorno=self))
             return self
         else:
-            return self.__espectativaMockada(propriedade, args, kargs)
+            return self.__espectativaMockada(property, args, kargs)
 
     def __exit__(self, type, value, traceback):
         self.__recording__ = STOPRECORD
@@ -233,31 +222,32 @@ class Mock(_TestDouble):
         if attr in dir(Mock):
             object.__setattr__(self, attr, value)
         else:
-            self.__propriedadeChamada('__setattr__', args=[attr, value])
+            self.__propertyCalled('__setattr__', args=[attr, value])
 
-    def __criarEspectativa(self, attr):
-        self.__espectativa__.append(attr)
+    def __newExpectation(self, attr):
+        self.__expectation__.append(attr)
 
     def __rshift__(self, retorno):
-            self.__espectativa__[-1].setretorno(retorno)
+            self.__expectation__[-1].setretorno(retorno)
     __lshift__ = __rshift__
 
     def __espectativaMockada(self, attr, args=[], kargs={}):
-        if not self.__espectativa__:
+        if not self.__expectation__:
             raise AssertionError("Object's mocks are not pre-programmed with expectations")
-        chamadaMockada = self.__espectativa__.pop(0)
+        chamadaMockada = self.__expectation__.pop(0)
         return chamadaMockada.chamada(attr, args, kargs)
 
     def __getattr__(self, x):
-        self.__ultimapropriedadechamada__ = x
-        return self.__propriedadeChamada('__getattribute__', [x])
+        self.__lastPropertyCalled__ = x
+        return self.__propertyCalled('__getattribute__', [x])
 
     def validate(self):
-        if self.__espectativa__:
+        if self.__expectation__:
             raise AssertionError, "Object's mocks are not pre-programmed with expectations"
-    
+
     def __del__(self):
-        if self.__espectativa__:
+        self._import.restoreObjet()
+        if self.__expectation__:
             print "Object's mocks are not pre-programmed with expectations"
 
 
@@ -267,7 +257,7 @@ class ChamadaMockda(object):
         self.args = args
         self.kargs = kargs
         self.retorno = retorno
-    
+
     def __repr__(self):
         return str((self.atributo, self.args, self.kargs))
 
@@ -275,7 +265,7 @@ class ChamadaMockda(object):
         self.retorno = retorno
 
     def chamada(self, atributo, args=[], kargs={}):
-        if( self.atributo == atributo 
+        if( self.atributo == atributo
         and self.args == args
         and self.kargs == kargs):
             if isinstance(self.retorno, Exception):
@@ -284,17 +274,17 @@ class ChamadaMockda(object):
                 return self.retorno
         else:
             self._erro(atributo, args, kargs)
-        
+
     def _erro(self, atributo, args, kargs):
         raise AssertionError, "Object's mocks are not pre-programmed with expectations:\n%s\nExpected:\n%s"%(
-            self._representacaoChamada(self.atributo, self.args, self.kargs),
-            self._representacaoChamada(atributo, args, kargs))
+            self._representacaoChamada(atributo, args, kargs),
+            self._representacaoChamada(self.atributo, self.args, self.kargs)
+            )
 
     def _representacaoChamada(self, attribute, args, kargs):
         if attribute == '__getattribute__':
             return args[0]
-        return "%s(%s, %s)"%(
-            attribute, 
-            ", ".join(args), #args
-            ", ".join(["%s=%s"%(k,v) for k,v in kargs.items()])) #kargss
+        return "%s(%s)"%(
+            attribute,
+            ", ".join(list(args) + ["%s=%r"%(k,v) for k,v in kargs.items()]))
 
