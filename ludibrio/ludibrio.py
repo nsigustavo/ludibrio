@@ -276,7 +276,7 @@ class ChamadaMockda(object):
             self._erro(atributo, args, kargs)
 
     def _erro(self, atributo, args, kargs):
-        raise AssertionError, "Object's mocks are not pre-programmed with expectations:\n%s\nExpected:\n%s"%(
+        raise AssertionError, "Object's mocks are not pre-programmed with expectations.\nGot:\n%s\nExpected:\n%s"%(
             self._representacaoChamada(atributo, args, kargs),
             self._representacaoChamada(self.atributo, self.args, self.kargs)
             )
