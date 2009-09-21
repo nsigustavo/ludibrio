@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import sys, os
 
-version = '1.1'
+version = '2.0'
 
 
 
@@ -34,3 +34,4 @@ setup(name='ludibrio',
       # -*- Entry points: -*-
       """,
       )
+

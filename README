@@ -5,7 +5,6 @@ Mocks are what we are talking about here:
 objects pre-programmed with expectations which form a
 specification of the calls they are expected to receive.
 
-
     >>> from ludibrio import Mock
 
     >>> with Mock() as greetings:
@@ -36,19 +35,19 @@ specification of the calls they are expected to receive.
     Traceback (most recent call last):
     ...
     AssertionError: Object's mocks are not pre-programmed with expectations:
-    see_you_soon
-    Expected:
     hello
+    Expected:
+    see_you_soon
 
     >>> with Mock() as greetings:
     ...     greetings.excuse_me(name='gustavo') >> 'Com licença'
-    >>> greetings.excuse_me(name='Diego Manhães')
+    >>> greetings.excuse_me(name='Diego Manhaes')
     Traceback (most recent call last):
     ...
     AssertionError: Object's mocks are not pre-programmed with expectations:
-    excuse_me(, name=gustavo)
+    excuse_me(name='Diego Manhaes')
     Expected:
-    excuse_me(, name=Diego Manhães)
+    excuse_me(name='gustavo')
 
     >>> with Mock() as listing:
     ...     listing[1] >> 'um'
@@ -112,7 +111,7 @@ specification of the calls they are expected to receive.
     ...
     AssertionError: Object's mocks are not pre-programmed with expectations
 
-        
+
 
     >>> with Mock() as count:
     ...     count() >> 1
@@ -125,6 +124,7 @@ specification of the calls they are expected to receive.
     >>> count()
     3
 
+
     >>> with Mock() as clock:
     ...     from time import clock
     ...     clock() >> 171
@@ -135,11 +135,11 @@ specification of the calls they are expected to receive.
 
 
 
-
 Dummy
 =====
 
 Dummy Objects are passed around but never validated.
+
 
     >>> from ludibrio import Dummy
 
@@ -228,6 +228,32 @@ Stubs provide canned answers to calls made during the test.
 
     >>> from ludibrio import Stub
 
+
+    >>> with Stub() as x:
+    ...     x + 1 >> 1
+    ...     x - 1 >> -1
+    >>> x - 1
+    -1
+    >>> x + 1
+    1
+    >>> with Stub() as count:
+    ...     count() >> 1
+    ...     count() >> 2
+    ...     count() >> 3
+    >>> count()
+    1
+    >>> count()
+    2
+    >>> count()
+    3
+    >>> count()
+    1
+    >>> count()
+    2
+    >>> count()
+    3
+
+
     >>> with Stub(repr='Greetings') as greetings:
     ...     greetings.excuse_me() >> 'Com licença'
     ...     greetings.hello('Gustavo') >> 'Ola, Gustavo'
@@ -259,16 +285,6 @@ Stubs provide canned answers to calls made during the test.
     >>> greetings + 171 - greetings * 22
     Dummy Object
 
-    >>> with Stub() as count:
-    ...     count() >> 1
-    ...     count() >> 2
-    ...     count() >> 3
-    >>> count()
-    1
-    >>> count()
-    2
-    >>> count()
-    3
 
 
 Spy
@@ -286,3 +302,4 @@ A test spy is similar to a stub, but besides giving clients an instance on which
     True
     >>> os.times()
     (23.02, 1.29, 0.0, 0.0, 17186198.539999999)
+
