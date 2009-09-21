@@ -286,5 +286,5 @@ class ChamadaMockda(object):
             return args[0]
         return "%s(%s)"%(
             attribute,
-            ", ".join(list(args) + ["%s=%r"%(k,v) for k,v in kargs.items()]))
+            ", ".join(["%r"%arg for arg in args] + ["%s=%r"%(k,v) for k,v in kargs.items()]))
 
