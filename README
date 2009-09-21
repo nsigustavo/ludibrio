@@ -34,7 +34,8 @@ specification of the calls they are expected to receive.
     >>> print greetings.hello('Gustavo Rezende')
     Traceback (most recent call last):
     ...
-    AssertionError: Object's mocks are not pre-programmed with expectations:
+    AssertionError: Object's mocks are not pre-programmed with expectations.
+    Got:
     hello
     Expected:
     see_you_soon
@@ -44,7 +45,8 @@ specification of the calls they are expected to receive.
     >>> greetings.excuse_me(name='Diego Manhaes')
     Traceback (most recent call last):
     ...
-    AssertionError: Object's mocks are not pre-programmed with expectations:
+    AssertionError: Object's mocks are not pre-programmed with expectations.
+    Got:
     excuse_me(name='Diego Manhaes')
     Expected:
     excuse_me(name='gustavo')
@@ -133,7 +135,18 @@ specification of the calls they are expected to receive.
     >>> clock()
     171
 
-
+    >>> class MaquinaDeSaque(object):
+    ...     @staticmethod
+    ...     def transferir(valor, conta1, conta2):
+    ...         if conta2.pegar_saldo() >= valor:
+    ...             conta2.sacar(valor)
+    ...             conta1.depositar(valor)
+    >>> with Mock() as conta1:
+    ...     conta1.depositar(100) << None
+    >>> with Mock() as conta2:
+    ...     conta2.pegar_saldo() << 200
+    ...     conta2.sacar(100) << None
+    >>> MaquinaDeSaque.transferir(100, conta1, conta2)
 
 Dummy
 =====
