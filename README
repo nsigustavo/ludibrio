@@ -1,3 +1,4 @@
+
 MOCK
 ====
 
@@ -132,21 +133,29 @@ specification of the calls they are expected to receive.
     ...     clock() >> 171
 
     >>> from time import clock
-    >>> clock()
+    >>> def tempo():
+    ...     return clock()
+    >>> tempo()
     171
 
-    >>> class MaquinaDeSaque(object):
-    ...     @staticmethod
-    ...     def transferir(valor, conta1, conta2):
-    ...         if conta2.pegar_saldo() >= valor:
-    ...             conta2.sacar(valor)
-    ...             conta1.depositar(valor)
-    >>> with Mock() as conta1:
-    ...     conta1.depositar(100) << None
-    >>> with Mock() as conta2:
-    ...     conta2.pegar_saldo() << 200
-    ...     conta2.sacar(100) << None
-    >>> MaquinaDeSaque.transferir(100, conta1, conta2)
+
+    >>> class Conta(object):
+    ...     def transferir(self, conta, valor):
+    ...             valor = self.sacar(valor)
+    ...             conta.depositar(valor)
+
+
+
+    >>> def transferir(conta_origem, conta_destino, valor):
+    ...    conta_origem.debitar(valor)
+    ...    conta_destino.creditar(valor)
+
+    >>> with Mock() as conta_origem:
+    ...     conta_origem.debitar(100) >> None
+    >>> with Mock() as conta_destino:
+    ...     conta_destino.creditar(100) >> None
+
+    >>> transferir(conta_origem, conta_destino, 100)
 
 Dummy
 =====
@@ -311,7 +320,7 @@ A test spy is similar to a stub, but besides giving clients an instance on which
     >>> with Spy(type=os) as os:
     ...     os.times() >> (23.02, 1.29, 0.0, 0.0, 17186198.539999999)
 
-    >>> 'ludibrio' in os.getcwd()
+    >>> 'ludibrio' in str(os.getcwd())
     True
     >>> os.times()
     (23.02, 1.29, 0.0, 0.0, 17186198.539999999)

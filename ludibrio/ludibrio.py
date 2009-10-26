@@ -1,4 +1,5 @@
 #-*- coding:utf-8 -*-
+#python:_testludibrio.py
 """
 Workflow basico de criacao dos objetos (Mock, Stub)
     class controlled_execution:
@@ -10,7 +11,6 @@ Workflow basico de criacao dos objetos (Mock, Stub)
 
     with controlled_execution() as thing:
          RECORD
-
 """
 
 #TODO: mockar importes respeitando o escopo com frame, pode-se subistituir o importe e validar a achamada
@@ -107,7 +107,7 @@ class Stub(_TestDouble):
             self.__newExpectation([property, args, kargs, retorno])
             return self
         else:
-            return self.__expectationValue(property, args, kargs)
+            return self._expectationValue(property, args, kargs)
 
     def __exit__(self, type, value, traceback):
         self.__recording__ = STOPRECORD
@@ -126,7 +126,7 @@ class Stub(_TestDouble):
             self.__expectation__[-1][3] = retorno
     __lshift__ = __rshift__
 
-    def __expectationValue(self, attr, args=[], kargs={}):
+    def _expectationValue(self, attr, args=[], kargs={}):
         for position, (attrEsp, argsEsp, kargsEsp, retorno) in enumerate(self.__expectation__):
             if (attrEsp, argsEsp, kargsEsp) == (attr, args, kargs):
                 self.__toTheEnd__(position)
@@ -145,15 +145,12 @@ class Stub(_TestDouble):
         self._import.restoreObjet()
 
 
-
-
-
 class Spy(Stub):
     def __init__(self, type , *args, **kargs):
         kargs['type']=type
-        Stub(self, *args, **kargs)
+        Stub.__init__(self, *args, **kargs)
 
-    def __expectationValue(self, attr, args=[], kargs={}):
+    def _expectationValue(self, attr, args=[], kargs={}):
         for position, (attrEsp, argsEsp, kargsEsp, retorno) in enumerate(self.__expectation__):
             if (attrEsp, argsEsp, kargsEsp) == (attr, args, kargs):
                 self.__toTheEnd(position)
