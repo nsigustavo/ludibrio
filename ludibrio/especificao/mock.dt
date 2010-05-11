@@ -20,7 +20,7 @@ Mocks são objetos pré-programados com as expectativas que formam uma especific
     >>> print greetings.see_you_soon
     Traceback (most recent call last):
     ...
-    AssertionError: Object's mocks are not pre-programmed with expectations
+    MockExpectationError: Mock Object received unexpected call: see_you_soon
 
 
     >>> with Mock() as greetings:
@@ -31,22 +31,22 @@ Mocks são objetos pré-programados com as expectativas que formam uma especific
     >>> print greetings.hello('Gustavo Rezende')
     Traceback (most recent call last):
     ...
-    AssertionError: Object's mocks are not pre-programmed with expectations.
-    Got:
-    hello
+    MockExpectationError: Mock Object received unexpected call.
     Expected:
     see_you_soon
+    Got:
+    hello
 
     >>> with Mock() as greetings:
     ...     greetings.excuse_me(name='gustavo') >> 'Com licença'
     >>> greetings.excuse_me(name='Diego Manhaes')
     Traceback (most recent call last):
     ...
-    AssertionError: Object's mocks are not pre-programmed with expectations.
-    Got:
-    excuse_me(name='Diego Manhaes')
+    MockExpectationError: Mock Object received unexpected call.
     Expected:
     excuse_me(name='gustavo')
+    Got:
+    excuse_me(name='Diego Manhaes')
 
     >>> with Mock() as listing:
     ...     listing[1] >> 'um'
@@ -108,7 +108,7 @@ Mocks são objetos pré-programados com as expectativas que formam uma especific
     >>> teste.validate()
     Traceback (most recent call last):
     ...
-    AssertionError: Object's mocks are not pre-programmed with expectations
+    MockExpectationError: Mock Object expected notcalled(), but didn't received it
 
 
 
