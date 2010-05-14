@@ -20,14 +20,17 @@ class Stub(_TestDouble):
         return self
 
     def __methodCalled__(self, *args, **kargs):
-        property =  self.__lastPropertyCalled__ or getframeinfo(getframe(1))[2]#nome da funcao chamada
-        # property == __call__ or alias
-        self.__lastPropertyCalled__ = None
-        return self.__propertyCalled(property, args, kargs)
+        property_name = self.__propertyCalledName__()
+        return self.__propertyCalled(property_name, args, kargs)
 
-    def __propertyCalled(self, property, args=[], kargs={}, retorno=None):
+    def __propertyCalledName__(self):
+        propertyCalledName =  self.__lastPropertyCalled__ or getframeinfo(getframe(2))[2]
+        self.__lastPropertyCalled__ = None
+        return propertyCalledName
+
+    def __propertyCalled(self, property, args=[], kargs={}, response=None):
         if self.__recording__:
-            self.__newExpectation([property, args, kargs, retorno])
+            self.__newExpectation([property, args, kargs, response])
             return self
         else:
             return self._expectationValue(property, args, kargs)
@@ -44,15 +47,15 @@ class Stub(_TestDouble):
     def __newExpectation(self, attr):
         self.__expectation__.append(attr)
 
-    def __rshift__(self, retorno):
-            self.__expectation__[-1][3] = retorno
+    def __rshift__(self, response):
+            self.__expectation__[-1][3] = response
     __lshift__ = __rshift__
 
     def _expectationValue(self, attr, args=[], kargs={}):
-        for position, (attrEsp, argsEsp, kargsEsp, retorno) in enumerate(self.__expectation__):
-            if (attrEsp, argsEsp, kargsEsp) == (attr, args, kargs):
+        for position, (attrExpectation, argsExpectation, kargsExpectation, response) in enumerate(self.__expectation__):
+            if (attrExpectation, argsExpectation, kargsExpectation) == (attr, args, kargs):
                 self.__toTheEnd__(position)
-                return retorno
+                return response
         raise AttributeError("Stub Object received unexpected call")
 
     def __toTheEnd__(self, position):
@@ -60,4 +63,4 @@ class Stub(_TestDouble):
 
     def __getattr__(self, x):
         self.__lastPropertyCalled__ = x
-        return self.__propertyCalled('__getattribute__', (x,), retorno=self)
+        return self.__propertyCalled('__getattribute__', (x,), response=self)
