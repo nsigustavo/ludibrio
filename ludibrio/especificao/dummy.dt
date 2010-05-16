@@ -27,6 +27,7 @@ Com o intuito de documentar a intenção do objeto dublê que não é influencia
     >>> dummy.one.two.three
     Dummy Object
 
+
 4. Deveria realizar qualquer operação matemática ou lógica:
     >>> 1 + Dummy()
     Dummy Object
@@ -101,5 +102,4 @@ Com o intuito de documentar a intenção do objeto dublê que não é influencia
 
 10. Deveria poder apagar algum elemento do dummy:
     >>> del Dummy().anything
-
 
