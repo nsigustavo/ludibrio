@@ -1,3 +1,5 @@
+from sys import _getframe as frame
+import inspect
 
 class _TestDouble(object):
 
@@ -160,4 +162,3 @@ class _TestDouble(object):
 
     def __call__(self, *args, **kargs):
         return self.__methodCalled__(*args, **kargs)
-

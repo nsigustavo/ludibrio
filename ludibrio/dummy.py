@@ -3,13 +3,11 @@
 from sys import _getframe as getframe
 from _testdouble import _TestDouble
 
-
 class Dummy(_TestDouble):
     """Dummy:
         São objetos que não são utilizados diretamente pela unidade sob teste.
         Normalmente paramentros que somente são repassados
     """
-
     def __methodCalled__(self, *args, **kargs):
         return self
 
