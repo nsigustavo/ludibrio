@@ -153,7 +153,7 @@ class Spy(Stub):
     def _expectationValue(self, attr, args=[], kargs={}):
         for position, (attrEsp, argsEsp, kargsEsp, retorno) in enumerate(self.__expectation__):
             if (attrEsp, argsEsp, kargsEsp) == (attr, args, kargs):
-                self.__toTheEnd(position)
+                self.__toTheEnd__(position)
                 return retorno
         return getattr(self.__kargs__.get('type'), attr)(*args, **kargs)
 
