@@ -5,6 +5,7 @@ Mocks are what we are talking about here:
 objects pre-programmed with expectations which form a
 specification of the calls they are expected to receive.
 
+
     >>> from ludibrio import Mock
 
     >>> with Mock() as greetings:
@@ -131,9 +132,11 @@ specification of the calls they are expected to receive.
     >>> with Mock() as clock:
     ...     from time import clock
     ...     clock() >> 171
+
     >>> from time import clock
     >>> clock()
     171
+
 
 
 Dummy
