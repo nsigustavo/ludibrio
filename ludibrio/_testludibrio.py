@@ -14,4 +14,5 @@ def _extract_future_flags(globs):
 doctest._extract_future_flags = _extract_future_flags
 
 
-print doctest.testfile("../README", optionflags=doctest.REPORT_ONLY_FIRST_FAILURE + doctest.ELLIPSIS  +__future__.with_statement.compiler_flag)
+print doctest.testfile("../README", optionflags=doctest.REPORT_ONLY_FIRST_FAILURE + doctest.ELLIPSIS)
+
