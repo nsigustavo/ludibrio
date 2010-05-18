@@ -3,6 +3,7 @@
 from inspect import getframeinfo
 from sys import _getframe as getframe
 from _testdouble import _TestDouble
+from dependencyinjection import DependencyInjection
 
 STOPRECORD = False
 RECORDING = True
@@ -14,10 +15,13 @@ class Stub(_TestDouble):
     __expectation__= [] # [(attribute, args, kargs),]
     __recording__ = RECORDING
     __lastPropertyCalled__ = None
+    __dependency_injection__ = None
+
 
     def __enter__(self):
         self.__expectation__= []
         self.__recording__ = RECORDING
+        self.__dependency_injection__ = DependencyInjection(double = self)
         return self
 
     def __methodCalled__(self, *args, **kargs):
@@ -37,6 +41,7 @@ class Stub(_TestDouble):
             return self._expectationValue(property, args, kargs)
 
     def __exit__(self, type, value, traceback):
+        self.__dependency_injection__.restoure_import()
         self.__recording__ = STOPRECORD
 
     def __setattr__(self, attr, value):
@@ -65,3 +70,7 @@ class Stub(_TestDouble):
     def __getattr__(self, x):
         self.__lastPropertyCalled__ = x
         return self.__propertyCalled('__getattribute__', (x,), response=self)
+    
+    def __del__(self):
+        self.__dependency_injection__.restoure_import()
+        self.__dependency_injection__.restoure_object()
