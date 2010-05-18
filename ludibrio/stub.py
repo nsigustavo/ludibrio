@@ -62,6 +62,8 @@ class Stub(_TestDouble):
             if (attrExpectation, argsExpectation, kargsExpectation) == (attr, args, kargs):
                 self.__toTheEnd__(position)
                 return response
+        if self.__kargs__.has_key('proxy'):
+            return getattr(self.__kargs__.get('proxy'), attr)(*args, **kargs)
         raise AttributeError("Stub Object received unexpected call")
 
     def __toTheEnd__(self, position):
