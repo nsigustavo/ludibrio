@@ -27,7 +27,7 @@ Classe utilizada para dinjeção de dependencia, utilizando a declaração from 
     ('double', '.py')
 
 2. Deveria recurar os objetos originais
-    >>> importing.restoure_import()
+    >>> importing.restoure_object()
     >>> splitext('teste.py')
     ('teste', '.py')
 

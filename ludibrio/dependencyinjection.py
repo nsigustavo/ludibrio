@@ -10,10 +10,16 @@ _oldimport = __import__
 class DependencyInjection(object):
 
     def __enter__(self):
-        __builtins__['__import__'] = self.import_double
+        self.replace_import_to_conf()
         return self
 
+    def replace_import_to_conf(self):
+        __builtins__['__import__'] = self.import_double
+
     def __exit__(self, type, value, traceback):
+        self.restoure_import()
+
+    def restoure_import(self):
         __builtins__['__import__'] = _oldimport
     
     def import_double(self, name, globals={}, locals={}, fromlist=[], level=-1):
@@ -29,7 +35,7 @@ class DependencyInjection(object):
         self.double = double
         self._original_to_double()
     
-    def restoure_import(self):
+    def restoure_object(self):
         self._double_to_original()
 
     def _original_to_double(self):
