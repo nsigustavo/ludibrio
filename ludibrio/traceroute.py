@@ -2,10 +2,11 @@ from inspect import getframeinfo, getmodule
 from sys import _getframe
 import traceback
 from _testdouble import _TestDouble
-
+from helpers import frameOutOfContext
 
 class TraceRoute(_TestDouble):
-    __traceback__= []
+    def __init__(self):
+        self.__traceback__= []
     
     def remember(self):
         frame = self._getFrameOfTrace()
@@ -19,10 +20,7 @@ class TraceRoute(_TestDouble):
                     or not self.__traceback__[-1].lineno == trace.lineno)
             
     def _getFrameOfTrace(self):
-        this_frame = frame = _getframe(0)
-        while 'ludibrio' in frame.f_code.co_filename:
-            frame = frame.f_back
-        return frame
+        return frameOutOfContext()
 
     def stackTrace(self, limit=10):
         """Format a stack trace and return."""

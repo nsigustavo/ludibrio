@@ -55,36 +55,36 @@ Com o intuito de documentar a intenção do objeto dublê que não é influencia
     >>> execute_but_not_validated(Dummy())
 
 8. Dummys tende a 1, verdadeiro ou a uma iteração devido a obrigatoriedade do python a transformações de tipo:
-    8.1. Deveria retornar uma lita contendo um Dummy com list():
+    8. 1. Deveria retornar uma lita contendo um Dummy com list():
         >>> list(Dummy())
         [Dummy Object]
 
-    8.2. Deveria executar um iteração ao iterar sobre um Dummy:
+    8. 2. Deveria executar um iteração ao iterar sobre um Dummy:
         >>> for i in Dummy():print i
         Dummy Object
 
-    8.3. Deveria retornar um Dummy para qualquer tipo de chamada python:
+    8. 3. Deveria retornar um Dummy para qualquer tipo de chamada python:
         >>> Dummy()[4]
         Dummy Object
         >>> Dummy()[2:9]
         Dummy Object
 
-    8.4. Deveria retornar 'Verdadeiro' em uma operação "in".
+    8. 4. Deveria retornar 'Verdadeiro' em uma operação "in".
         >>> 8 in Dummy()
         True
 
-    8.5. Deveria retornar um dicionario contendo um elemento Dummy como chave e valor ao transformar para dict:
+    8. 5. Deveria retornar um dicionario contendo um elemento Dummy como chave e valor ao transformar para dict:
 
         >>> dict(Dummy())
         {Dummy Object: Dummy Object}
 
-    8.6. Retorna sua representação como string:
+    8. 6. Retorna sua representação como string:
         >>> str(Dummy())
         'Dummy Object'
         >>> str(Dummy(str='objeto idiota'))
         'objeto idiota'
 
-    8.7. Deveria retorn 1, 1.0 ou True
+    8. 7. Deveria retorn 1, 1.0 ou True
         >>> int(Dummy())
         1
         >>> float(Dummy())

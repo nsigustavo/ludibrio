@@ -7,6 +7,7 @@ from _testdouble import _TestDouble
 STOPRECORD = False
 RECORDING = True
 
+
 class Stub(_TestDouble):
     """Stubs provides canned answers to calls made during the test.
     """

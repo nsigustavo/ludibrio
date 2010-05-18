@@ -1,0 +1,18 @@
+Unit for DependencyInjection
+============================
+
+>>> from ludibrio.dependencyinjection import DependencyInjection
+
+1. Deveria subistituir obetos importados fora do contexto do teste.
+    >>> from ludibrio.specification.importexample import tempo
+    >>> type(tempo())
+    <type 'float'>
+    >>> def mock():return '0' #return string
+    >>> importing = DependencyInjection()
+    >>> with importing:
+    ...     from os import times
+    ...     importing.inject(mock)
+
+    >>> tempo()
+    '0'
+

@@ -8,7 +8,7 @@ from inspect import getframeinfo
 from sys import _getframe as getframe 
 from types import MethodType, UnboundMethodType, FunctionType 
 from _testdouble import _TestDouble 
-
+from traceroute import TraceRoute
 
 funcsType = [MethodType, UnboundMethodType, FunctionType]
 
@@ -23,25 +23,27 @@ class Mock(_TestDouble):
     """
     __expectation__ =[]#[MockedCall(attribute, args, kargs),]
     __recording__ = RECORDING 
-    __lastPropertyCalled__ = None 
-
+    __traceroute__ = None
+    __tracerouteExpected__ = None
 
     def __enter__(self):
+        self.__traceroute__ = TraceRoute()
+        self.__tracerouteExpected__ = TraceRoute()
         self.__expectation__ =[]
         self.__recording__ = RECORDING 
         return self 
 
     def __methodCalled__(self, *args, **kargs):
-        property = self.__lastPropertyCalled__ or getframeinfo(getframe(1))[2]# nome da funcao call
-        self.__lastPropertyCalled__ = None 
-        # property ==  __call__ or alias
+        property = getframeinfo(getframe(1))[2]
         return self.__propertyCalled(property, args, kargs)
 
     def __propertyCalled(self, property, args=[], kargs={}):
         if self.__recording__:
+            self.__tracerouteExpected__.remember()
             self.__newExpectation(MockedCall(property, args = args, kargs = kargs, response = self))
             return self 
         else:
+            self.__traceroute__.remember()
             return self.__espectativaMockada(property, args, kargs)
 
     def __exit__(self, type, value, traceback):
@@ -61,23 +63,30 @@ class Mock(_TestDouble):
     __lshift__ = __rshift__ 
 
     def __espectativaMockada(self, attr, args=[], kargs={}):
-        if not self.__expectation__:
-            raise MockExpectationError("Mock Object received unexpected call: %s" % self.__lastPropertyCalled__)
-        callMockada = self.__expectation__.pop(0)
-        return callMockada.call(attr, args, kargs)
+        try:
+            callMockada = self.__expectation__.pop(0)
+            return callMockada.call(attr, args, kargs)
+        except IndexError:
+            raise MockExpectationError("Mock Object received unexpected call: %s" % self.__traceroute__.mostRecentCall())
+        except MockCallError:
+            raise MockExpectationError("Mock Object received unexpected call:\nExpected:\n%s\nGot: %s" % (
+                    self.__tracerouteExpected__.stackCode(),
+                    self.__traceroute__.stackTrace())
+                    )
 
     def __getattr__(self, x):
-        self.__lastPropertyCalled__ = x 
         return self.__propertyCalled('__getattribute__',[x])
 
     def validate(self):
         if self.__expectation__:
-            raise MockExpectationError("Mock Object expected %s(), but didn't "
-                                 "received it" % self.__expectation__[0].args[0])
+            raise MockExpectationError("Call waiting:\nExpected:\n%s\nGot only:\n%s" % (
+                    self.__tracerouteExpected__.stackCode(),
+                    self.__traceroute__.stackCode())
+                    )
 
     def __del__(self):
         if self.__expectation__:
-            print "Object's mocks are not pre-programmed with expectations"
+            print "Call waiting"
 
 
 class MockedCall(object):
@@ -91,7 +100,7 @@ class MockedCall(object):
         return str((self.attribute, self.args, self.kargs))
 
     def setResponse(self, response):
-        self.response = response 
+        self.response = response
 
     def call(self, attribute, args=[], kargs={}):
         if(self.attribute == attribute 
@@ -102,21 +111,11 @@ class MockedCall(object):
             else:
                 return self.response 
         else:
-            self._erro(attribute, args, kargs)
-
-    def _erro(self, attribute, args, kargs):
-        raise MockExpectationError, "Mock Object received unexpected call.\nExpected:\n%s\nGot:\n%s"%(
-            self._callRepresentation(self.attribute, self.args, self.kargs),
-            self._callRepresentation(attribute, args, kargs),
-            )
-
-    def _callRepresentation(self, attribute, args, kargs):
-        if attribute == '__getattribute__':
-            return args[0]
-        return "%s(%s)"%(
-                attribute, 
-                ", ".join(["%r"%arg for arg in args]+["%s=%r"%(k, v)for k, v in kargs.items()]))
+            raise MockCallError('Mock Object received unexpected call.')
 
 
 class MockExpectationError(AssertionError):
+    '''Extends AssertionError for unittest compatibility'''
+
+class MockCallError(AssertionError):
     '''Extends AssertionError for unittest compatibility'''
