@@ -16,12 +16,9 @@ Classe utilizada para dinjeção de dependencia, utilizando a declaração from 
     ...     return ('double','.py')
 
     Configuração do objeto a ser substituido
-    >>> with DependencyInjection() as importing:
+    >>> with DependencyInjection(mySplitext) as importing:
     ...     from os.path import splitext # obtem o original para injeção do duble
     
-    Injeção do Duble
-    >>> importing.inject(mySplitext)
-
     Chamada substituida 
     >>> splitext('teste.py') # double
     ('double', '.py')
@@ -30,6 +27,5 @@ Classe utilizada para dinjeção de dependencia, utilizando a declaração from 
     >>> importing.restoure_object()
     >>> splitext('teste.py')
     ('teste', '.py')
-
 
 

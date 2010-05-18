@@ -6,8 +6,11 @@ import gc
 
 _oldimport = __import__
 
-
 class DependencyInjection(object):
+
+    def __init__(self, double):
+        self.double = double
+        self.replace_import_to_conf()
 
     def __enter__(self):
         self.replace_import_to_conf()
@@ -21,7 +24,7 @@ class DependencyInjection(object):
 
     def restoure_import(self):
         __builtins__['__import__'] = _oldimport
-    
+
     def import_double(self, name, globals={}, locals={}, fromlist=[], level=-1):
         """import_double(name, globals={}, locals={}, fromlist=[], level=-1) -> module
         """
@@ -29,11 +32,12 @@ class DependencyInjection(object):
         module = _oldimport(name, globals, locals, fromlist, level)
         self.original = module.__dict__[fromlist[0]]
         self.frame = frameOutOfContext()
+        self.inject()
         return module
 
-    def inject(self, double):
-        self.double = double
-        self._original_to_double()
+    def inject(self):
+        if hasattr(self,'original'):
+            self._original_to_double()
     
     def restoure_object(self):
         self._double_to_original()

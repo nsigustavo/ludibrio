@@ -9,6 +9,8 @@ from sys import _getframe as getframe
 from types import MethodType, UnboundMethodType, FunctionType 
 from _testdouble import _TestDouble 
 from traceroute import TraceRoute
+from dependencyinjection import DependencyInjection
+
 
 funcsType = [MethodType, UnboundMethodType, FunctionType]
 
@@ -25,13 +27,15 @@ class Mock(_TestDouble):
     __recording__ = RECORDING 
     __traceroute__ = None
     __tracerouteExpected__ = None
+    __dependency_injection__ = None
 
     def __enter__(self):
         self.__traceroute__ = TraceRoute()
         self.__tracerouteExpected__ = TraceRoute()
-        self.__expectation__ =[]
-        self.__recording__ = RECORDING 
-        return self 
+        self.__expectation__ = []
+        self.__recording__ = RECORDING
+        self.__dependency_injection__ = DependencyInjection(double = self)
+        return self
 
     def __methodCalled__(self, *args, **kargs):
         property = getframeinfo(getframe(1))[2]
@@ -47,7 +51,8 @@ class Mock(_TestDouble):
             return self.__espectativaMockada(property, args, kargs)
 
     def __exit__(self, type, value, traceback):
-        self.__recording__ = STOPRECORD 
+        self.__dependency_injection__.restoure_import()
+        self.__recording__ = STOPRECORD
 
     def __setattr__(self, attr, value):
         if attr in dir(Mock):
@@ -69,7 +74,7 @@ class Mock(_TestDouble):
         except IndexError:
             raise MockExpectationError("Mock Object received unexpected call: %s" % self.__traceroute__.mostRecentCall())
         except MockCallError:
-            raise MockExpectationError("Mock Object received unexpected call:\nExpected:\n%s\nGot: %s" % (
+            raise MockExpectationError("Mock Object received unexpected call:\nExpected:\n%s\nGot:\n%s" % (
                     self.__tracerouteExpected__.stackCode(),
                     self.__traceroute__.stackTrace())
                     )
@@ -85,6 +90,8 @@ class Mock(_TestDouble):
                     )
 
     def __del__(self):
+        self.__dependency_injection__.restoure_import()
+        self.__dependency_injection__.restoure_object()
         if self.__expectation__:
             print "Call waiting"
 

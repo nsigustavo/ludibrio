@@ -35,7 +35,8 @@ Mocks são objetos pré-programados com as expectativas que formam uma especific
     Expected:
     greetings.excuse_me() >> 'Com licença'
     greetings.see_you_soon >> 'Até logo'
-    Got: Stack trace (most recent call last)
+    Got:
+    Stack trace (most recent call last)
       File "<doctest mock.dt[8]>", line 1, in <module>
         print greetings.excuse_me()
       File "<doctest mock.dt[9]>", line 1, in <module>
@@ -49,7 +50,8 @@ Mocks são objetos pré-programados com as expectativas que formam uma especific
     MockExpectationError: Mock Object received unexpected call:
     Expected:
     greetings.excuse_me(name='gustavo') >> 'Com licença'
-    Got: Stack trace (most recent call last)
+    Got:
+    Stack trace (most recent call last)
       File "<doctest mock.dt[11]>", line 1, in <module>
         greetings.excuse_me(name='Diego Manhaes')
 
