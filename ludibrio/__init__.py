@@ -15,5 +15,6 @@ Dummy
 Dummy objects are passed around but never validated.
 
 """
-from ludibrio import Mock, Stub, Dummy, Spy
-
+from ludibrio.mock import Mock
+from ludibrio.stub import Stub
+from ludibrio.dummy import Dummy

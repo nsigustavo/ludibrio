@@ -1,0 +1,87 @@
+Stubs
+=====
+
+Stubs são objetos que se comportam segundo uma dada programação, assim como os mocks. Porém, diferentemente destes, a execução ou não dos métodos programados não é condição para que as especificações passem. Normalmente, stubs são usados quando a execução dos métodos programados não é o que o exemplo corrente deseja especificar.
+
+>>> from ludibrio.stub import Stub
+
+
+1. Stubs provide canned answers to calls made during the test.
+    >>> with Stub() as x:
+    ...     x.anything() >> 'responce'
+    
+    >>> x.anything()
+    'responce'
+
+    >>> with Stub() as x:
+    ...     x + 1 >> 1
+    ...     x - 1 >> -1
+    ...     x.anything() >> 'responce'
+    >>> x - 1
+    -1
+    >>> x + 1
+    1
+   >>> x.anything()
+   'responce'
+
+
+2. Deveria configurar as resposta na sequência em que são chamadas os métodos. Entretanto, ao executar o exemplo, este voltará ao seu estado inicial.
+    >>> with Stub() as count:
+    ...     count() >> 1
+    ...     count() >> 2
+    ...     count() >> 3
+    >>> count()
+    1
+    >>> count()
+    2
+    >>> count()
+    3
+    >>> count()
+    1
+    >>> count()
+    2
+    >>> count()
+    3
+
+3. Deveria poder configurar sua representação:
+    >>> with Stub(repr='Greetings') as greetings:
+    ...     pass
+    >>> greetings
+    Greetings
+
+
+4. Deveria poder configurar mais métodos e propriedades:
+    >>> with greetings as greetings:
+    ...     greetings.excuse_me() >> 'Com licença'
+    ...     greetings.hello('Gustavo') >> 'Ola, Gustavo'
+    ...     greetings.outrohello('Gustavo') >> 'Oi, Gustavo'
+    ...     greetings.hello('Gustavo', 'Diego') >> 'Ola, Gustavo e Diego'
+    ...     greetings.see_you_soon >> 'Até logo'
+
+    >>> print greetings.hello('Gustavo')
+    Ola, Gustavo
+    >>> print greetings.excuse_me()
+    Com licença
+    >>> print greetings.hello('Gustavo')
+    Ola, Gustavo
+    >>> print greetings.outrohello('Gustavo')
+    Oi, Gustavo
+    >>> print greetings.outrohello('Gustavo')
+    Oi, Gustavo
+    >>> print greetings.hello('Gustavo')
+    Ola, Gustavo
+    >>> print greetings.see_you_soon
+    Até logo
+    >>> print greetings.hello('Gustavo', 'Diego')
+    Ola, Gustavo e Diego
+    >>> print greetings.hello('Gustavo')
+    Ola, Gustavo
+
+5. Deveria gerar um erro ao executar algo não configurado:
+    >>> print greetings.executeAnythingAndReturnError()
+    Traceback (most recent call last):
+    ...
+    AttributeError: Stub Object received unexpected call
+
+
+
