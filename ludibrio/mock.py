@@ -26,12 +26,12 @@ class Mock(_TestDouble):
     __expectation__ =[]#[MockedCall(attribute, args, kargs),]
     __recording__ = RECORDING 
     __traceroute__ = None
-    __tracerouteExpected__ = None
+    __traceroute_expected__ = None
     __dependency_injection__ = None
 
     def __enter__(self):
         self.__traceroute__ = TraceRoute()
-        self.__tracerouteExpected__ = TraceRoute()
+        self.__traceroute_expected__ = TraceRoute()
         self.__expectation__ = []
         self.__recording__ = RECORDING
         self.__dependency_injection__ = DependencyInjection(double = self)
@@ -39,16 +39,16 @@ class Mock(_TestDouble):
 
     def __methodCalled__(self, *args, **kargs):
         property = getframeinfo(getframe(1))[2]
-        return self.__propertyCalled(property, args, kargs)
+        return self._property_called(property, args, kargs)
 
-    def __propertyCalled(self, property, args=[], kargs={}):
+    def _property_called(self, property, args=[], kargs={}):
         if self.__recording__:
-            self.__tracerouteExpected__.remember()
-            self.__newExpectation(MockedCall(property, args = args, kargs = kargs, response = self))
+            self.__traceroute_expected__.remember()
+            self._new_expectation(MockedCall(property, args = args, kargs = kargs, response = self))
             return self 
         else:
             self.__traceroute__.remember()
-            return self.__espectativaMockada(property, args, kargs)
+            return self._expectancy_recorded(property, args, kargs)
 
     def __exit__(self, type, value, traceback):
         self.__dependency_injection__.restoure_import()
@@ -58,43 +58,54 @@ class Mock(_TestDouble):
         if attr in dir(Mock):
             object.__setattr__(self, attr, value)
         else:
-            self.__propertyCalled('__setattr__', args=[attr, value])
+            self._property_called('__setattr__', args=[attr, value])
 
-    def __newExpectation(self, attr):
+    def _new_expectation(self, attr):
         self.__expectation__.append(attr)
 
     def __rshift__(self, response):
             self.__expectation__[-1].setResponse(response)
     __lshift__ = __rshift__ 
 
-    def __espectativaMockada(self, attr, args=[], kargs={}):
+    def _expectancy_recorded(self, attr, args=[], kargs={}):
         try:
             callMockada = self.__expectation__.pop(0)
             return callMockada.call(attr, args, kargs)
         except IndexError:
-            raise MockExpectationError("Mock Object received unexpected call: %s" % self.__traceroute__.mostRecentCall())
+            raise MockExpectationError(
+                  "Mock Object received unexpected call: %s" % 
+                    self.__traceroute__.mostRecentCall())
         except MockCallError:
-            raise MockExpectationError("Mock Object received unexpected call:\nExpected:\n%s\nGot:\n%s" % (
-                    self.__tracerouteExpected__.stackCode(),
+            raise MockExpectationError(
+                  "Mock Object received unexpected call:\n"
+                  "Expected:\n%s\n"
+                  "Got:\n%s" % (
+                    self.__traceroute_expected__.stackCode(),
                     self.__traceroute__.stackTrace())
                     )
 
     def __getattr__(self, x):
-        return self.__propertyCalled('__getattribute__',[x])
+        return self._property_called('__getattribute__',[x])
 
     def validate(self):
         if self.__expectation__:
-            raise MockExpectationError("Call waiting:\nExpected:\n%s\nGot only:\n%s" % (
-                    self.__tracerouteExpected__.stackCode(),
-                    self.__traceroute__.stackCode())
-                    )
+            raise MockExpectationError(
+                    self._call_waiting_msg())
 
     def __del__(self):
         self.__dependency_injection__.restoure_import()
         self.__dependency_injection__.restoure_object()
         if self.__expectation__:
-            print "Call waiting"
-
+            print  self._call_waiting_msg()
+    
+    def _call_waiting_msg(self):
+        return("Call waiting:\n"
+               "Expected:\n"
+               "%s\n"
+               "Got only:\n"
+               "%s") % (
+                    self.__traceroute_expected__.stackCode(),
+                    self.__traceroute__.stackCode())
 
 class MockedCall(object):
     def __init__(self, attribute, args=[], kargs={}, response = None):
