@@ -3,16 +3,12 @@
 #TODO: mockar imports respeitando o escopo com frame, pode-se subistituir o importe e validar a acall
 #TODO: Spy ainda esta como protótipo
 
-from __future__ import with_statement 
 from inspect import getframeinfo 
 from sys import _getframe as getframe 
-from types import MethodType, UnboundMethodType, FunctionType 
 from _testdouble import _TestDouble 
 from traceroute import TraceRoute
 from dependencyinjection import DependencyInjection
 
-
-funcsType = [MethodType, UnboundMethodType, FunctionType]
 
 STOPRECORD = False 
 RECORDING = True 
@@ -64,24 +60,33 @@ class Mock(_TestDouble):
         self.__expectation__.append(attr)
 
     def __rshift__(self, response):
-            self.__expectation__[-1].setResponse(response)
+            self.__expectation__[-1].set_response(response)
     __lshift__ = __rshift__ 
 
     def _expectancy_recorded(self, attr, args=[], kargs={}):
         try:
-            callMockada = self.__expectation__.pop(0)
-            return callMockada.call(attr, args, kargs)
+            if self.__kargs__.get('ordered', True):
+                callMockada = self.__expectation__.pop(0)
+                return callMockada.call(attr, args, kargs)
+            else:
+                for number, call in enumerate(self.__expectation__):
+                    if call.has_callable(attr, args, kargs):
+                        callMockada = self.__expectation__.pop(number)
+                        return callMockada.call(attr, args, kargs)
+                raise MockCallError('received unexpected call')
         except IndexError:
             raise MockExpectationError(
                   "Mock Object received unexpected call: %s" % 
-                    self.__traceroute__.mostRecentCall())
+                    self.__traceroute__.most_recent_call())
         except MockCallError:
             raise MockExpectationError(
                   "Mock Object received unexpected call:\n"
-                  "Expected:\n%s\n"
-                  "Got:\n%s" % (
-                    self.__traceroute_expected__.stackCode(),
-                    self.__traceroute__.stackTrace())
+                  "Expected:\n"
+                  "%s\n"
+                  "Got:\n"
+                  "%s" % (
+                    self.__traceroute_expected__.stack_code(),
+                    self.__traceroute__.stack_trace())
                     )
 
     def __getattr__(self, x):
@@ -104,8 +109,8 @@ class Mock(_TestDouble):
                "%s\n"
                "Got only:\n"
                "%s") % (
-                    self.__traceroute_expected__.stackCode(),
-                    self.__traceroute__.stackCode())
+                    self.__traceroute_expected__.stack_code(),
+                    self.__traceroute__.stack_code())
 
 class MockedCall(object):
     def __init__(self, attribute, args=[], kargs={}, response = None):
@@ -117,8 +122,11 @@ class MockedCall(object):
     def __repr__(self):
         return str((self.attribute, self.args, self.kargs))
 
-    def setResponse(self, response):
+    def set_response(self, response):
         self.response = response
+
+    def has_callable(self, attr, args, kargs):
+        return (self.attribute, self.args, self.kargs) == (attr, args, kargs)
 
     def call(self, attribute, args=[], kargs={}):
         if(self.attribute == attribute 

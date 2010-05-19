@@ -4,14 +4,14 @@
     >>> traceroute = TraceRoute()
     >>> assert traceroute.executAnythingAndReturnDummyObject()
     >>> assert traceroute.foo.test
-    >>> print traceroute.stackCode()
+    >>> print traceroute.stack_code()
     assert traceroute.executAnythingAndReturnDummyObject()
     assert traceroute.foo.test
 
-    >>> traceroute.mostRecentCall()
+    >>> traceroute.most_recent_call()
     'assert traceroute.foo.test'
 
-    >>> print traceroute.stackTrace()
+    >>> print traceroute.stack_trace()
     Stack trace (most recent call last)
       File "<doctest traceroute.dt[2]>", line 1, in <module>
         assert traceroute.executAnythingAndReturnDummyObject()

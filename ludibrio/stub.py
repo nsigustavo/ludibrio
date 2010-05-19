@@ -5,6 +5,7 @@ from sys import _getframe as getframe
 from _testdouble import _TestDouble
 from dependencyinjection import DependencyInjection
 
+
 STOPRECORD = False
 RECORDING = True
 
@@ -17,7 +18,6 @@ class Stub(_TestDouble):
     __lastPropertyCalled__ = None
     __dependency_injection__ = None
 
-
     def __enter__(self):
         self.__expectation__= []
         self.__recording__ = RECORDING
@@ -25,20 +25,20 @@ class Stub(_TestDouble):
         return self
 
     def __methodCalled__(self, *args, **kargs):
-        property_name = self.__propertyCalledName__()
-        return self.__propertyCalled(property_name, args, kargs)
+        property_name = self._property_called_name()
+        return self._property_called(property_name, args, kargs)
 
-    def __propertyCalledName__(self):
+    def _property_called_name(self):
         propertyCalledName =  self.__lastPropertyCalled__ or getframeinfo(getframe(2))[2]
         self.__lastPropertyCalled__ = None
         return propertyCalledName
 
-    def __propertyCalled(self, property, args=[], kargs={}, response=None):
+    def _property_called(self, property, args=[], kargs={}, response=None):
         if self.__recording__:
-            self.__newExpectation([property, args, kargs, response])
+            self._new_expectation([property, args, kargs, response])
             return self
         else:
-            return self._expectationValue(property, args, kargs)
+            return self._expectation_value(property, args, kargs)
 
     def __exit__(self, type, value, traceback):
         self.__dependency_injection__.restoure_import()
@@ -48,30 +48,30 @@ class Stub(_TestDouble):
         if attr in dir(Stub):
             object.__setattr__(self, attr, value)
         else:
-            self.__propertyCalled('__setattr__', args=[attr, value])
+            self._property_called('__setattr__', args=[attr, value])
 
-    def __newExpectation(self, attr):
+    def _new_expectation(self, attr):
         self.__expectation__.append(attr)
 
     def __rshift__(self, response):
             self.__expectation__[-1][3] = response
     __lshift__ = __rshift__
 
-    def _expectationValue(self, attr, args=[], kargs={}):
+    def _expectation_value(self, attr, args=[], kargs={}):
         for position, (attrExpectation, argsExpectation, kargsExpectation, response) in enumerate(self.__expectation__):
             if (attrExpectation, argsExpectation, kargsExpectation) == (attr, args, kargs):
-                self.__toTheEnd__(position)
+                self._to_the_end(position)
                 return response
         if self.__kargs__.has_key('proxy'):
             return getattr(self.__kargs__.get('proxy'), attr)(*args, **kargs)
         raise AttributeError("Stub Object received unexpected call")
 
-    def __toTheEnd__(self, position):
+    def _to_the_end(self, position):
         self.__expectation__.append(self.__expectation__.pop(position))
 
     def __getattr__(self, x):
         self.__lastPropertyCalled__ = x
-        return self.__propertyCalled('__getattribute__', (x,), response=self)
+        return self._property_called('__getattribute__', (x,), response=self)
     
     def __del__(self):
         self.__dependency_injection__.restoure_import()
