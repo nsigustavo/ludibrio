@@ -1,0 +1,19 @@
+Um poderosos recursos do Ludíbrio que não são comumente vistos em outros sistemas de Test Double é a capacidade de fazer um proxy para objetos existentes, ou mesmo remendar o exemplo real.
+
+Quando um objeto Stub é criado com o parâmetro proxy, Ludíbrio criará um objeto de Stub , que manterá uma referência ao objeto real, e permite a passagem de chamadas que não foram configuradas no Stub.
+
+Para entender como isso funciona na prática, vamos definir uma Stub:
+
+    >>> from ludibrio import Stub
+
+    >>> from os import path
+    
+    >>> with Stub(proxy=path) as newpath:
+    ...     newpath.abspath('.') >> '/stub/ludibrio'
+    
+    >>> newpath.abspath('.')
+    '/stub/ludibrio'
+    >>> newpath.join('/stub','ludibrio')
+    '/stub/ludibrio'
+    
+
