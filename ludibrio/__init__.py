@@ -18,4 +18,3 @@ Dummy objects are passed around but never validated.
 from ludibrio.mock import Mock
 from ludibrio.stub import Stub
 from ludibrio.dummy import Dummy
-
