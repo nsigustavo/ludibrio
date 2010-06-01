@@ -1,7 +1,7 @@
 from inspect import getframeinfo, getmodule
 from sys import _getframe
 import traceback
-from _testdouble import _TestDouble
+from ludibrio._testdouble import _TestDouble
 from helpers import frameOutOfContext
 
 class TraceRoute(_TestDouble):

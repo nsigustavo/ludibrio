@@ -1,7 +1,7 @@
 Unit for DependencyInjection
 ============================
 
->>> from ludibrio.dependencyinjection import DependencyInjection
+>>> from ludibrio.dependencyinjection  import DependencyInjection
 
 1. Deveria subistituir obetos importados fora do contexto do teste.
     >>> from ludibrio import _importexample

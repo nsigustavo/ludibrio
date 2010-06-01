@@ -1,5 +1,4 @@
 
-
 >>> from ludibrio import *
 
 >>> with Stub() as splitext:
@@ -14,4 +13,12 @@
 
 >>> splitext.restoure_import()
 
+>>> with Stub() as test:
+...     test.method(any(), kind_of(int)) >> None and amount == 3
+
+>>> test.method(1,2)
+>>> test.method('',2.0)
+Traceback (most recent call last):
+  ...
+ParameterException: 2.0 is not a kind of <type 'int'>
 

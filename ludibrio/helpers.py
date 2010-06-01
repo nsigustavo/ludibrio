@@ -4,6 +4,7 @@
 from sys import _getframe
 import os
 
+
 def frameOutOfContext():
     this_frame = frame = _getframe(1)
     while folder() in frame.f_code.co_filename:

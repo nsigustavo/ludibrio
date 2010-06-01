@@ -1,17 +1,14 @@
 #-*- coding:utf-8 -*-
 
-#TODO: mockar imports respeitando o escopo com frame, pode-se subistituir o importe e validar a acall
-#TODO: Spy ainda esta como protótipo
-
 from inspect import getframeinfo 
 from sys import _getframe as getframe 
 from _testdouble import _TestDouble 
-from traceroute import TraceRoute
 from dependencyinjection import DependencyInjection
+from traceroute import TraceRoute
 
 
-STOPRECORD = False 
-RECORDING = True 
+STOPRECORD = False
+RECORDING = True
 
 
 class Mock(_TestDouble):
@@ -141,7 +138,7 @@ class MockedCall(object):
 
 
 class MockExpectationError(AssertionError):
-    '''Extends AssertionError for unittest compatibility'''
+    """Extends AssertionError for unittest compatibility"""
 
 class MockCallError(AssertionError):
-    '''Extends AssertionError for unittest compatibility'''
+    """Extends AssertionError for unittest compatibility"""
