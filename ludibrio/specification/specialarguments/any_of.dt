@@ -1,0 +1,17 @@
+
+
+>>> from ludibrio.matcher import *
+
+
+>>> any() == 1
+True
+>>> any() == 171
+True
+>>> any() == 'Foo'
+True
+>>> any() == 'anything'
+True
+
+
+
+

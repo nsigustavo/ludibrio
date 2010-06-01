@@ -43,10 +43,11 @@ class DependencyInjection(object):
         self._double_to_original()
 
     def _original_to_double(self):
-        self._replace_all(self.original, self.double)
+            self._replace_all(self.original, self.double)
 
     def _double_to_original(self):
-        self._replace_all(self.double, self.original)
+        if hasattr(self,'original'):
+            self._replace_all(self.double, self.original)
 
     def _replace_all(self, old, new):
         self._old, self._new = old, new

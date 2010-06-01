@@ -1,0 +1,17 @@
+
+
+>>> from ludibrio import *
+
+>>> with Stub() as splitext:
+...     from os.path import splitext
+...     splitext(any()) >> ['test', '.temp']
+
+>>> splitext("file.txt")
+['test', '.temp']
+
+>>> splitext("document.odt")
+['test', '.temp']
+
+>>> splitext.restoure_import()
+
+

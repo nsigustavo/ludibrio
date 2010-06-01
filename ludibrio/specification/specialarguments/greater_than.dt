@@ -1,0 +1,15 @@
+>>> from ludibrio.matcher import *
+
+>>> 1 == greater_than(0.9)
+True
+>>> 1 == greater_than(1)
+Traceback (most recent call last):
+    ...
+ParameterException: 1 is not greater than 1
+>>> 1 == greater_than(2)
+Traceback (most recent call last):
+    ...
+ParameterException: 1 is not greater than 2
+>>> name = 'b'
+>>> name == greater_than('a')
+True

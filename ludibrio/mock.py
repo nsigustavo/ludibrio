@@ -93,12 +93,12 @@ class Mock(_TestDouble):
         return self._property_called('__getattribute__',[x])
 
     def validate(self):
+        self.__dependency_injection__.restoure_object()
         if self.__expectation__:
             raise MockExpectationError(
                     self._call_waiting_msg())
 
     def __del__(self):
-        self.__dependency_injection__.restoure_import()
         self.__dependency_injection__.restoure_object()
         if self.__expectation__:
             print  self._call_waiting_msg()

@@ -74,5 +74,7 @@ class Stub(_TestDouble):
         return self._property_called('__getattribute__', (x,), response=self)
     
     def __del__(self):
-        self.__dependency_injection__.restoure_import()
+        self.__dependency_injection__.restoure_object()
+    
+    def restoure_import(self):
         self.__dependency_injection__.restoure_object()
