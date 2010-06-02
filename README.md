@@ -11,14 +11,11 @@ Gustavo Rezende <nsigustavo@gmail.com>
 Development
 -----------
 
-Development of Ludibrio may be tracked in github:
-http://github.com/nsigustavo/ludibrio
-
-The source code may be obtained using 'git':
-    git clone git://github.com/nsigustavo/ludibrio.git
-
-Code may be browsed at:
+Ludibrio's development may be viewed and followed on github:
     http://github.com/nsigustavo/ludibrio
+
+Retrieve the source code using 'git':
+    git clone git://github.com/nsigustavo/ludibrio.git
 
 
 Tutorial
@@ -34,9 +31,9 @@ Install
 Mock
 ----
 
-Mocks are what we are talking about here: objects pre-programmed with expectations which form a specification of the calls they are expected to receive.
+Mocks are objects pre-programmed with expectations which form a specification of the calls they are expected to receive.
 
-A Mocker or Stub instance is used to command with recording and replaying of expectations.
+A Mocker or Stub instance uses the 'with' statement to record and replay expectations::
 
     >>> from ludibrio import Mock
     
@@ -59,21 +56,21 @@ A Mocker or Stub instance is used to command with recording and replaying of exp
 Stub
 ----
 
-Stubs provide canned answers to calls made during the test.
+Stubs provide pre-defined answers to method calls made during a test::
 
     >>> from ludibrio import Stub
 
     >>> with Stub() as x:
-    ...     x.anything() >> 'responce'
+    ...     x.anything() >> 'response'
 
     >>> x.anything()
-    'responce'
+    'response'
 
 
-Trivial mocking or stubing of any external module
--------------------------------------------------
+Trivial mocking or stubing for any external module
+--------------------------------------------------
 
-Ludibrio also offers a replace mode, which basically means that if using the "from ... import ..." in 'with', on replay time the returned mock object will replace the original object in namespaces of the whole Python interpreter (including modules, etc). Here is a simple example to illustrate how it may be used:
+Ludibrio also offers a replace mode, which basically means if a "from ... import ..." statement is defined into a 'with' scope, the replay mechanism will return a mock object to replace the original object in namespace of the whole Python interpreter (including any modules, etc). There's a simple example below to illustrate how use it::
 
     >>> from ludibrio import Stub
     
@@ -89,9 +86,10 @@ Ludibrio also offers a replace mode, which basically means that if using the "fr
 
 Proxy
 -----
-Two powerful features of Ludibrio which aren't commonly seen in other mocking systems is the ability of proxying to existing objects, or even patching the real instance or class.
 
-When an object is proxied, Ludibrio will create a Test Double object which will hold a reference to the real object, and will allow expressions to passthrough (mocked or not, and by default or on request).
+Two Ludibrio's powerful features that aren't found in other mocking systems is the ability of proxying existing objects, or patching a real instance or class.
+
+When an object is proxied, Ludibrio create a Test Double object holding a reference to the real object, allowing expressions passthrough to it(mocked or not, and by default or on request).
 
     >>> from os.path import splitext
 
@@ -104,4 +102,4 @@ When an object is proxied, Ludibrio will create a Test Double object which will 
     >>> splitext('ludibrio/stubed.py')
     ('/temp/temp', '.temp')
     
-    
+
