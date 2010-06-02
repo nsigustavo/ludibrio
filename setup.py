@@ -29,9 +29,7 @@ setup(name='ludibrio',
       packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
       include_package_data=True,
       zip_safe=False,
-      test_requires=[
-        'doctestcommand',
-      ],
+      install_requires=[],
       entry_points="""
       # -*- Entry points: -*-
       """,
