@@ -6,6 +6,13 @@ Author
 
 Gustavo Rezende <nsigustavo@gmail.com>
 
+Contributors
+------------
+
+Diego Pinheiro <me@dmpinheiro.net>
+Hugo Lopes <hltbra@gmail.com>
+Rodrigo Manhães <rmanhaes@gmail.com>
+
 
 
 Development
