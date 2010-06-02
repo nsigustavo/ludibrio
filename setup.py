@@ -1,16 +1,18 @@
 from setuptools import setup, find_packages
 import sys, os
 
-version = '2.0'
+version = '3.0.1'
 
 
 
-def read(*rnames):
-    return file(os.path.join(os.path.dirname(__file__), *rnames)).read()
+def read(rname):
+    if os.path.isfile(rname):
+        return file(os.path.join(os.path.dirname(__file__), rname)).read()
+    return ''
 
 
 long_description = (
-    read('README')
+    read('README.md')
     )
 
 
@@ -27,7 +29,7 @@ setup(name='ludibrio',
       packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
       include_package_data=True,
       zip_safe=False,
-      install_requires=[
+      test_requires=[
         'doctestcommand',
       ],
       entry_points="""
