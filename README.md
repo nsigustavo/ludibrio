@@ -1,17 +1,16 @@
-Ludibrio
-========
+.. image:: http://ludibriar.appspot.com/logo.png
 
 Author
 ------
 
-Gustavo Rezende <nsigustavo@gmail.com>
+    * Gustavo Rezende <nsigustavo@gmail.com>
 
 Contributors
 ------------
 
-Diego Pinheiro <me@dmpinheiro.net>
-Hugo Lopes <hltbra@gmail.com>
-Rodrigo Manhães <rmanhaes@gmail.com>
+    * Diego Pinheiro <me@dmpinheiro.net>
+    * Hugo Lopes <hltbra@gmail.com>
+    * Rodrigo Manhães <rmanhaes@gmail.com>
 
 
 
