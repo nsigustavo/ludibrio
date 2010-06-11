@@ -32,6 +32,7 @@ Install package in 'development mode' and run tests with doctestcommand.
     $ doctest
 
 
+========
 Tutorial
 ========
 
