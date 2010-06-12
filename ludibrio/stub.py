@@ -4,7 +4,7 @@ from inspect import getframeinfo
 from sys import _getframe as getframe
 from _testdouble import _TestDouble
 from dependencyinjection import DependencyInjection
-
+from traceroute import TraceRoute
 
 STOPRECORD = False
 RECORDING = True
@@ -17,9 +17,11 @@ class Stub(_TestDouble):
     __recording__ = RECORDING
     __lastPropertyCalled__ = None
     __dependency_injection__ = None
+    __traceroute__ = None
 
     def __enter__(self):
         self.__expectation__= []
+        self.__traceroute__ = TraceRoute()
         self.__recording__ = RECORDING
         self.__dependency_injection__ = DependencyInjection(double = self)
         return self
@@ -39,6 +41,7 @@ class Stub(_TestDouble):
             self._new_expectation([property, args, kargs, response])
             return self
         else:
+            self.__traceroute__.remember()
             return self._expectation_value(property, args, kargs)
 
     def __exit__(self, type, value, traceback):
@@ -65,10 +68,15 @@ class Stub(_TestDouble):
                 return response
         if self.__kargs__.has_key('proxy'):
             return getattr(self.__kargs__.get('proxy'), attr)(*args, **kargs)
-        raise AttributeError("Stub Object received unexpected call.\n%s"%self.format_called(attr, args, kargs))
+        raise AttributeError(
+            "Stub Object received unexpected call. %s\n%s"%(
+                    self.format_called(attr, args, kargs),
+                    self.__traceroute__.stack_trace()))
 
     def format_called(self,  attr, args, kargs):
         if attr == "__getattribute__": return args[0]
+        if attr == '__call__' and self.__lastPropertyCalled__:
+            attr = self.__lastPropertyCalled__
         parameters = ', '.join(list(args)+['%s=%s'%(k, v) for k, v in kargs.items()])
         return "%s(%s)"%( attr, parameters)
 
