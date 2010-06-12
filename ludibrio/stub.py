@@ -35,6 +35,7 @@ class Stub(_TestDouble):
 
     def _property_called(self, property, args=[], kargs={}, response=None):
         if self.__recording__:
+            response = response if response is not None else self
             self._new_expectation([property, args, kargs, response])
             return self
         else:
@@ -64,7 +65,12 @@ class Stub(_TestDouble):
                 return response
         if self.__kargs__.has_key('proxy'):
             return getattr(self.__kargs__.get('proxy'), attr)(*args, **kargs)
-        raise AttributeError("Stub Object received unexpected call")
+        raise AttributeError("Stub Object received unexpected call.\n%s"%self.format_called(attr, args, kargs))
+
+    def format_called(self,  attr, args, kargs):
+        if attr == "__getattribute__": return args[0]
+        parameters = ', '.join(list(args)+['%s=%s'%(k, v) for k, v in kargs.items()])
+        return "%s(%s)"%( attr, parameters)
 
     def _to_the_end(self, position):
         self.__expectation__.append(self.__expectation__.pop(position))

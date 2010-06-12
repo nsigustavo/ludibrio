@@ -81,7 +81,9 @@ Stubs são objetos que se comportam segundo uma dada programação, assim como o
     >>> print greetings.executeAnythingAndReturnError()
     Traceback (most recent call last):
     ...
-    AttributeError: Stub Object received unexpected call
+    AttributeError: Stub Object received unexpected call.
+    executeAnythingAndReturnError
+
 
 
 
