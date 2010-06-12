@@ -18,12 +18,15 @@ Development
 -----------
 
 Ludibrio's development may be viewed and followed on github::
+
     http://github.com/nsigustavo/ludibrio
 
 Retrieve the source code using 'git'::
+
     git clone git://github.com/nsigustavo/ludibrio.git
 
 Install package in 'development mode' and run tests with doctestcommand::
+
     $ sudo easy_install doctestcommand
     $ git clone git://github.com/nsigustavo/ludibrio.git
     $ cd ludibrio
