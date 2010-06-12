@@ -77,7 +77,9 @@ class Stub(_TestDouble):
         if attr == "__getattribute__": return args[0]
         if attr == '__call__' and self.__lastPropertyCalled__:
             attr = self.__lastPropertyCalled__
-        parameters = ', '.join(list(args)+['%s=%s'%(k, v) for k, v in kargs.items()])
+        parameters = ', '.join(
+                         [repr(arg) for arg in args]
+                        +['%s=%r'%(k, v) for k, v in kargs.items()])
         return "%s(%s)"%( attr, parameters)
 
     def _to_the_end(self, position):
