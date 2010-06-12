@@ -13,6 +13,12 @@ def frameOutOfContext():
 
 def folder():
     return os.path.dirname(__file__)
-    
+
+def format_called(attr, args, kargs):
+    if attr == "__getattribute__": return args[0]
+    parameters = ', '.join(
+                     [repr(arg) for arg in args]
+                    +['%s=%r'%(k, v) for k, v in kargs.items()])
+    return "%s(%s)"%( attr, parameters)
 
 

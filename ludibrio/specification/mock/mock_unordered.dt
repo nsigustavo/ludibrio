@@ -12,7 +12,7 @@
     >>> print greetings.hello('Gustavo')
     Traceback (most recent call last):
     ...
-    MockExpectationError: Mock Object received unexpected call:
+    MockExpectationError: Mock Object received unexpected call:hello
     Expected:
     greetings.excuse_me() >> 'Com licença'
     greetings.hello('Gustavo') >> 'Ola, Gustavo'

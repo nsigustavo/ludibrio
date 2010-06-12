@@ -5,6 +5,7 @@ from sys import _getframe as getframe
 from _testdouble import _TestDouble
 from dependencyinjection import DependencyInjection
 from traceroute import TraceRoute
+from ludibrio.helpers import format_called
 
 STOPRECORD = False
 RECORDING = True
@@ -73,14 +74,10 @@ class Stub(_TestDouble):
                     self.format_called(attr, args, kargs),
                     self.__traceroute__.stack_trace()))
 
-    def format_called(self,  attr, args, kargs):
-        if attr == "__getattribute__": return args[0]
+    def format_called(self, attr, args, kargs):
         if attr == '__call__' and self.__lastPropertyCalled__:
             attr = self.__lastPropertyCalled__
-        parameters = ', '.join(
-                         [repr(arg) for arg in args]
-                        +['%s=%r'%(k, v) for k, v in kargs.items()])
-        return "%s(%s)"%( attr, parameters)
+        return format_called(attr, args, kargs)
 
     def _to_the_end(self, position):
         self.__expectation__.append(self.__expectation__.pop(position))

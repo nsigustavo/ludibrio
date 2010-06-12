@@ -1,0 +1,52 @@
+
+    >>> from ludibrio import *
+
+    >>> with Mock() as teste:
+    ...     teste.called() << 1
+    ...     teste.notcalled() << 2
+    >>> gotnumber = teste.called()
+    >>> teste.validate()
+    ... 
+    Traceback (most recent call last):
+    ...
+    MockExpectationError: Call waiting:
+    Expected:
+    teste.called() << 1
+    teste.notcalled() << 2
+    Got only:
+    gotnumber = teste.called()
+
+
+    >>> with Mock() as greetings:
+    ...     greetings.excuse_me() >> 'Com licença'
+    ...     greetings.see_you_soon >> 'Até logo'
+    >>> print greetings.excuse_me()
+    Com licença
+    >>> print greetings.hello('Gustavo Rezende')
+    Traceback (most recent call last):
+    ...
+    MockExpectationError: Mock Object received unexpected call:hello
+    Expected:
+    greetings.excuse_me() >> 'Com licença'
+    greetings.see_you_soon >> 'Até logo'
+    Got:
+    Stack trace (most recent call last)
+      File "<doctest mock_msg_error.dt[5]>", line 1, in <module>
+        print greetings.excuse_me()
+      File "<doctest mock_msg_error.dt[6]>", line 1, in <module>
+        print greetings.hello('Gustavo Rezende')
+
+
+    >>> with Mock() as greetings:
+    ...     greetings.excuse_me(name='gustavo') >> 'Com licença'
+    >>> greetings.excuse_me(name='Diego Manhaes')
+    Traceback (most recent call last):
+    ...
+    MockExpectationError: Mock Object received unexpected call:__call__(name='Diego Manhaes')
+    Expected:
+    greetings.excuse_me(name='gustavo') >> 'Com licença'
+    Got:
+    Stack trace (most recent call last)
+      File "<doctest mock_msg_error.dt[8]>", line 1, in <module>
+        greetings.excuse_me(name='Diego Manhaes')
+

@@ -5,7 +5,7 @@ from sys import _getframe as getframe
 from _testdouble import _TestDouble 
 from dependencyinjection import DependencyInjection
 from traceroute import TraceRoute
-
+from ludibrio.helpers import format_called
 
 STOPRECORD = False
 RECORDING = True
@@ -70,18 +70,19 @@ class Mock(_TestDouble):
                     if call.has_callable(attr, args, kargs):
                         callMockada = self.__expectation__.pop(number)
                         return callMockada.call(attr, args, kargs)
-                raise MockCallError('received unexpected call')
+                raise CallExpectation("Mock object has no called %s" %attr)
         except IndexError:
             raise MockExpectationError(
                   "Mock Object received unexpected call: %s" % 
                     self.__traceroute__.most_recent_call())
-        except MockCallError:
+        except CallExpectation:
             raise MockExpectationError(
-                  "Mock Object received unexpected call:\n"
+                  "Mock Object received unexpected call:%s\n"
                   "Expected:\n"
                   "%s\n"
                   "Got:\n"
                   "%s" % (
+                    format_called(attr, args, kargs),
                     self.__traceroute_expected__.stack_code(),
                     self.__traceroute__.stack_trace())
                     )
@@ -134,11 +135,11 @@ class MockedCall(object):
             else:
                 return self.response 
         else:
-            raise MockCallError('Mock Object received unexpected call.')
+            raise CallExpectation('Mock Object received unexpected call.')
 
 
 class MockExpectationError(AssertionError):
     """Extends AssertionError for unittest compatibility"""
 
-class MockCallError(AssertionError):
+class CallExpectation(AssertionError):
     """Extends AssertionError for unittest compatibility"""

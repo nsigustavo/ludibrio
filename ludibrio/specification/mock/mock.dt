@@ -23,37 +23,7 @@ Mocks são objetos pré-programados com as expectativas que formam uma especific
     MockExpectationError: Mock Object received unexpected call: print greetings.see_you_soon
 
 
-    >>> with Mock() as greetings:
-    ...     greetings.excuse_me() >> 'Com licença'
-    ...     greetings.see_you_soon >> 'Até logo'
-    >>> print greetings.excuse_me()
-    Com licença
-    >>> print greetings.hello('Gustavo Rezende')
-    Traceback (most recent call last):
-    ...
-    MockExpectationError: Mock Object received unexpected call:
-    Expected:
-    greetings.excuse_me() >> 'Com licença'
-    greetings.see_you_soon >> 'Até logo'
-    Got:
-    Stack trace (most recent call last)
-      File "<doctest mock.dt[8]>", line 1, in <module>
-        print greetings.excuse_me()
-      File "<doctest mock.dt[9]>", line 1, in <module>
-        print greetings.hello('Gustavo Rezende')
 
-    >>> with Mock() as greetings:
-    ...     greetings.excuse_me(name='gustavo') >> 'Com licença'
-    >>> greetings.excuse_me(name='Diego Manhaes')
-    Traceback (most recent call last):
-    ...
-    MockExpectationError: Mock Object received unexpected call:
-    Expected:
-    greetings.excuse_me(name='gustavo') >> 'Com licença'
-    Got:
-    Stack trace (most recent call last)
-      File "<doctest mock.dt[11]>", line 1, in <module>
-        greetings.excuse_me(name='Diego Manhaes')
 
     >>> with Mock() as listing:
     ...     listing[1] >> 'um'
@@ -107,20 +77,6 @@ Mocks são objetos pré-programados com as expectativas que formam uma especific
     ...
     ArithmeticError: teste error
 
-    >>> with Mock() as teste:
-    ...     teste.called() << 1
-    ...     teste.notcalled() << 2
-    >>> gotnumber = teste.called()
-    >>> teste.validate()
-    ... 
-    Traceback (most recent call last):
-    ...
-    MockExpectationError: Call waiting:
-    Expected:
-    teste.called() << 1
-    teste.notcalled() << 2
-    Got only:
-    gotnumber = teste.called()
 
 
     >>> with Mock() as count:
@@ -133,12 +89,6 @@ Mocks são objetos pré-programados com as expectativas que formam uma especific
     2
     >>> count()
     3
-
-
-    >>> class Conta(object):
-    ...     def transferir(self, conta, valor):
-    ...             valor = self.sacar(valor)
-    ...             conta.depositar(valor)
 
 
     >>> def transferir(conta_origem, conta_destino, valor):

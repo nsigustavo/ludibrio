@@ -1,8 +1,10 @@
 from ludibrio.specialarguments import matcher
 import re
 
+
 class ParameterException(Exception):
     """'Exception' for mandatory parameters"""
+
 
 @matcher
 def any(x, y):
