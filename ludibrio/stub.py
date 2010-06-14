@@ -16,7 +16,7 @@ class Stub(_TestDouble):
     """
     __expectation__= [] # [(attribute, args, kargs),]
     __recording__ = RECORDING
-    __lastPropertyCalled__ = None
+    __last_property_called__ = None
     __dependency_injection__ = None
     __traceroute__ = None
 
@@ -32,9 +32,9 @@ class Stub(_TestDouble):
         return self._property_called(property_name, args, kargs)
 
     def _property_called_name(self):
-        propertyCalledName =  self.__lastPropertyCalled__ or getframeinfo(getframe(2))[2]
-        self.__lastPropertyCalled__ = None
-        return propertyCalledName
+        property_called_name =  self.__last_property_called__ or getframeinfo(getframe(2))[2]
+        self.__last_property_called__ = None
+        return property_called_name
 
     def _property_called(self, property, args=[], kargs={}, response=None):
         if self.__recording__:
@@ -63,27 +63,34 @@ class Stub(_TestDouble):
     __lshift__ = __rshift__
 
     def _expectation_value(self, attr, args=[], kargs={}):
-        for position, (attrExpectation, argsExpectation, kargsExpectation, response) in enumerate(self.__expectation__):
-            if (attrExpectation, argsExpectation, kargsExpectation) == (attr, args, kargs):
+        for position, (attr_expectation, args_expectation, kargs_expectation, response) in enumerate(self.__expectation__):
+            if (attr_expectation, args_expectation, kargs_expectation) == (attr, args, kargs):
                 self._to_the_end(position)
                 return response
-        if self.__kargs__.has_key('proxy'):
-            return getattr(self.__kargs__.get('proxy'), attr)(*args, **kargs)
+        if self._has_proxy():
+            return self._proxy(attr, args, kargs)
+
         raise AttributeError(
             "Stub Object received unexpected call. %s\n%s"%(
                     self.format_called(attr, args, kargs),
                     self.__traceroute__.stack_trace()))
 
+    def _proxy(self, attr, args, kargs):
+        return getattr(self.__kargs__.get('proxy'), attr)(*args, **kargs)
+
+    def _has_proxy(self):
+        return self.__kargs__.has_key('proxy')
+
     def format_called(self, attr, args, kargs):
-        if attr == '__call__' and self.__lastPropertyCalled__:
-            attr = self.__lastPropertyCalled__
+        if attr == '__call__' and self.__last_property_called__:
+            attr = self.__last_property_called__
         return format_called(attr, args, kargs)
 
     def _to_the_end(self, position):
         self.__expectation__.append(self.__expectation__.pop(position))
 
     def __getattr__(self, x):
-        self.__lastPropertyCalled__ = x
+        self.__last_property_called__ = x
         return self._property_called('__getattribute__', (x,), response=self)
     
     def __del__(self):

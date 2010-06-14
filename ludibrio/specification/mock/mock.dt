@@ -20,9 +20,24 @@ Mocks são objetos pré-programados com as expectativas que formam uma especific
     >>> print greetings.see_you_soon
     Traceback (most recent call last):
     ...
-    MockExpectationError: Mock Object received unexpected call: print greetings.see_you_soon
-
-
+    MockExpectationError: Mock Object received unexpected call:see_you_soon
+    Expected:
+    greetings.excuse_me() >> 'Com licença'
+    greetings.hello('Gustavo') >> 'Ola, Gustavo'
+    greetings.see_you_soon >> 'Até logo'
+    greetings.see_you_soon >> 'Até logo, denovo'
+    Got:
+    Stack trace (most recent call last)
+      File "<doctest mock.dt[2]>", line 1, in <module>
+        print greetings.excuse_me()
+      File "<doctest mock.dt[3]>", line 1, in <module>
+        print greetings.hello('Gustavo')
+      File "<doctest mock.dt[4]>", line 1, in <module>
+        print greetings.see_you_soon
+      File "<doctest mock.dt[5]>", line 1, in <module>
+        print greetings.see_you_soon
+      File "<doctest mock.dt[6]>", line 1, in <module>
+        print greetings.see_you_soon
 
 
     >>> with Mock() as listing:

@@ -62,30 +62,36 @@ class Mock(_TestDouble):
 
     def _expectancy_recorded(self, attr, args=[], kargs={}):
         try:
-            if self.__kargs__.get('ordered', True):
-                callMockada = self.__expectation__.pop(0)
-                return callMockada.call(attr, args, kargs)
+            if self._is_ordered():
+                return self._call_mocked_ordered(attr, args, kargs)
             else:
-                for number, call in enumerate(self.__expectation__):
-                    if call.has_callable(attr, args, kargs):
-                        callMockada = self.__expectation__.pop(number)
-                        return callMockada.call(attr, args, kargs)
-                raise CallExpectation("Mock object has no called %s" %attr)
-        except IndexError:
-            raise MockExpectationError(
-                  "Mock Object received unexpected call: %s" % 
-                    self.__traceroute__.most_recent_call())
-        except CallExpectation:
-            raise MockExpectationError(
-                  "Mock Object received unexpected call:%s\n"
-                  "Expected:\n"
-                  "%s\n"
-                  "Got:\n"
-                  "%s" % (
+                return self._call_mocked_unordered(attr, args, kargs)
+        except (CallExpectation, IndexError):
+            raise MockExpectationError(self._unexpected_call_msg(attr, args, kargs))
+
+    def _unexpected_call_msg(self, attr, args, kargs):
+        return ("Mock Object received unexpected call:%s\n"
+                "Expected:\n"
+                "%s\n"
+                "Got:\n"
+                "%s") % (
                     format_called(attr, args, kargs),
                     self.__traceroute_expected__.stack_code(),
                     self.__traceroute__.stack_trace())
-                    )
+
+    def _is_ordered(self):
+        return self.__kargs__.get('ordered', True)
+
+    def _call_mocked_unordered(self, attr, args, kargs):
+        for number, call in enumerate(self.__expectation__):
+            if call.has_callable(attr, args, kargs):
+                call_mocked = self.__expectation__.pop(number)
+                return call_mocked.call(attr, args, kargs)
+        raise CallExpectation("Mock object has no called %s" %attr)
+
+    def _call_mocked_ordered(self, attr, args, kargs):
+        call_mocked = self.__expectation__.pop(0)
+        return call_mocked.call(attr, args, kargs)
 
     def __getattr__(self, x):
         return self._property_called('__getattribute__',[x])
