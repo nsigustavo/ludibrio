@@ -69,10 +69,12 @@ class Stub(_TestDouble):
                 return response
         if self._has_proxy():
             return self._proxy(attr, args, kargs)
+        self._attribute_expectation(attr, args, kargs)
 
+    def _attribute_expectation(self, attr, args, kargs):
         raise AttributeError(
             "Stub Object received unexpected call. %s\n%s"%(
-                    self.format_called(attr, args, kargs),
+                    self._format_called(attr, args, kargs),
                     self.__traceroute__.stack_trace()))
 
     def _proxy(self, attr, args, kargs):
@@ -81,7 +83,7 @@ class Stub(_TestDouble):
     def _has_proxy(self):
         return self.__kargs__.has_key('proxy')
 
-    def format_called(self, attr, args, kargs):
+    def _format_called(self, attr, args, kargs):
         if attr == '__call__' and self.__last_property_called__:
             attr = self.__last_property_called__
         return format_called(attr, args, kargs)
