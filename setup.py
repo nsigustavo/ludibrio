@@ -1,8 +1,7 @@
 from setuptools import setup, find_packages
-import sys, os
+import os
 
-version = '3.0.1'
-
+version = '3.0.2'
 
 
 def read(rname):
@@ -12,13 +11,13 @@ def read(rname):
 
 
 long_description = (
-    read('README.md')
+    read('README.rst')
     )
 
 
 setup(name='ludibrio',
       version=version,
-      description="Platform for test doubles in Python (mocks, stubs, fakes, and dummies)",
+      description="Platform for test doubles in Python (mocks, stubs, and dummies)",
       long_description=long_description,
       classifiers=[], # Get strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
       keywords='mock stub fake dummy doubles mocks',
