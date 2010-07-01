@@ -1,3 +1,6 @@
+teste
+=====
+
 >>> from ludibrio.matcher import *
 
 >>> class Foo(object):

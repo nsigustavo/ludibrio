@@ -1,4 +1,4 @@
-MOCK
+Mock
 ====
 Mocks são objetos pré-programados com as expectativas que formam uma especificação das chamadas que se espera receber. Quando o objeto sob teste é executado, todas as expectativas definidas para os mocks têm obrigatoriamente que ser cumpridas ou a especificação falhará.
 

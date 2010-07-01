@@ -35,9 +35,8 @@ Install package in 'development mode' and run tests with doctestcommand::
     $ doctest
 
 
-========
-Tutorial
-========
+In a nutshell
+=============
 
 
 Install
