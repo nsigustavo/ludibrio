@@ -1,0 +1,16 @@
+>>> from ludibrio.matcher import *
+
+>>> class Foo(object):
+...    pass
+>>> class Bar(object):
+...    pass
+>>> foo = Foo()
+
+>>> foo == kind_of(Foo)
+True
+
+>>> foo == kind_of(Bar)
+Traceback (most recent call last):
+    ...
+ParameterException: <...Foo object at ...> is not a kind of <class '...Bar'>
+

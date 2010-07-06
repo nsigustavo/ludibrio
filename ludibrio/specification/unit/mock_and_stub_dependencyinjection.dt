@@ -1,0 +1,24 @@
+MOCK
+====
+Ludíbrio também oferece uma declaração para subistituir objetos em outros contextos, basicamente significa que, se usar o from ... import ... dentro da uma declaração de Mock, o dublê irá substituir o objeto importado em namespaces do interpretador Python (incluindo módulos e contexto atual). Usar essa declaração, é trivial para realizar as mudanças de nível do ambiente, tais como funções definidas em módulos Python padrão.
+Aqui está um exemplo simples para ilustrar como ele pode ser usado:
+
+
+    >>> from ludibrio import Mock, Stub
+
+    >>> with Mock() as time:
+    ...     from time import time
+    ...     time() >> 2
+
+
+    >>> from time import time #mocado
+    >>> time()
+    2
+
+    >>> with Stub() as tempo:
+    ...     from os import times
+    ...     tempo() >> 'haaaaa'
+    >>> tempo()
+    'haaaaa'
+
+    >>> tempo.restoure_import()

@@ -1,0 +1,28 @@
+
+
+    >>> from ludibrio import Mock
+
+    >>> with Mock(ordered=False) as greetings:
+    ...     greetings.excuse_me() >> 'Com licença'
+    ...     greetings.hello('Gustavo') >> 'Ola, Gustavo'
+    >>> print greetings.hello('Gustavo')
+    Ola, Gustavo
+    >>> print greetings.excuse_me()
+    Com licença
+    >>> print greetings.hello('Gustavo')
+    Traceback (most recent call last):
+    ...
+    MockExpectationError: Mock Object received unexpected call:hello
+    Expected:
+    greetings.excuse_me() >> 'Com licença'
+    greetings.hello('Gustavo') >> 'Ola, Gustavo'
+    Got:
+    Stack trace (most recent call last)
+      File "<doctest mock_unordered.dt[2]>", line 1, in <module>
+        print greetings.hello('Gustavo')
+      File "<doctest mock_unordered.dt[3]>", line 1, in <module>
+        print greetings.excuse_me()
+      File "<doctest mock_unordered.dt[4]>", line 1, in <module>
+        print greetings.hello('Gustavo')
+
+

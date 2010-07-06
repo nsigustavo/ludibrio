@@ -1,0 +1,16 @@
+>>> from ludibrio.matcher import *
+
+>>> class Foo(object):
+...    pass
+>>> class Bar(object):
+...    pass
+>>> foo = Foo()
+
+>>> foo == instance_of(Foo)
+True
+
+>>> foo == instance_of(Bar)
+Traceback (most recent call last):
+    ...
+ParameterException: <...Foo object at ...> is not a instance of <class '...Bar'>
+

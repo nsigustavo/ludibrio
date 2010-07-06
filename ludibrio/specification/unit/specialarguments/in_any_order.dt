@@ -1,0 +1,26 @@
+>>> from ludibrio.matcher import *
+
+>>> [1, 2, 3] == in_any_order([3, 1])
+True
+
+>>> [1, 2, 3] == in_any_order([3, 4])
+Traceback (most recent call last):
+    ...
+ParameterException: [1, 2, 3] does not have in any order [3, 4]
+
+>>> [1, 2, 3] == in_any_order((3, 1))
+True
+
+>>> [1, 2, 3] == in_any_order((3, 4))
+Traceback (most recent call last):
+    ...
+ParameterException: [1, 2, 3] does not have in any order (3, 4)
+
+>>> 'should' == in_any_order(('s', 'd', 'l'))
+True
+
+>>> 'should' == in_any_order(('h', 'a'))
+Traceback (most recent call last):
+    ...
+ParameterException: 'should' does not have in any order ('h', 'a')
+

@@ -1,0 +1,31 @@
+Unit for DependencyInjection
+============================
+
+Classe utilizada para dinjeção de dependencia, utilizando a declaração from ... import ...
+
+    >>> from ludibrio.dependencyinjection import DependencyInjection
+
+1. Deveria subistituir obetos diretamente importados no contexto.    
+    objeto a ser subtituido
+    >>> from os.path import splitext
+    >>> splitext('teste.py')
+    ('teste', '.py')
+
+    Duble
+    >>> def mySplitext(path):
+    ...     return ('double','.py')
+
+    Configuração do objeto a ser substituido
+    >>> with DependencyInjection(mySplitext) as importing:
+    ...     from os.path import splitext # obtem o original para injeção do duble
+    
+    Chamada substituida 
+    >>> splitext('teste.py') # double
+    ('double', '.py')
+
+2. Deveria recurar os objetos originais
+    >>> importing.restoure_object()
+    >>> splitext('teste.py')
+    ('teste', '.py')
+
+
