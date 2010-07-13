@@ -9,7 +9,7 @@ ludibrio/_importexample.py
 
 Usage::
     
-    >>> from ludibrio  import Mock
+    >>> from ludibrio  import Stub
 
     >>> with Stub() as times:
     ...     from os import times
