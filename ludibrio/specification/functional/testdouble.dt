@@ -91,7 +91,7 @@ Stubs apenas retornam valores pré-programados, para determinadas chamadas e mai
     >>> data_atual('$dia/$mes/$ano')
     '7/6/2010'
 
-    >>> datetime.restoure_import()
+    >>> datetime.restore_import()
 
 
 No exemplo acima o sistema sob testes é composto pela função data_atual, que retorna a data atual formatada segundo uma template, composta por dia, mês e ano - porém em ordem variável.

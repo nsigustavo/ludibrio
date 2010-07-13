@@ -46,7 +46,7 @@ class Stub(_TestDouble):
             return self._expectation_value(property, args, kargs)
 
     def __exit__(self, type, value, traceback):
-        self.__dependency_injection__.restoure_import()
+        self.__dependency_injection__.restore_import()
         self.__recording__ = STOPRECORD
 
     def __setattr__(self, attr, value):
@@ -96,7 +96,7 @@ class Stub(_TestDouble):
         return self._property_called('__getattribute__', (x,), response=self)
     
     def __del__(self):
-        self.__dependency_injection__.restoure_object()
+        self.__dependency_injection__.restore_object()
     
-    def restoure_import(self):
-        self.__dependency_injection__.restoure_object()
+    def restore_import(self):
+        self.__dependency_injection__.restore_object()

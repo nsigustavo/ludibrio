@@ -11,7 +11,7 @@
 >>> splitext("document.odt")
 ['test', '.temp']
 
->>> splitext.restoure_import()
+>>> splitext.restore_import()
 
 >>> with Stub() as test:
 ...     test.method(any(), kind_of(int)) >> None and amount == 3

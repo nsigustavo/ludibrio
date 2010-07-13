@@ -23,4 +23,4 @@ Ludibrio also offers a replace mode, which basically means if a "from ... import
     >>> tempo()
     'haaaaa'
 
-    >>> tempo.restoure_import()
+    >>> tempo.restore_import()

@@ -44,7 +44,7 @@ class Mock(_TestDouble):
             return self._expectancy_recorded(property, args, kargs)
 
     def __exit__(self, type, value, traceback):
-        self.__dependency_injection__.restoure_import()
+        self.__dependency_injection__.restore_import()
         self.__recording__ = STOPRECORD
 
     def __setattr__(self, attr, value):
@@ -97,13 +97,13 @@ class Mock(_TestDouble):
         return self._property_called('__getattribute__',[x])
 
     def validate(self):
-        self.__dependency_injection__.restoure_object()
+        self.__dependency_injection__.restore_object()
         if self.__expectation__:
             raise MockExpectationError(
                     self._call_waiting_msg())
 
     def __del__(self):
-        self.__dependency_injection__.restoure_object()
+        self.__dependency_injection__.restore_object()
         if self.__expectation__:
             print  self._call_waiting_msg()
     

@@ -19,4 +19,4 @@ Usage::
     >>> tempo()
     17186168.84
     
-    >>> times.restoure_import() 
+    >>> times.restore_import() 
