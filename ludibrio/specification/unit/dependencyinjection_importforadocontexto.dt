@@ -17,6 +17,6 @@ Usage::
 
     >>> from ludibrio._importexample import tempo
     >>> tempo()
-    0.31
+    17186168.84
     
-    >>> times.restoure_import()
+    >>> times.restoure_import() 
