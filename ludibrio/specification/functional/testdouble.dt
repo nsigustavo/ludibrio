@@ -1,0 +1,101 @@
+Test Doubles (Dublês de Teste)
+==============================
+
+Usar dublês de testes significa usar objetos falsos, que simulam o comportamento de um objeto real, nos testes. Os motivos de usar tais dublês são:
+
+    * Fazer os testes rodarem mais rápido
+    * Eliminar a necessidade de ter todas os colaboradores [1] implementados
+    * Tornar possível utilizar técnicas como Behavior Driven Development, que fazem uso de um ciclo de desenvolvimento outside-in
+    * Diminuir o acoplamento dos objetos
+    * Facilitar a testabilidade do código
+
+[1]	Colaboradores são os objetos nos quais alguma classe depende para executar algum comportamento. Um exemplo de colaborador é um mapeador objeto relacional, em se tratando de operações que necessitem de banco de dados.
+
+
+Entradas e Saídas Controladas
+=============================
+
+O maior problema em testar grupos de classes é que acaba sendo muito difícil conseguir focar em um problema por vez. Assim, usando ferramentas de test doubles o trabalho de focar em um problema por vez diminui, pois os objetos que interagem com o sistema sob testes tem respostas a chamadas controladas pelo desenvolvedor. O tipo de test double mais usado para auxiliar em testes desta natureza é o Stub.
+
+Outro problema é saber qual é o caminho que os colaboradores estão trilhando. Um exemplo claro disto é uma chamada a um objeto que é uma abstração de um banco de dados e você quer ter certeza do caminho que tal objeto segue, ou seja, quais são as chamadas feitas no objeto que é a abstração do banco de dados. Este é um caso mais peculiar e nem sempre usado de forma correta; o test double usado é sempre o Mock.
+
+Mocks
+-----
+
+Como dito anteriormente, mocks devem ser utilizados quando a ordem das chamadas é importante e/ou quando o que está sendo especificado é a chamada. É necessário ter certeza de quais métodos estão sendo chamados, quantas vezes e com quais parâmetros.
+
+No exemplo seguinte o sistema sob teste é um servidor de e-mail. O objetivo do teste a seguir é verificar se a interação entre o servidor de e-mail com a biblioteca (de baixo nível) está sendo feita corretamente - o número de chamadas, parâmetros e quantidade de chamada dos métodos.
+
+
+::
+
+    >>> class ServidorDeEmail:
+    ...    def __init__(self, enviador_de_email):
+    ...        self._enviador_de_email = enviador_de_email
+    ...    def enviar_email(self, para, de, mensagem):
+    ...        self._enviador_de_email.send_mail(from_=de,
+    ...                                          to=para,
+    ...                                          message=mensagem)
+
+::
+    >>> from ludibrio import Mock
+
+    >>> with Mock() as enviador_de_email:
+    ...     enviador_de_email.send_mail(from_='eu@dominio.com',
+    ...                                      to='voce@dominio.com',
+    ...                                      message='Oi!') >> None
+    >>> servidor = ServidorDeEmail(enviador_de_email)
+    >>> servidor.enviar_email(para='voce@dominio.com',
+    ...                       de='eu@dominio.com',
+    ...                       mensagem='Oi!')
+    >>> enviador_de_email.validate()
+
+A classe ServidorDeEmail recebe no seu método inicializador o objeto que é responsável por enviar e-mails, que no caso seria a biblioteca que sabe enviar e-mails. O nome da técnica usada acima é Injeção de Dependência [2], que pode ser feita da forma anterior, através de métodos set ou por passagem de parâmetros.
+
+A chamada ao método validate assegura que o método send_mail será chamado no objeto enviador_de_email, passando os devidos parâmetros.
+
+Uma das vantagens de se utilizar mocks é que seu código não depende de nenhuma implementação prévia de colaboradores. No caso acima, o nosso sistema sob testes tem como colaboradores apenas a biblioteca responsável por enviar e-mails. Ela não precisa existir para que a implementação da classe ServidorDeEmail seja feita, e nem precisamos configurar nenhum servidor real de e-mail ou nada do gênero.
+
+Além de tais vantagens, usar test doubles no geral deixa o desenvolvedor mais focado, pois ele não se preocupa com nada além da implementação do sistema sob testes, além de aumentar a velocidade com que os testes rodam - pois não há necessidade de colaboradores reias (no caso anterior um servidor de e-mails de verdade).
+
+[2]	http://jamesshore.com/Blog/Dependency-Injection-Demystified.html
+
+
+Stubs
+-----
+
+O dublê de testes Stub se preocupa com as entradas e saídas dos métodos dos colaboradores, não se preocupando se os métodos serão chamados e quantas vezes serão chamados. Quando usa-se stubs o objetivo dos testes é diferente do objetivo quando usa-se mocks. No caso de mocks, o objetivo é assegurar que as chamadas foram exercitadas nos colaboradores, testando assim, as chamadas feitas nos colaboradores.
+
+Stubs apenas retornam valores pré-programados, para determinadas chamadas e mais nada. A seguir está um exemplo de stub::
+
+    >>> import string
+    >>> from datetime import datetime
+
+    >>> def data_atual(formato):
+    ...    agora = datetime.now()
+    ...    template = string.Template(formato)
+    ...    return template.substitute(ano=agora.year,
+    ...                            mes=agora.month,
+    ...                            dia=agora.day)
+
+::
+    >>> from ludibrio import Stub
+
+    >>> with Stub() as datetime:
+    ...    from datetime import datetime
+    ...    now = datetime.now()
+    ...    now.year >> 2010
+    ...    now.month >> 6
+    ...    now.day >> 7
+
+    >>> data_atual('$dia/$mes/$ano')
+    '7/6/2010'
+
+    >>> datetime.restoure_import()
+
+
+No exemplo acima o sistema sob testes é composto pela função data_atual, que retorna a data atual formatada segundo uma template, composta por dia, mês e ano - porém em ordem variável.
+
+O stub acima troca o retorno do método now do objeto datetime, importado do módulo datetime para que retorne 2010 no atributo year, 6 no atributo month e 7 no atributo day.
+
+No fim das contas o objetivo era apenas retornar respostas pré-definidas, sem se importar com a ordem das chamadas e até mesmo se os métodos ou atributos são acessados.
