@@ -1,62 +1,63 @@
-Test Doubles (Dublês de Teste)
-==============================
+Test Doubles
+============
 
-Usar dublês de testes significa usar objetos falsos, que simulam o comportamento de um objeto real, nos testes. Os motivos de usar tais dublês são:
+Test doubles are fake objects that simulate the behavior of a real object for testing purposes. Test doubles are used for:
 
-    * Fazer os testes rodarem mais rápido
-    * Eliminar a necessidade de ter todas os colaboradores [1] implementados
-    * Tornar possível utilizar técnicas como Behavior Driven Development, que fazem uso de um ciclo de desenvolvimento outside-in
-    * Diminuir o acoplamento dos objetos
-    * Facilitar a testabilidade do código
+    * Make tests run faster
+    * Eliminate the need for previously implementing all collaborators
+    * Enable the use techniques like Behaviour-Driven Development, that are based on outside-in development cycles
+    * Minimize coupling between objects
+    * Increase code testability
 
-[1]	Colaboradores são os objetos nos quais alguma classe depende para executar algum comportamento. Um exemplo de colaborador é um mapeador objeto relacional, em se tratando de operações que necessitem de banco de dados.
+[1] Collaborators are objects that the unit under test depends for executing some behavior. For example, a relational-object mapper can be a collaborator of a unit under test that persists itself in relational databases.
 
 
-Entradas e Saídas Controladas
+Controlled inputs and outputs
 =============================
 
-O maior problema em testar grupos de classes é que acaba sendo muito difícil conseguir focar em um problema por vez. Assim, usando ferramentas de test doubles o trabalho de focar em um problema por vez diminui, pois os objetos que interagem com o sistema sob testes tem respostas a chamadas controladas pelo desenvolvedor. O tipo de test double mais usado para auxiliar em testes desta natureza é o Stub.
+When testing a group of classes, it's sometimes very difficult to focus in one problem at once. Test doubles tools help to keep focused on the implementation of the unit under test, beacuse doubles are put at work instead of the real collaborators. The kind of test double used to perform this role is the Stub.
 
-Outro problema é saber qual é o caminho que os colaboradores estão trilhando. Um exemplo claro disto é uma chamada a um objeto que é uma abstração de um banco de dados e você quer ter certeza do caminho que tal objeto segue, ou seja, quais são as chamadas feitas no objeto que é a abstração do banco de dados. Este é um caso mais peculiar e nem sempre usado de forma correta; o test double usado é sempre o Mock.
+Another issue is when the assertions are the calls to the collaborators themselves. For example, when testing an object that make calls to a persistence abstraction layer and you want to ensure that the unit under test makes the expected calls. In these situations, in which the collaboration must be ensured, the suitable kind of test double is the Mock.
+
 
 Mocks
 -----
 
-Como dito anteriormente, mocks devem ser utilizados quando a ordem das chamadas é importante e/ou quando o que está sendo especificado é a chamada. É necessário ter certeza de quais métodos estão sendo chamados, quantas vezes e com quais parâmetros.
+As said above, mocks are used when the order of the calls is relevant and/or when the call (or calls) itself is the expected behavior. In these cases, the test or specification must ensure what methods are being called, how many times and with which parameters.
 
-No exemplo seguinte o sistema sob teste é um servidor de e-mail. O objetivo do teste a seguir é verificar se a interação entre o servidor de e-mail com a biblioteca (de baixo nível) está sendo feita corretamente - o número de chamadas, parâmetros e quantidade de chamada dos métodos.
-
+In the following example, the system under test is a mail server. The test goal is to ensure the correctness of the interaction between the mail server and the underlying mail library.
 
 ::
 
-    >>> class ServidorDeEmail:
-    ...    def __init__(self, enviador_de_email):
-    ...        self._enviador_de_email = enviador_de_email
-    ...    def enviar_email(self, para, de, mensagem):
-    ...        self._enviador_de_email.send_mail(from_=de,
-    ...                                          to=para,
-    ...                                          message=mensagem)
+    >>> class MailServer:
+    ...    def __init__(self, mail_sender):
+    ...        self._mail_sender = mail_sender
+    ...    def send_mail(self, from_, to, message):
+    ...        self._mail_sender.send(from_address=from_,
+    ...                               to_address=to,
+    ...                               message_content=message)
 
 ::
     >>> from ludibrio import Mock
 
-    >>> with Mock() as enviador_de_email:
-    ...     enviador_de_email.send_mail(from_='eu@dominio.com',
-    ...                                      to='voce@dominio.com',
-    ...                                      message='Oi!') >> None
-    >>> servidor = ServidorDeEmail(enviador_de_email)
-    >>> servidor.enviar_email(para='voce@dominio.com',
-    ...                       de='eu@dominio.com',
-    ...                       mensagem='Oi!')
-    >>> enviador_de_email.validate()
+    >>> with Mock() as mail_sender:
+    ...     mail_sender.send(from_address='me@domain.com',
+    ...                      to_address='you@domain.com',
+    ...                      message_content='Hi!') >> None
+    >>> server = MailServer(mail_sender)
+    >>> server.send_mail(from_='me@domain.com',
+    ...                   to='you@domain.com',
+    ...                   message='Hi!')
+    >>> mail_sender.validate()
 
-A classe ServidorDeEmail recebe no seu método inicializador o objeto que é responsável por enviar e-mails, que no caso seria a biblioteca que sabe enviar e-mails. O nome da técnica usada acima é Injeção de Dependência [2], que pode ser feita da forma anterior, através de métodos set ou por passagem de parâmetros.
 
-A chamada ao método validate assegura que o método send_mail será chamado no objeto enviador_de_email, passando os devidos parâmetros.
+MailServer class' __init__ method receives the object responsible to send mails, i.e., the library that as the ability to send mails. This technique is called dependency injection [2], which can be constructor injection (as we did), setter injection or by parameter passing.
 
-Uma das vantagens de se utilizar mocks é que seu código não depende de nenhuma implementação prévia de colaboradores. No caso acima, o nosso sistema sob testes tem como colaboradores apenas a biblioteca responsável por enviar e-mails. Ela não precisa existir para que a implementação da classe ServidorDeEmail seja feita, e nem precisamos configurar nenhum servidor real de e-mail ou nada do gênero.
+The validate method ensure that send_mail method was called within mail_sender object, and received the correct parameters.
 
-Além de tais vantagens, usar test doubles no geral deixa o desenvolvedor mais focado, pois ele não se preocupa com nada além da implementação do sistema sob testes, além de aumentar a velocidade com que os testes rodam - pois não há necessidade de colaboradores reias (no caso anterior um servidor de e-mails de verdade).
+Using mocks, the code under test doesn't depend on any previous implementation of collaborators. They don't need even exist. In fact, in the example above, at the moment that MailServer class is specified, there's no any class for the mail_sender object. There's no real mail server to be configured, nothing to shift the focus from the current task.
+
+Test doubles also minimize the time of running tests, since there's none of the overhead associated to real collaborators as network connections or file access.
 
 [2]	http://jamesshore.com/Blog/Dependency-Injection-Demystified.html
 
@@ -64,19 +65,19 @@ Além de tais vantagens, usar test doubles no geral deixa o desenvolvedor mais f
 Stubs
 -----
 
-O dublê de testes Stub se preocupa com as entradas e saídas dos métodos dos colaboradores, não se preocupando se os métodos serão chamados e quantas vezes serão chamados. Quando usa-se stubs o objetivo dos testes é diferente do objetivo quando usa-se mocks. No caso de mocks, o objetivo é assegurar que as chamadas foram exercitadas nos colaboradores, testando assim, as chamadas feitas nos colaboradores.
+Stubs are test doubles programmed to provide inputs to and outputs from collaborators, but that don't care if the collaborator's methods are called or in which order the calls happen. The goal of using stubs is quite different to using mocks: with mocks, the programmed calls are themselves the assertions/expectations; with stubs, the programmed calls provide inputs and outputs from collaborators to unit under test.
 
-Stubs apenas retornam valores pré-programados, para determinadas chamadas e mais nada. A seguir está um exemplo de stub::
+Stubs only return programmed answers for given calls, and nothing more. An example follows:
 
     >>> import string
     >>> from datetime import datetime
 
-    >>> def data_atual(formato):
-    ...    agora = datetime.now()
-    ...    template = string.Template(formato)
-    ...    return template.substitute(ano=agora.year,
-    ...                            mes=agora.month,
-    ...                            dia=agora.day)
+    >>> def current_date(format):
+    ...    now = datetime.now()
+    ...    template = string.Template(format)
+    ...    return template.substitute(year=now.year,
+    ...                               month=now.month,
+    ...                               day=now.day)
 
 ::
     >>> from ludibrio import Stub
@@ -88,14 +89,15 @@ Stubs apenas retornam valores pré-programados, para determinadas chamadas e mai
     ...    now.month >> 6
     ...    now.day >> 7
 
-    >>> data_atual('$dia/$mes/$ano')
+    >>> current_date('$day/$month/$year')
     '7/6/2010'
 
     >>> datetime.restore_import()
 
 
-No exemplo acima o sistema sob testes é composto pela função data_atual, que retorna a data atual formatada segundo uma template, composta por dia, mês e ano - porém em ordem variável.
+In the example above, the system under test is the current_date function, that returns the current date, composed by day, month and year, in a configurable format.
 
-O stub acima troca o retorno do método now do objeto datetime, importado do módulo datetime para que retorne 2010 no atributo year, 6 no atributo month e 7 no atributo day.
+The stub replaces the return of datetime object's now method, imported from datetime module, making it return 2010, 6 and 7 in, respectively, its year, month and day attributes.
 
-No fim das contas o objetivo era apenas retornar respostas pré-definidas, sem se importar com a ordem das chamadas e até mesmo se os métodos ou atributos são acessados.
+Thus, the goal is merely to return the programmed answers, with no care about the order of calls or even if methods or attributes are accessed.
+
