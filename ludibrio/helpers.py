@@ -5,7 +5,7 @@ from sys import _getframe
 import os
 
 
-def frameOutOfContext():
+def frame_out_of_context():
     this_frame = frame = _getframe(1)
     while folder() in frame.f_code.co_filename:
         frame = frame.f_back
@@ -20,5 +20,4 @@ def format_called(attr, args, kargs):
                      [repr(arg) for arg in args]
                     +['%s=%r'%(k, v) for k, v in kargs.items()])
     return "%s(%s)"%( attr, parameters)
-
 

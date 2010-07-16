@@ -1,4 +1,4 @@
-from helpers import frameOutOfContext
+from helpers import frame_out_of_context
 from inspect import getframeinfo, getmodule
 from sys import _getframe
 from types import ModuleType
@@ -31,14 +31,14 @@ class DependencyInjection(object):
         if not fromlist:raise ImportError('Use: from ... import ...')
         module = _oldimport(name, globals, locals, fromlist, level)
         self.original = module.__dict__[fromlist[0]]
-        self.frame = frameOutOfContext()
+        self.frame = frame_out_of_context()
         self.inject()
         return module
 
     def inject(self):
         if hasattr(self,'original'):
             self._original_to_double()
-    
+
     def restore_object(self):
         self._double_to_original()
 
@@ -59,8 +59,9 @@ class DependencyInjection(object):
          for k, v in context_dict.items():
                 if v is self._old:
                     context_dict[k] = self._new
-    
+
     def _all_modules(self):
         for obj in gc.get_objects():
             if isinstance(obj, ModuleType):
                 yield obj
+
