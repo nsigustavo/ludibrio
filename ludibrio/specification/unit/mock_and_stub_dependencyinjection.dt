@@ -11,7 +11,7 @@ Ludibrio also offers a replace mode, which basically means if a "from ... import
     ...     time() >> 2
 
 
-    >>> from time import time #mocado
+    >>> from time import time #mocked
     >>> time()
     2
 
@@ -24,3 +24,4 @@ Ludibrio also offers a replace mode, which basically means if a "from ... import
     'haaaaa'
 
     >>> tempo.restore_import()
+

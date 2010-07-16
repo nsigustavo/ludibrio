@@ -1,7 +1,8 @@
 Stubs
 =====
 
-Stubs são objetos que se comportam segundo uma dada programação, assim como os mocks. Porém, diferentemente destes, a execução ou não dos métodos programados não é condição para que as especificações passem. Normalmente, stubs são usados quando a execução dos métodos programados não é o que o exemplo corrente deseja especificar.
+Stubs are test doubles programmed to provide inputs to and outputs from collaborators, but that don't care if the collaborator's methods are called or in which order the calls happen. The goal of using stubs is quite different to using mocks: with mocks, the programmed calls are themselves the assertions/expectations; with stubs, the programmed calls provide inputs and outputs from collaborators to unit under test.
+
 
 >>> from ludibrio.stub import Stub
 
@@ -9,7 +10,7 @@ Stubs são objetos que se comportam segundo uma dada programação, assim como o
 1. Stubs provide canned answers to calls made during the test.
     >>> with Stub() as x:
     ...     x.anything() >> 'responce'
-    
+
     >>> x.anything()
     'responce'
 
@@ -25,7 +26,8 @@ Stubs são objetos que se comportam segundo uma dada programação, assim como o
    'responce'
 
 
-2. Deveria configurar as resposta na sequência em que são chamadas os métodos. Entretanto, ao executar o exemplo, este voltará ao seu estado inicial.
+2. Should return the values in the same sequence as the methods are called on the stub configuration. Subsequent calls will restart the cycle.
+
     >>> with Stub() as count:
     ...     count() >> 1
     ...     count() >> 2
@@ -43,14 +45,14 @@ Stubs são objetos que se comportam segundo uma dada programação, assim como o
     >>> count()
     3
 
-3. Deveria poder configurar sua representação:
+3. Should support its string representation be changed by configuration.
     >>> with Stub(repr='Greetings') as greetings:
     ...     pass
     >>> greetings
     Greetings
 
 
-4. Deveria poder configurar mais métodos e propriedades:
+4. Should support both method and property configuration:
     >>> with greetings as greetings:
     ...     greetings.excuse_me() >> 'Com licença'
     ...     greetings.hello('Gustavo') >> 'Ola, Gustavo'
@@ -76,5 +78,4 @@ Stubs são objetos que se comportam segundo uma dada programação, assim como o
     Ola, Gustavo e Diego
     >>> print greetings.hello('Gustavo')
     Ola, Gustavo
-
 

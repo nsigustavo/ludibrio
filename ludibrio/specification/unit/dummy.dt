@@ -2,32 +2,30 @@
 Dummy
 =====
 
-Com o intuito de documentar a intenção do objeto dublê que não é influenciado diretamente no teste, diferente de outros frameworks, o Ludíbrio disponibiliza o recurso de objetos Dummy. Neste objeto pode ser chamado qualquer método com qualquer parâmetro e/ou realizar qualquer operação, sendo que este retorna sempre um outro objeto Dummy. Este dublê responde a qualquer interface desejada, não sendo necessário configurações, podendo assim ser facilmente incorporado em objetos reais do contexto onde seu comportamento não é relevante.
+Ludibrio provides dummy objects, in order to document the intention of programmer of using a double object that is not influenced on test. Any method call with any parameter of any attribute access on a dummy object results on another dummy. Dummies respond to all kind of collaboration, being useful in cases in which its behavior is irrelevant.
 
     >>> from ludibrio.dummy import Dummy
 
-1. Deveria poder configurar sua representação:
+1. Should accept configuration of its representation:
     >>> Dummy()
     Dummy Object
     >>> Dummy(repr="Objeto Idiota")
     Objeto Idiota
 
-
-
-2. Deveria sempre retornar um Dummy seja qual for o método chamado:
+2. Should always return a Dummy, for any method call:
     >>> dummy = Dummy()
     >>> dummy.executAnythingAndReturnDummyObject()
     Dummy Object
     >>> dummy.foo()
     Dummy Object
 
-3. Deveria sempre retornar um Dummy seja qual for a propriedade chamada:
+3. Should always return a Dummy, for any property call:
     >>> dummy.bar
     Dummy Object
     >>> dummy.one.two.three
     Dummy Object
 
-4. Deveria realizar qualquer operação matemática ou lógica:
+4. Should accept any mathematical or logical operation:
     >>> 1 + Dummy()
     Dummy Object
     >>> Dummy() -1
@@ -40,66 +38,68 @@ Com o intuito de documentar a intenção do objeto dublê que não é influencia
     Dummy Object
 
 
-5. Deveria retornar um Dummy seja qual for o parâmetro passado:
+5. Should return a Dummy for any parameter passed to constructor:
     >>> Dummy(1,2.3,"4",a=5.6, b=7, c="8")[...]
     Dummy Object
 
-6. Deveria simular uma string:
+6. Should fake a string:
     >>> Dummy() %(1, "Gustavo Rezende", 2.8)
     Dummy Object
 
-7. Deveria executar em qualquer contexto:
+7. Should work in any context:
     >>> def execute_but_not_validated(x):
     ...     x.write("teste")
     ...     x.close()
     >>> execute_but_not_validated(Dummy())
 
-8. Dummys tende a 1, verdadeiro ou a uma iteração devido a obrigatoriedade do python a transformações de tipo:
-    8. 1. Deveria retornar uma lita contendo um Dummy com list():
+8. Dummies result on 1, True or an iterator due to Python's type transforms.
+    8. 1. Should return a list containing a dummy object with list():
         >>> list(Dummy())
         [Dummy Object]
 
-    8. 2. Deveria executar um iteração ao iterar sobre um Dummy:
+    8. 2. Should execute one iteration when asked to iterate:
         >>> for i in Dummy():print i
         Dummy Object
 
-    8. 3. Deveria retornar um Dummy para qualquer tipo de chamada python:
+    8. 3. Any kind of Python call should return a dummy object:
         >>> Dummy()[4]
         Dummy Object
         >>> Dummy()[2:9]
         Dummy Object
 
-    8. 4. Deveria retornar 'Verdadeiro' em uma operação "in".
+    8. 4. Should return True when "in" is applied:
         >>> 8 in Dummy()
         True
 
-    8. 5. Deveria retornar um dicionario contendo um elemento Dummy como chave e valor ao transformar para dict:
-
+    8. 5. Should return a dictionary having dummy objects as both key and value when dict() is applied:
         >>> dict(Dummy())
         {Dummy Object: Dummy Object}
 
-    8. 6. Retorna sua representação como string:
+    8. 6. Should return its string representation:
         >>> str(Dummy())
         'Dummy Object'
-        >>> str(Dummy(str='objeto idiota'))
-        'objeto idiota'
+        >>> str(Dummy(str='dumb object'))
+        'dumb object'
 
-    8. 7. Deveria retorn 1, 1.0 ou True
+    8. 7. Should return 1 for int()
         >>> int(Dummy())
         1
+
+    8. 8. Should return 1.0 for float()
         >>> float(Dummy())
         1.0
+
+    8. 9. Should return True for bool()
         >>> bool(Dummy())
         True
 
-9. Deveria simular um tipo quando necessário:
+9. Should simulate a type when requested:
     >>> isinstance(Dummy(), str)
     False
 
     >>> isinstance(Dummy(type=str), str)
     True
 
-10. Deveria poder apagar algum elemento do dummy:
+10. Should accept deletion of an element:
     >>> del Dummy().anything
-
 
