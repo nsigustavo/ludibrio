@@ -93,4 +93,3 @@ def equal_to_ignoring_case(x, y):
         return True
     raise ParameterException("%r is not equal to %r ignoring case"%(x, y))
 
-
