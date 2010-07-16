@@ -104,14 +104,14 @@ Ludibrio provides dummy objects, in order to document the intention of programme
     >>> del Dummy().anything
 
 
-11. Métodos especias como __enter__ e __exit__ para declaraçãqo 'with' retornam Dummy:
+11. Métodos especias como __enter__ e __exit__ para declaração 'with' retornam Dummy assim como >>:
     >>> with Dummy() as d:
     ...     d.foo() >> 'bar'
     Dummy Object
     >>> d.foo()
     Dummy Object
 
-Para configurar algum retorno em um objeto que possa retornar qualquer coisa para qualquer método utilize o proxy do Stub:
+Para configurar um retorno de um método para um objeto que responda a qualquer interface, utilize o proxy do Stub para um dummy:
     >>> from ludibrio import Stub, Dummy
     >>> with Stub(proxy=Dummy()) as d:
     ...     d.foo() >> 'bar'
@@ -120,3 +120,6 @@ Para configurar algum retorno em um objeto que possa retornar qualquer coisa par
     'bar'
     >>> d.bar()
     Dummy Object
+
+
+
