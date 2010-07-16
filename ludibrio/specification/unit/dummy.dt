@@ -103,3 +103,24 @@ Com o intuito de documentar a intenção do objeto dublê que não é influencia
     >>> del Dummy().anything
 
 
+11. Métodos especias como __enter__ e __exit__ para declaraçãqo 'with' retornam Dummy:
+    >>> with Dummy() as d:
+    ...     d.foo() >> 'bar'
+    Dummy Object
+    >>> d.foo()
+    Dummy Object
+
+Para configurar algum retorno em um objeto que possa retornar qualquer coisa para qualquer método utilize o proxy do Stub:
+    >>> from ludibrio import Stub, Dummy
+    >>> with Stub(proxy=Dummy()) as d:
+    ...     d.foo() >> 'bar'
+    
+    >>> d.foo()
+    'bar'
+    >>> d.bar()
+    Dummy Object
+
+
+
+
+

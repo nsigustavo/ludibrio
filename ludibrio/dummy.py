@@ -31,5 +31,13 @@ class Dummy(_TestDouble):
             return object.__getattribute__(self, x)
         else:
             return self
+            
+    def __getattribute__(self, x):
+        if x == '__class__':
+            return self.__kargs__.get('type', type(self))
+        elif x in dir(Dummy):
+            return object.__getattribute__(self, x)
+        else:
+            return self
 
-
+    

@@ -23,6 +23,12 @@ class _TestDouble(object):
         return object.__getattribute__(self, x)
 
 
+    def __enter__(self, *args, **kargs):
+        return self.__methodCalled__(*args, **kargs)
+
+    def __exit__(self, *args, **kargs):
+        return self.__methodCalled__(*args, **kargs)
+
     def __item__(self, *args, **kargs):
         return self.__methodCalled__(*args, **kargs)
 
