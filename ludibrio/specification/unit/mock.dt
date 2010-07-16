@@ -1,6 +1,6 @@
 Mock
 ====
-Mocks são objetos pré-programados com as expectativas que formam uma especificação das chamadas que se espera receber. Quando o objeto sob teste é executado, todas as expectativas definidas para os mocks têm obrigatoriamente que ser cumpridas ou a especificação falhará.
+Mocks are objects with programmed calls that are themselves the expectation. When the object under test is executed, all expectations defined on the mocks have necessarily to be accomplished or the specification will fail.
 
     >>> from ludibrio.mock import Mock
 
@@ -41,14 +41,14 @@ Mocks são objetos pré-programados com as expectativas que formam uma especific
 
 
     >>> with Mock() as listing:
-    ...     listing[1] >> 'um'
-    ...     listing[1:4] >> ['dois', 'tres', 'quatro']
-    ...     listing['quatro'] >> 4
+    ...     listing[1] >> 'one'
+    ...     listing[1:4] >> ['two', 'three', 'four']
+    ...     listing['four'] >> 4
     >>> print listing[1]
-    um
+    one
     >>> print listing[1:4]
-    ['dois', 'tres', 'quatro']
-    >>> print listing['quatro']
+    ['two', 'three', 'four']
+    >>> print listing['four']
     4
 
     >>> with Mock() as callable:
@@ -73,24 +73,24 @@ Mocks são objetos pré-programados com as expectativas que formam uma especific
     Mock Object
 
     >>> with Mock() as MySQLdb:
-    ...     con = MySQLdb.connect('servidor', ' usuario', 'senha')
-    ...     con.select_db('banco de dados') >> None
+    ...     con = MySQLdb.connect('server', 'user', 'password')
+    ...     con.select_db('database') >> None
     ...     cursor = con.cursor()
-    ...     cursor.execute('ALGUM SQL') >> None
+    ...     cursor.execute('SOME SQL') >> None
     ...     cursor.fetchall() >> [1,2,3,4,5]
-    >>> con = MySQLdb.connect('servidor', ' usuario', 'senha')
-    >>> con.select_db('banco de dados')
+    >>> con = MySQLdb.connect('server', 'user', 'password')
+    >>> con.select_db('database')
     >>> cursor = con.cursor()
-    >>> cursor.execute('ALGUM SQL')
+    >>> cursor.execute('SOME SQL')
     >>> cursor.fetchall()
     [1, 2, 3, 4, 5]
 
     >>> with Mock() as testeError:
-    ...     testeError.foo('bar') >> ArithmeticError('teste error')
+    ...     testeError.foo('bar') >> ArithmeticError('test error')
     >>> testeError.foo('bar')
     Traceback (most recent call last):
     ...
-    ArithmeticError: teste error
+    ArithmeticError: test error
 
 
 
@@ -106,13 +106,14 @@ Mocks são objetos pré-programados com as expectativas que formam uma especific
     3
 
 
-    >>> def transferir(conta_origem, conta_destino, valor):
-    ...    conta_origem.debitar(valor)
-    ...    conta_destino.creditar(valor)
+    >>> def credit_transfer(from_account, to_account, value):
+    ...    from_account.debit(value)
+    ...    to_account.credit(value)
 
-    >>> with Mock() as conta_origem:
-    ...     conta_origem.debitar(100) >> None
-    >>> with Mock() as conta_destino:
-    ...     conta_destino.creditar(100) >> None
+    >>> with Mock() as from_account:
+    ...     from_account.debit(100) >> None
+    >>> with Mock() as to_account:
+    ...     to_account.credit(100) >> None
 
-    >>> transferir(conta_origem, conta_destino, 100)
+    >>> credit_transfer(from_account, to_account, 100)
+

@@ -1,7 +1,7 @@
 
 >>> from ludibrio import Stub
 
-Deveria gerar um erro ao executar algo não configurado::
+Should raise an error when making non-configured calls::
     >>> with Stub() as greetings:
     ...     greetings.called() >> 'returned'
     >>> print greetings.called()
@@ -17,7 +17,7 @@ Deveria gerar um erro ao executar algo não configurado::
         print greetings.executeAnythingAndReturnError()
 
 
-Deveria gerar erro ao chamar algo com os parametros errados::
+Should raise an error if programmed calls are executed with incorrect parameters::
     >>> with Stub() as greetings:
     ...     greetings.hi(name='Gustavo') >> 'Hi, Gustavo'
     >>> print greetings.hi('fulano')
