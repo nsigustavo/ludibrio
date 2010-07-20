@@ -1,21 +1,36 @@
+Welcome to ludibrio
+===================
+
 .. image:: http://ludibriar.appspot.com/logo.png
 
-Author
-------
+|
+:Author: * Gustavo Rezende <nsigustavo@gmail.com>
 
-    * Gustavo Rezende <nsigustavo@gmail.com>
+:Contributors: * Diego Pinheiro <me@dmpinheiro.net>
+               * Hugo Lopes <hltbra@gmail.com>
+               * Rodrigo Manhães <rmanhaes@gmail.com>
 
-Contributors
-------------
+Install
+-------
+Ludibrio is registered with PyPi. If you have pip, setuptools or Distribute you can install mock with::
 
-    * Diego Pinheiro <me@dmpinheiro.net>
-    * Hugo Lopes <hltbra@gmail.com>
-    * Rodrigo Manhães <rmanhaes@gmail.com>
-
+    $ sudo easy_install ludibrio
 
 
-Development
------------
+Download
+--------
+
+Download ludibrio at ludibrio 3::
+
+    http://github.com/nsigustavo/ludibrio/archives/ludibrio3.0
+
+
+.. include::
+    ../documentation.rst
+
+
+Getting involved !
+------------------
 
 Ludibrio's development may be viewed and followed on github::
 
@@ -35,34 +50,28 @@ Install package in 'development mode' and run tests with doctestcommand::
     $ doctest
 
 
+
+
+
+
 In a nutshell
 =============
 
-
-Install
--------
-
-Install package with easy_install or pip::
-
-    $ sudo easy_install ludibrio
+Test doubles are fake objects that simulate the behavior of a real object for testing purposes. Test doubles are used for:
 
 
 Mock
 ----
 
-Mocks are objects pre-programmed with expectations which form a specification of the calls they are expected to receive.
-
-A Mocker or Stub instance uses the 'with' statement to record and replay expectations::
+Mocks are objects pre-programmed with expectations which form a specification of the calls they are expected to receive::
 
     >>> from ludibrio import Mock
-
     >>> with Mock() as MySQLdb:
     ...     con = MySQLdb.connect('servidor', ' usuario', 'senha')
     ...     con.select_db('banco de dados') >> None
     ...     cursor = con.cursor()
     ...     cursor.execute('ALGUM SQL') >> None
     ...     cursor.fetchall() >> [1,2,3,4,5]
-
     >>> con = MySQLdb.connect('servidor', ' usuario', 'senha')
     >>> con.select_db('banco de dados')
     >>> cursor = con.cursor()
@@ -79,10 +88,8 @@ Stub
 Stubs provide pre-defined answers to method calls made during a test::
 
     >>> from ludibrio import Stub
-
     >>> with Stub() as x:
     ...     x.anything() >> 'response'
-
     >>> x.anything()
     'response'
 
