@@ -1,7 +1,12 @@
+Sample of generation of error for Stub.
+========================================
 
->>> from ludibrio import Stub
+::
+
+    >>> from ludibrio import Stub
 
 Should raise an error when making non-configured calls::
+
     >>> with Stub() as greetings:
     ...     greetings.called() >> 'returned'
     >>> print greetings.called()
@@ -18,6 +23,7 @@ Should raise an error when making non-configured calls::
 
 
 Should raise an error if programmed calls are executed with incorrect parameters::
+
     >>> with Stub() as greetings:
     ...     greetings.hi(name='Gustavo') >> 'Hi, Gustavo'
     >>> print greetings.hi('fulano')

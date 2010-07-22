@@ -1,15 +1,21 @@
->>> from ludibrio.matcher import *
 
->>> 0.9 == less_than(1)
-True
->>> 2 == less_than(2)
-Traceback (most recent call last):
-    ...
-ParameterException: 2 is not less than 2
->>> 2 == less_than(1)
-Traceback (most recent call last):
-    ...
-ParameterException: 2 is not less than 1
->>> name = 'a'
->>> name == less_than('b')
-True
+less_than
+~~~~~~~~~
+
+Simply checks the given comparisons (<)::
+
+    >>> from ludibrio.matcher import less_than
+
+    >>> 0.9 == less_than(1)
+    True
+    >>> 2 == less_than(2)
+    Traceback (most recent call last):
+        ...
+    ParameterException: 2 is not less than 2
+    >>> 2 == less_than(1)
+    Traceback (most recent call last):
+        ...
+    ParameterException: 2 is not less than 1
+    >>> name = 'a'
+    >>> name == less_than('b')
+    True

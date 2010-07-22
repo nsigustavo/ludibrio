@@ -1,5 +1,9 @@
+Sample of generation of error for Mock.
+=======================================
 
-    >>> from ludibrio import *
+::
+
+    >>> from ludibrio import Mock
 
     >>> with Mock() as teste:
     ...     teste.called() << 1
@@ -16,6 +20,7 @@
     Got only:
     gotnumber = teste.called()
 
+::
 
     >>> with Mock() as greetings:
     ...     greetings.excuse_me() >> 'Com licença'
@@ -36,6 +41,7 @@
       File "<doctest mock_msg_error.dt[6]>", line 1, in <module>
         print greetings.hello('Gustavo Rezende')
 
+::
 
     >>> with Mock() as greetings:
     ...     greetings.excuse_me(name='gustavo') >> 'Com licença'

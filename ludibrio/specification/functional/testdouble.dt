@@ -1,5 +1,5 @@
-Test Doubles
-============
+Test Doubles - Overview for beginners by Hugo Lopes.
+====================================================
 
 Test doubles are fake objects that simulate the behavior of a real object for testing purposes. Test doubles are used for:
 
@@ -13,7 +13,7 @@ Test doubles are fake objects that simulate the behavior of a real object for te
 
 
 Controlled inputs and outputs
-=============================
+-----------------------------
 
 When testing a group of classes, it's sometimes very difficult to focus in one problem at once. Test doubles tools help to keep focused on the implementation of the unit under test, beacuse doubles are put at work instead of the real collaborators. The kind of test double used to perform this role is the Stub.
 
@@ -21,7 +21,7 @@ Another issue is when the assertions are the calls to the collaborators themselv
 
 
 Mocks
------
+~~~~~
 
 As said above, mocks are used when the order of the calls is relevant and/or when the call (or calls) itself is the expected behavior. In these cases, the test or specification must ensure what methods are being called, how many times and with which parameters.
 
@@ -38,6 +38,7 @@ In the following example, the system under test is a mail server. The test goal 
     ...                               message_content=message)
 
 ::
+
     >>> from ludibrio import Mock
 
     >>> with Mock() as mail_sender:
@@ -63,11 +64,11 @@ Test doubles also minimize the time of running tests, since there's none of the 
 
 
 Stubs
------
+~~~~~
 
 Stubs are test doubles programmed to provide inputs to and outputs from collaborators, but that don't care if the collaborator's methods are called or in which order the calls happen. The goal of using stubs is quite different to using mocks: with mocks, the programmed calls are themselves the assertions/expectations; with stubs, the programmed calls provide inputs and outputs from collaborators to unit under test.
 
-Stubs only return programmed answers for given calls, and nothing more. An example follows:
+Stubs only return programmed answers for given calls, and nothing more. An example follows::
 
     >>> import string
     >>> from datetime import datetime
@@ -80,6 +81,7 @@ Stubs only return programmed answers for given calls, and nothing more. An examp
     ...                               day=now.day)
 
 ::
+
     >>> from ludibrio import Stub
 
     >>> with Stub() as datetime:

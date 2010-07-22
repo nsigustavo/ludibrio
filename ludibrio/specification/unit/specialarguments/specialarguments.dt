@@ -1,24 +1,53 @@
+Parameter matching
+==================
 
->>> from ludibrio import *
+Ludibrio offers a very flexible way to match parameters in method calls. In simple cases, parameters are matched using basic equality. For instance::
 
->>> with Stub() as splitext:
-...     from os.path import splitext
-...     splitext(any()) >> ['test', '.temp']
+    >>> from ludibrio import *
 
->>> splitext("file.txt")
-['test', '.temp']
+::
 
->>> splitext("document.odt")
-['test', '.temp']
+    >>> with Mock() as greeting:
+    ...     greeting.hello('Gustavo', 'morning') >> 'Good morning, Gustavo'
 
->>> splitext.restore_import()
+    >>> greeting.hello('Gustavo')
+    'Good morning, Gustavo'
 
->>> with Stub() as test:
-...     test.method(any(), kind_of(int)) >> None and amount == 3
 
->>> test.method(1,2)
->>> test.method('',2.0)
-Traceback (most recent call last):
-  ...
-ParameterException: 2.0 is not a kind of <type 'int'>
+In more interesting cases, a few special parameters may be used to define the expectation.
+
+As an example, the following code will record an expression which will match any method calls that take str as the second argument::
+
+    >>> from ludibrio.matcher import *
+
+    >>> with Mock() as greeting:
+    ...     greeting.hello(name=instance_of(str), any()) >> 'Hello, guy'
+
+    >>> greeting.hello(name='bean', 'morning')
+    'Hello, guy'
+
+
+In Stub::
+
+
+    >>> with Stub() as splitext:
+    ...     from os.path import splitext
+    ...     splitext(any()) >> ['test', '.temp']
+
+    >>> splitext("file.txt")
+    ['test', '.temp']
+
+    >>> splitext("document.odt")
+    ['test', '.temp']
+
+    >>> splitext.restore_import()
+
+    >>> with Stub() as test:
+    ...     test.method(any(), kind_of(int)) >> None and amount == 3
+
+    >>> test.method(1,2)
+    >>> test.method('',2.0)
+    Traceback (most recent call last):
+      ...
+    ParameterException: 2.0 is not a kind of <type 'int'>
 

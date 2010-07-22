@@ -1,8 +1,14 @@
->>> from ludibrio.matcher import *
 
->>> 'Hello World' == like(r'Hello W.+')
-True
->>> '123 is a number' == like(r'^[12]+ is a number')
-Traceback (most recent call last):
-    ...
-ParameterException: '123 is a number' is not like '^[12]+ is a number'
+like
+~~~~
+
+Checks matching against a regular expression::
+
+    >>> from ludibrio.matcher import like
+
+    >>> 'Hello World' == like(r'Hello W.+')
+    True
+    >>> '123 is a number' == like(r'^[12]+ is a number')
+    Traceback (most recent call last):
+        ...
+    ParameterException: '123 is a number' is not like '^[12]+ is a number'

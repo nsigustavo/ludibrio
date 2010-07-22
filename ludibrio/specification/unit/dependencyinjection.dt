@@ -6,25 +6,30 @@ DependencyInjection is a class used to inject dependencies using from... import.
     >>> from ludibrio.dependencyinjection import DependencyInjection
 
 1. Should replace directly imported objects on the context.
-    object to be replaced
-    >>> from os.path import splitext
-    >>> splitext('test.py')
-    ('test', '.py')
+    object to be replaced::
 
-    Double
-    >>> def mySplitext(path):
-    ...     return ('double','.py')
+        >>> from os.path import splitext
+        >>> splitext('test.py')
+        ('test', '.py')
 
-    Configuration of the object to be replaced
-    >>> with DependencyInjection(mySplitext) as importing:
-    ...     from os.path import splitext # gets the original for double injection
+    Double::
 
-    mocked call
-    >>> splitext('teste.py') # double
-    ('double', '.py')
+        >>> def mySplitext(path):
+        ...     return ('double','.py')
+
+    Configuration of the object to be replaced::
+
+        >>> with DependencyInjection(mySplitext) as importing:
+        ...     from os.path import splitext # gets the original for double injection
+
+    mocked call::
+
+        >>> splitext('teste.py') # double
+        ('double', '.py')
 
 
-2. Should restore original objects
+2. Should restore original objects::
+
     >>> importing.restore_object()
     >>> splitext('teste.py')
     ('teste', '.py')

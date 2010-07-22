@@ -1,12 +1,17 @@
+into
+~~~~
 
->>> from ludibrio.matcher import *
+Verifies if an object is contained (into) another. The contain and include matchers do exactly the same job::
 
->>> into([1,2,3]) == 1
-True
->>> into([1,2,3]) == 5
-Traceback (most recent call last):
-  ...
-ParameterException: 5 is not in [1, 2, 3]
 
->>> into([1,2,3]) == 3
-True
+    >>> from ludibrio.matcher import into
+
+    >>> into([1,2,3]) == 1
+    True
+    >>> into([1,2,3]) == 5
+    Traceback (most recent call last):
+      ...
+    ParameterException: 5 is not in [1, 2, 3]
+
+    >>> into([1,2,3]) == 3
+    True

@@ -1,6 +1,11 @@
+Sample Mock unordered
+=====================
 
+::
 
     >>> from ludibrio import Mock
+
+::
 
     >>> with Mock(ordered=False) as greetings:
     ...     greetings.excuse_me() >> 'Com licença'

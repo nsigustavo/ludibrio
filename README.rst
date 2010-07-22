@@ -3,7 +3,6 @@ Welcome to ludibrio
 
 .. image:: http://ludibriar.appspot.com/logo.png
 
-|
 :Author: * Gustavo Rezende <nsigustavo@gmail.com>
 
 :Contributors: * Diego Pinheiro <me@dmpinheiro.net>
@@ -12,7 +11,10 @@ Welcome to ludibrio
 
 Install
 -------
-Ludibrio is registered with PyPi. If you have pip, setuptools or Distribute you can install mock with::
+
+Ludibrio is registered with PyPi. If you have pip, setuptools or Distribute you can install mock with:
+
+.. code-block:: console
 
     $ sudo easy_install ludibrio
 
@@ -25,8 +27,12 @@ Download ludibrio at ludibrio 3::
     http://github.com/nsigustavo/ludibrio/archives/ludibrio3.0
 
 
+.. Documentation
+   -------------
+   See the doc/ directory  or www.ludibrio.info for the current documentation.
+
 .. include::
-    ../documentation.rst
+    ../documentation.dt
 
 
 Getting involved !
@@ -36,11 +42,15 @@ Ludibrio's development may be viewed and followed on github::
 
     http://github.com/nsigustavo/ludibrio
 
-Retrieve the source code using 'git'::
+Retrieve the source code using 'git':
 
-    git clone git://github.com/nsigustavo/ludibrio.git
+.. code-block:: console
 
-Install package in 'development mode' and run tests with doctestcommand::
+    $ git clone git://github.com/nsigustavo/ludibrio.git
+
+Install package in 'development mode' and run tests with doctestcommand
+
+.. code-block:: console
 
     $ sudo easy_install doctestcommand
     $ git clone git://github.com/nsigustavo/ludibrio.git
@@ -57,7 +67,7 @@ Install package in 'development mode' and run tests with doctestcommand::
 In a nutshell
 =============
 
-Test doubles are fake objects that simulate the behavior of a real object for testing purposes. Test doubles are used for:
+Test doubles are fake objects that simulate the behavior of a real object for testing purposes.
 
 
 Mock
@@ -67,18 +77,21 @@ Mocks are objects pre-programmed with expectations which form a specification of
 
     >>> from ludibrio import Mock
     >>> with Mock() as MySQLdb:
-    ...     con = MySQLdb.connect('servidor', ' usuario', 'senha')
-    ...     con.select_db('banco de dados') >> None
+    ...     con = MySQLdb.connect('server', 'user', 'XXXX')
+    ...     con.select_db('DB') >> None
     ...     cursor = con.cursor()
-    ...     cursor.execute('ALGUM SQL') >> None
+    ...     cursor.execute('select * from numbers') >> None
     ...     cursor.fetchall() >> [1,2,3,4,5]
-    >>> con = MySQLdb.connect('servidor', ' usuario', 'senha')
-    >>> con.select_db('banco de dados')
+
+::
+
+    >>> con = MySQLdb.connect('server', 'user', 'XXXX')
+    >>> con.select_db('DB')
     >>> cursor = con.cursor()
-    >>> cursor.execute('ALGUM SQL')
+    >>> cursor.execute('select * from numbers')
     >>> cursor.fetchall()
     [1, 2, 3, 4, 5]
-    
+
     >>> MySQLdb.validate() #passed
 
 
@@ -90,6 +103,9 @@ Stubs provide pre-defined answers to method calls made during a test::
     >>> from ludibrio import Stub
     >>> with Stub() as x:
     ...     x.anything() >> 'response'
+
+::
+
     >>> x.anything()
     'response'
 
@@ -105,8 +121,9 @@ Ludibrio also offers a replace mode, which basically means if a "from ... import
     ...     from time import time
     ...     time() >> 171
 
-    >>> from time import time
+::
 
+    >>> from time import time
     >>> time()
     171
 
@@ -120,13 +137,13 @@ Two Ludibrio's powerful features that aren't found in other mocking systems is t
 When an object is proxied, Ludibrio create a Test Double object holding a reference to the real object, allowing expressions passthrough to it(mocked or not, and by default or on request)::
 
     >>> from os.path import splitext
-
     >>> with Stub(proxy=splitext) as splitext:
     ...     splitext('ludibrio/stubed.py') >> ('/temp/temp','.temp')
 
+::
+
     >>> splitext('mock.py')
     ('mock', '.py')
-
     >>> splitext('ludibrio/stubed.py')
     ('/temp/temp', '.temp')
 
