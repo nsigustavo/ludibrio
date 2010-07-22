@@ -22,9 +22,9 @@ Ludibrio is registered with PyPi. If you have pip, setuptools or Distribute you 
 Download
 --------
 
-Download ludibrio at ludibrio 3::
+The latest official version is 3.0.2. Here’s how to get it:
 
-    http://github.com/nsigustavo/ludibrio/archives/ludibrio3.0
+http://pypi.python.org/pypi/ludibrio/3.0.2
 
 
 .. Documentation
