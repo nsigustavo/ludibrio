@@ -37,29 +37,29 @@ h2 {
 
 
 #documentation h2 {
-    background: url(file:///home/eu/generatesiteludibrio/build/html/_static/img/_documentacao.png) top left no-repeat transparent;
+    background: url(../img/_programando.png) top left no-repeat transparent;
 }
 #getting-involved h2 {
-    background: url(file:///home/eu/generatesiteludibrio/build/html/_static/img/_programando.png) top left  no-repeat transparent;
+    background: url(../img/_programando.png) top left  no-repeat transparent;
 }
 #install h2 {
-    background: url(file:///home/eu/generatesiteludibrio/build/html/_static/img/_install.png) top left no-repeat transparent;
+    background: url(../img/_install.png) top left no-repeat transparent;
 }
 #download h2 {
-    background: url(file:///home/eu/generatesiteludibrio/build/html/_static/img/_download.png) top left no-repeat transparent;
+    background: url(../img/_download.png) top left no-repeat transparent;
 }
 
 
 
 body {
-    background: url(file:///home/eu/generatesiteludibrio/build/html/_static/img/bg_main.jpg) 0 0 repeat-x transparent;
+    background: url(../img/bg_main.jpg) 0 0 repeat-x transparent;
     padding: 0;
     margin: 0;
 }
 
 .document {
     padding-top: 170px;
-    background: url(file:///home/eu/generatesiteludibrio/build/html/_static/img/bg_logo.png) top center no-repeat transparent;
+    background: url(../img/bg_logo.png) top center no-repeat transparent;
     margin-left:1em;
 }
 
@@ -99,7 +99,7 @@ body {
     height: 23px;
     margin: 0;
     border: 0;
-    background: transparent url(file:///home/eu/generatesiteludibrio/build/html/_static/img/search.png) no-repeat center top;
+    background: transparent url(../img/search.png) no-repeat center top;
     color:transparent;
     vertical-align: top;
 }
@@ -109,7 +109,7 @@ body {
     height: 23px;
     margin: 0;
     border: 0;
-    background: transparent url(file:///home/eu/generatesiteludibrio/build/html/_static/img/searchinput.png) no-repeat center top;
+    background: transparent url(../img/searchinput.png) no-repeat center top;
     vertical-align: top;
 }
 
