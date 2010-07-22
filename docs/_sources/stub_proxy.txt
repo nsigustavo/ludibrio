@@ -1,0 +1,3 @@
+
+.. include::
+    ludibrio/ludibrio/specification/unit/stub_proxy.dt

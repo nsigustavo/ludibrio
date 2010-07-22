@@ -1,0 +1,231 @@
+.k {
+    color:#007020;
+    font-weight:bold;
+}
+.nf , .nc {
+    color:#ffffff;
+    font-weight:bold;
+}
+.go {
+    color:#aaaaaa;
+}
+
+.gp {
+    color:#e7de4f;
+}
+
+.s {
+    color: MediumAquaMarine;
+}
+
+.nn {
+    color: white;
+}
+
+.bp {
+    color: MediumAquaMarine;
+}
+
+/*.hll {*/
+/*    background-color:#FFFFCC;*/
+/*}*/
+/*.c {*/
+/*    color:#408090;*/
+/*    font-style:italic;*/
+/*}*/
+/*.err {*/
+/*    border:1px solid #FF0000;*/
+/*}*/
+
+/*.o {*/
+/*    color:#aaaaaa;*/
+/*}*/
+/*.cm {*/
+/*    color:#408090;*/
+/*    font-style:italic;*/
+/*}*/
+/*.cp {*/
+/*    color:#ffffff;*/
+/*}*/
+/*.c1 {*/
+/*    color:#408090;*/
+/*    font-style:italic;*/
+/*}*/
+/*.cs {*/
+/*    background-color:#FFF0F0;*/
+/*    color:#408090;*/
+/*}*/
+/*.gd {*/
+/*    color:#A00000;*/
+/*}*/
+/*.ge {*/
+/*    font-style:italic;*/
+/*}*/
+/*.gr {*/
+/*    color:#FF0000;*/
+/*}*/
+/*.gh {*/
+/*    color:#000080;*/
+/*    font-weight:bold;*/
+/*}*/
+/*.gi {*/
+/*    color:#00A000;*/
+/*}*/
+/*.go {*/
+/*    color:#aaaaaa;*/
+/*    font-weight:bold;*/
+/*}*/
+/*.gp {*/
+/*    color:#aaaaaa;*/
+/*    font-weight:bold;*/
+/*}*/
+/*.gs {*/
+/*    font-weight:bold;*/
+/*}*/
+/*.gu {*/
+/*    color:#800080;*/
+/*    font-weight:bold;*/
+/*}*/
+/*.gt {*/
+/*    color:#0040D0;*/
+/*}*/
+/*.kc {*/
+/*    color:#ffffff;*/
+/*    font-weight:bold;*/
+/*}*/
+/*.kd {*/
+/*    color:#ffffff;*/
+/*    font-weight:bold;*/
+/*}*/
+/*.kn {*/
+/*    color: #970c92;*/
+/*    font-weight:bold;*/
+/*}*/
+/*.kp {*/
+/*    color:#ffffff;*/
+/*}*/
+/*.kr {*/
+/*    color:#ffffff;*/
+/*    font-weight:bold;*/
+/*}*/
+/*.kt {*/
+/*    color:#902000;*/
+/*}*/
+/*.m {*/
+/*    color:#ffe900;*/
+/*}*/
+/*.s {*/
+/*    color:#fff831;*/
+/*}*/
+/*.na {*/
+/*    color:#4070A0;*/
+/*}*/
+/*.nb {*/
+/*    color:#ffffff;*/
+/*}*/
+/*.nc {*/
+/*    color:#ffffff;*/
+/*    font-weight:bold;*/
+/*}*/
+/*.no {*/
+/*    color:#60ADD5;*/
+/*}*/
+/*.nd {*/
+/*    color:#555555;*/
+/*    font-weight:bold;*/
+/*}*/
+/*.ni {*/
+/*    color:#D55537;*/
+/*    font-weight:bold;*/
+/*}*/
+/*.ne {*/
+/*    color:#ffffff;*/
+/*}*/
+/*.nf {*/
+/*    color:#06287E;*/
+/*}*/
+/*.nl {*/
+/*    color:#002070;*/
+/*    font-weight:bold;*/
+/*}*/
+/*.nn {*/
+/*    color:#ffffff;*/
+/*}*/
+/*.nt {*/
+/*    color:#062873;*/
+/*    font-weight:bold;*/
+/*}*/
+/*.nv {*/
+/*    color:#BB60D5;*/
+/*}*/
+/*.ow {*/
+/*    color:#ffffff;*/
+/*    font-weight:bold;*/
+/*}*/
+/*.w {*/
+/*    color:#BBBBBB;*/
+/*}*/
+/*.mf {*/
+/*    color:#ffe900;*/
+/*}*/
+/*.mh {*/
+/*    color:#ffe900;*/
+/*}*/
+/*.mi {*/
+/*    color:#ffe900;*/
+/*}*/
+/*.mo {*/
+/*    color:#ffe900;*/
+/*}*/
+/*.sb {*/
+/*    color:#4070A0;*/
+/*}*/
+/*.sc {*/
+/*    color:#4070A0;*/
+/*}*/
+/*.sd {*/
+/*    color:#4070A0;*/
+/*    font-style:italic;*/
+/*}*/
+/*.s2 {*/
+/*    color:#4070A0;*/
+/*}*/
+/*.se {*/
+/*    color:#4070A0;*/
+/*    font-weight:bold;*/
+/*}*/
+/*.sh {*/
+/*    color:#4070A0;*/
+/*}*/
+/*.si {*/
+/*    color:#70A0D0;*/
+/*    font-style:italic;*/
+/*}*/
+/*.sx {*/
+/*    color:#ffff00;*/
+/*}*/
+/*.sr {*/
+/*    color:#235388;*/
+/*}*/
+/*.s1 {*/
+/*    color:#4070A0;*/
+/*}*/
+/*.ss {*/
+/*    color:#517918;*/
+/*}*/
+/*.bp {*/
+/*    color:#ff0000;*/
+/*}*/
+/*.vc {*/
+/*    color:#BB60D5;*/
+/*}*/
+/*.vg {*/
+/*    color:#BB60D5;*/
+/*}*/
+/*.vi {*/
+/*    color:#BB60D5;*/
+/*}*/
+/*.il {*/
+/*    color:#ffe900;*/
+/*}*/
+

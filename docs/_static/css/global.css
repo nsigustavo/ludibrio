@@ -1,0 +1,121 @@
+#hide {
+    display:none;
+}
+
+pre {
+    display: block;
+    min-width:300px;
+    width:90%;
+    background-color: #222222;
+    border-radius:10px;
+    -moz-border-radius:10px;
+    color: #ffffff !important;
+    border: 0 solid transparent;
+    padding:1em;
+}
+
+
+h1, h2 {
+    padding-top: 5px;
+    padding-left:20px;
+    text-shadow:2px 2px 1px #ffffff; 
+    width:80%;
+}
+
+h1 {
+    padding-left: 50px;
+    border-bottom:1px solid black;
+    font-size:2em;
+}
+
+h2 {
+    font-size:1.5em;
+    padding-left: 50px;
+    border-bottom:1px solid black;
+
+}
+
+
+#documentation h2 {
+    background: url(file:///home/eu/generatesiteludibrio/build/html/_static/img/_documentacao.png) top left no-repeat transparent;
+}
+#getting-involved h2 {
+    background: url(file:///home/eu/generatesiteludibrio/build/html/_static/img/_programando.png) top left  no-repeat transparent;
+}
+#install h2 {
+    background: url(file:///home/eu/generatesiteludibrio/build/html/_static/img/_install.png) top left no-repeat transparent;
+}
+#download h2 {
+    background: url(file:///home/eu/generatesiteludibrio/build/html/_static/img/_download.png) top left no-repeat transparent;
+}
+
+
+
+body {
+    background: url(file:///home/eu/generatesiteludibrio/build/html/_static/img/bg_main.jpg) 0 0 repeat-x transparent;
+    padding: 0;
+    margin: 0;
+}
+
+.document {
+    padding-top: 170px;
+    background: url(file:///home/eu/generatesiteludibrio/build/html/_static/img/bg_logo.png) top center no-repeat transparent;
+    margin-left:1em;
+}
+
+#in-a-nutshell, #welcome-to-ludibrio {
+    display:inline-block;
+    width:48%;
+    vertical-align: top;
+}
+
+
+.menu {
+    position:absolute;
+    left:5px;
+    top:1px;
+    
+}
+
+.menu img{
+    border: 0;
+}
+
+.menu a {
+    text-decoration: none;
+    color: black;
+    font-weight:bold;
+    text-shadow:2px 2px 1px #ffffff;
+}
+
+#searchbox {
+    position:absolute;
+    right: 10px;
+    top: 10px;
+}
+
+.search input.submit {
+    width: 68px;
+    height: 23px;
+    margin: 0;
+    border: 0;
+    background: transparent url(file:///home/eu/generatesiteludibrio/build/html/_static/img/search.png) no-repeat center top;
+    color:transparent;
+    vertical-align: top;
+}
+
+.search input.text {
+    width: 213px;
+    height: 23px;
+    margin: 0;
+    border: 0;
+    background: transparent url(file:///home/eu/generatesiteludibrio/build/html/_static/img/searchinput.png) no-repeat center top;
+    vertical-align: top;
+}
+
+
+#welcome-to-ludibrio img {
+    display: none;
+}
+
+

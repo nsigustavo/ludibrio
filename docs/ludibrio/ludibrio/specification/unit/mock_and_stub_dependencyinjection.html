@@ -1,0 +1,127 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Trivial mocking or stubing for any external module (Dependecy Injection) &mdash; ludibrio v3.0.2 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '3.0.2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="top" title="ludibrio v3.0.2 documentation" href="../../../../index.html" />
+
+
+    <link rel="stylesheet" href="../../../../_static/css/global.css" type="text/css" charset="utf-8" />
+
+    <link rel="stylesheet" href="../../../../_static/css/python.css" type="text/css" charset="utf-8" />
+
+
+
+  </head>
+  <body>
+
+    <div class="menu">
+        <a href="../../../../index.html">
+            <img src="../../../../_static/img/_home.png" />
+        </a>
+        <a href="../../../../documentation.html">
+            <img src="../../../../_static/img/_documentacao.png" />
+        </a>
+        <a href="../../../../download.html">
+            <img src="../../../../_static/img/_download.png" />
+        </a>
+        <a href="../../../../getting_involved.html">
+            <img src="../../../../_static/img/_programando.png" />
+        </a>
+        <a href="../../../../search.html">
+            <img src="../../../../_static/img/_busca.png" />
+        </a>
+    </div>
+
+<div id="searchbox" style="display: none">
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" class="text" />
+      <input type="submit" value="Go" class="submit" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="trivial-mocking-or-stubing-for-any-external-module-dependecy-injection">
+<h1>Trivial mocking or stubing for any external module (Dependecy Injection)<a class="headerlink" href="#trivial-mocking-or-stubing-for-any-external-module-dependecy-injection" title="Permalink to this headline">¶</a></h1>
+<p>Ludibrio also offers a replace mode, which basically means if a &#8220;from ... import ...&#8221; statement is defined into a &#8216;with&#8217; scope, the replay mechanism will return a mock object to replace the original object in namespace of the whole Python interpreter (including any modules, etc). There&#8217;s a simple example below to illustrate how use it:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ludibrio</span> <span class="kn">import</span> <span class="n">Mock</span><span class="p">,</span> <span class="n">Stub</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">Mock</span><span class="p">()</span> <span class="k">as</span> <span class="n">time</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
+<span class="gp">... </span>    <span class="n">time</span><span class="p">()</span> <span class="o">&gt;&gt;</span> <span class="mi">2</span>
+
+
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span> <span class="c">#mocked</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">time</span><span class="p">()</span>
+<span class="go">2</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">time</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">Stub</span><span class="p">()</span> <span class="k">as</span> <span class="n">tempo</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">times</span>
+<span class="gp">... </span>    <span class="n">tempo</span><span class="p">()</span> <span class="o">&gt;&gt;</span> <span class="s">&#39;haaaaa&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tempo</span><span class="p">()</span>
+<span class="go">&#39;haaaaa&#39;</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tempo</span><span class="o">.</span><span class="n">restore_import</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../../../_sources/ludibrio/ludibrio/specification/unit/mock_and_stub_dependencyinjection.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+  </body>
+</html>

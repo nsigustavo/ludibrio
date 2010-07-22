@@ -1,0 +1,40 @@
+
+Getting involved !
+------------------
+
+Ludibrio's development may be viewed and followed on github::
+
+    http://github.com/nsigustavo/ludibrio
+
+Retrieve the source code using 'git':
+
+.. code-block:: console
+
+    $ git clone git://github.com/nsigustavo/ludibrio.git
+
+
+
+Issue tracking system
+---------------------
+
+Ludibrio bug reports are tracked in github.
+
+    http://github.com/nsigustavo/ludibrio/issues
+
+
+development
+-----------
+
+Install package in 'development mode' and run tests with doctestcommand
+
+.. code-block:: console
+
+    $ sudo easy_install doctestcommand
+    $ git clone git://github.com/nsigustavo/ludibrio.git
+    $ cd ludibrio
+    $ sudo python setup.py develop
+    $ cd ludibrio
+    $ doctest
+
+
+

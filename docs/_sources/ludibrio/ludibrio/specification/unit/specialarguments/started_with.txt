@@ -1,0 +1,16 @@
+
+started_with
+~~~~~~~~~~~~
+
+Verifies if a string starts with a given prefix::
+
+    >>> from ludibrio.matcher import *
+
+    >>> 'hello world' == started_with('hello')
+    True
+
+    >>> 'Hi world' == started_with('hello')
+    Traceback (most recent call last):
+        ...
+    ParameterException: 'Hi world' is not started with 'hello'
+
