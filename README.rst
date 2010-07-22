@@ -1,7 +1,7 @@
 Welcome to ludibrio
 ===================
 
-.. image:: http://ludibriar.appspot.com/logo.png
+.. image:: http://ludibriar.appspot.com/_static/img/logo.png
 
 :Author: * Gustavo Rezende <nsigustavo@gmail.com>
 
@@ -22,9 +22,9 @@ Ludibrio is registered with PyPi. If you have pip, setuptools or Distribute you 
 Download
 --------
 
-The latest official version is 3.0.2. Here’s how to get it:
+The latest official version is 3.0.2. Here’s how to get it::
 
-http://pypi.python.org/pypi/ludibrio/3.0.2
+    http://pypi.python.org/pypi/ludibrio/3.0.2
 
 
 .. Documentation
