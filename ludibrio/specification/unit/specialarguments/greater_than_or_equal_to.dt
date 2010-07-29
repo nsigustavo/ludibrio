@@ -5,7 +5,7 @@ greater_than_or_equal_to
 Simply checks the given comparisons (>=)::
 
 
-    >>> from ludibrios import greater_than_or_equal_to
+    >>> from ludibrio import greater_than_or_equal_to
 
     >>> 1 == greater_than_or_equal_to(0.9)
     True

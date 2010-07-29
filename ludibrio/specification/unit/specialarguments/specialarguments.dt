@@ -10,7 +10,7 @@ Ludibrio offers a very flexible way to match parameters in method calls. In simp
     >>> with Mock() as greeting:
     ...     greeting.hello('Gustavo', 'morning') >> 'Good morning, Gustavo'
 
-    >>> greeting.hello('Gustavo')
+    >>> greeting.hello('Gustavo', 'morning')
     'Good morning, Gustavo'
 
 
@@ -21,9 +21,9 @@ As an example, the following code will record an expression which will match any
     >>> from ludibrio.matcher import *
 
     >>> with Mock() as greeting:
-    ...     greeting.hello(name=instance_of(str), any()) >> 'Hello, guy'
+    ...     greeting.hello( any(), name=instance_of(str)) >> 'Hello, guy'
 
-    >>> greeting.hello(name='bean', 'morning')
+    >>> greeting.hello('morning', name='bean')
     'Hello, guy'
 
 
