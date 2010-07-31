@@ -8,10 +8,10 @@ Ludibrio offers a very flexible way to match parameters in method calls. In simp
 ::
 
     >>> with Mock() as greeting:
-    ...     greeting.hello('Gustavo', 'morning') >> 'Good morning, Gustavo'
+    ...     greeting.hello('Gustavo') >> 'Hello, Gustavo'
 
     >>> greeting.hello('Gustavo')
-    'Good morning, Gustavo'
+    'Hello, Gustavo'
 
 
 In more interesting cases, a few special parameters may be used to define the expectation.
@@ -21,10 +21,10 @@ As an example, the following code will record an expression which will match any
     >>> from ludibrio.matcher import *
 
     >>> with Mock() as greeting:
-    ...     greeting.hello(name=instance_of(str), any()) >> 'Hello, guy'
+    ...     greeting.hello(name=instance_of(str)) >> 'Hello, to all'
 
-    >>> greeting.hello(name='bean', 'morning')
-    'Hello, guy'
+    >>> greeting.hello(name='bean')
+    'Hello, to all'
 
 
 In Stub::
