@@ -55,8 +55,8 @@ class Stub(_TestDouble):
         else:
             self._property_called('__setattr__', args=[attr, value])
 
-    def _new_expectation(self, attr):
-        self.__expectation__.append(attr)
+    def _new_expectation(self, expectation):
+        self.__expectation__.append(expectation)
 
     def __rshift__(self, response):
             self.__expectation__[-1][3] = response

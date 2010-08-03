@@ -9,21 +9,21 @@ Stubs are test doubles programmed to provide inputs to and outputs from collabor
 
 1. Stubs provide canned answers to calls made during the test.
     >>> with Stub() as x:
-    ...     x.anything() >> 'responce'
+    ...     x.anything() >> 'response'
 
     >>> x.anything()
-    'responce'
+    'response'
 
     >>> with Stub() as x:
     ...     x + 1 >> 1
     ...     x - 1 >> -1
-    ...     x.anything() >> 'responce'
+    ...     x.anything() >> 'response'
     >>> x - 1
     -1
     >>> x + 1
     1
    >>> x.anything()
-   'responce'
+   'response'
 
 
 2. Should return the values in the same sequence as the methods are called on the stub configuration. Subsequent calls will restart the cycle.

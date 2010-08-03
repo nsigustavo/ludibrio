@@ -18,5 +18,6 @@ Dummy objects are passed around but never validated.
 from ludibrio.mock import Mock
 from ludibrio.stub import Stub
 from ludibrio.dummy import Dummy
+from ludibrio.spy import Spy, verify, times
 
 from ludibrio.matcher import *

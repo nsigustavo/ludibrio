@@ -1,0 +1,46 @@
+
+Spy test Double.
+==================
+
+Test Spy is used as an observation point for the indirect output of the tested code. May need to provide values in response to method calls, also captures the indirect outputs of the system and saves them for later verification by the test::
+
+    >>> from ludibrio import Spy, verify, times
+
+Spy can be configured like a stub::
+
+    >>> with Spy() as greetings:
+    ...      greetings.welcome() >> "Welcome"
+    ...      greetings.hi(name='beca') >> "Hi, beca"
+    
+    >>> print greetings.welcome()
+    Welcome
+        
+    >>> greetings.hi(name='beca')
+    'Hi, beca'
+
+    >>> greetings.hi(name='beca')
+    'Hi, beca'
+    
+Non-configured calls return a spy object::
+
+    >>> greetings.goodbye()
+    Spy Object
+
+Spy provides indirect output verification::
+
+    >>> verify(greetings).welcome().called(times == 1)
+    True
+    >>> verify(greetings).goodbye().called(times == 2)
+    False
+    >>> verify(greetings).hello().called(times == 1)
+    False
+    >>> verify(greetings).hi(name='beca').called(times == 2)
+    True
+    >>> verify(greetings).hi(name='beca').called(times > 3)
+    False
+    >>> verify(greetings).welcome().called(times <= 1)
+    True
+    >>> verify(greetings).welcome().called(times >= 2)
+    False
+    >>> verify(greetings).goodbye().called(times <= 2)
+    True
