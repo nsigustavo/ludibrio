@@ -14,7 +14,7 @@ Spy can be configured like a stub::
     
     >>> print greetings.welcome()
     Welcome
-        
+
     >>> greetings.hi(name='beca')
     'Hi, beca'
 
@@ -28,19 +28,21 @@ Non-configured calls return a spy object::
 
 Spy provides indirect output verification::
 
-    >>> verify(greetings).welcome().called(times == 1)
+    >>> verify (greetings).welcome() .called(times == 1)
     True
-    >>> verify(greetings).goodbye().called(times == 2)
+    >>> verify (greetings).goodbye() .called(times == 2)
     False
-    >>> verify(greetings).hello().called(times == 1)
+    >>> verify (greetings).hello() .called(times == 1)
     False
-    >>> verify(greetings).hi(name='beca').called(times == 2)
+    >>> verify (greetings).hi(name='beca') .called(times == 2)
     True
-    >>> verify(greetings).hi(name='beca').called(times > 3)
+    >>> verify (greetings).hi(name='beca') .called(times > 3)
     False
-    >>> verify(greetings).welcome().called(times <= 1)
+    >>> verify (greetings).welcome() .called(times <= 1)
     True
-    >>> verify(greetings).welcome().called(times >= 2)
+    >>> verify (greetings).welcome() .called(times >= 2)
     False
-    >>> verify(greetings).goodbye().called(times <= 2)
+    >>> verify (greetings).goodbye() .called(times <= 2)
     True
+
+

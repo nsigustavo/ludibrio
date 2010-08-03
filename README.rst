@@ -8,6 +8,7 @@ Welcome to ludibrio
 :Contributors: * Diego Pinheiro <me@dmpinheiro.net>
                * Hugo Lopes <hltbra@gmail.com>
                * Rodrigo Manhães <rmanhaes@gmail.com>
+               * Rebeca Motta <becacmotta@gmail.com>
 
 Install
 -------
