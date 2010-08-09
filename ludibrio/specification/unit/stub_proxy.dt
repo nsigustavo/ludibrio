@@ -1,0 +1,21 @@
+Stub proxy
+==========
+
+Using Ludibrio, it is possible to program a proxy for existent objects or even modify the real object. This feature doesn't exist on most test double tools.
+
+When a stub is created with the proxy argument, Ludibrio will create a stub that keeps a reference to the real object, allowing to execute non-configured calls.
+
+Below is an example for a better understanding::
+
+    >>> from ludibrio import Stub
+
+    >>> from os import path
+
+    >>> with Stub(proxy=path) as newpath:
+    ...     newpath.abspath('.') >> '/stub/ludibrio'
+
+    >>> newpath.abspath('.')
+    '/stub/ludibrio'
+    >>> newpath.join('/stub','ludibrio')
+    '/stub/ludibrio'
+

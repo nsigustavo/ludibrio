@@ -1,0 +1,22 @@
+
+Documentation
+-------------
+Here, you can find examples showing how to use Ludibrio test double.
+
+
+.. toctree::
+    :maxdepth: 1
+
+    overview
+    mock
+    mock_unordered
+    parameter_matching
+    stub
+    dummy
+    stub_proxy
+    dependencyinjection
+
+    stub_msg_error
+    mock_msg_error
+
+

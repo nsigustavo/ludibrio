@@ -1,0 +1,22 @@
+
+greater_than_or_equal_to
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+Simply checks the given comparisons (>=)::
+
+
+    >>> from ludibrio import greater_than_or_equal_to
+
+    >>> 1 == greater_than_or_equal_to(0.9)
+    True
+    >>> 1 == greater_than_or_equal_to(1)
+    True
+    >>> 1 == greater_than_or_equal_to(2)
+    Traceback (most recent call last):
+        ...
+    ParameterException: 1 is not greater than or equal to 2
+    >>> name = 'b'
+    >>> name == greater_than_or_equal_to('a')
+    True
+    >>> name == greater_than_or_equal_to('b')
+    True

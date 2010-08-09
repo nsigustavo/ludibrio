@@ -1,0 +1,143 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Unit for DependencyInjection &mdash; ludibrio v3.0.2 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '3.0.2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="top" title="ludibrio v3.0.2 documentation" href="../../../../index.html" />
+
+
+    <link rel="stylesheet" href="../../../../_static/css/global.css" type="text/css" charset="utf-8" />
+
+    <link rel="stylesheet" href="../../../../_static/css/python.css" type="text/css" charset="utf-8" />
+
+
+
+  </head>
+  <body>
+
+    <div class="menu">
+        <a href="../../../../index.html">
+            <img src="../../../../_static/img/_home.png" />
+        </a>
+        <a href="../../../../documentation.html">
+            <img src="../../../../_static/img/_documentacao.png" />
+        </a>
+        <a href="../../../../download.html">
+            <img src="../../../../_static/img/_download.png" />
+        </a>
+        <a href="../../../../getting_involved.html">
+            <img src="../../../../_static/img/_programando.png" />
+        </a>
+        <a href="../../../../search.html">
+            <img src="../../../../_static/img/_busca.png" />
+        </a>
+    </div>
+
+<div id="searchbox" style="display: none">
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" class="text" />
+      <input type="submit" value="Go" class="submit" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="unit-for-dependencyinjection">
+<h1>Unit for DependencyInjection<a class="headerlink" href="#unit-for-dependencyinjection" title="Permalink to this headline">¶</a></h1>
+<p>DependencyInjection is a class used to inject dependencies using from... import... statement.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ludibrio.dependencyinjection</span> <span class="kn">import</span> <span class="n">DependencyInjection</span>
+</pre></div>
+</div>
+<ol class="arabic">
+<li><dl class="first docutils">
+<dt>Should replace directly imported objects on the context.</dt>
+<dd><p class="first">object to be replaced:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">splitext</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">splitext</span><span class="p">(</span><span class="s">&#39;test.py&#39;</span><span class="p">)</span>
+<span class="go">(&#39;test&#39;, &#39;.py&#39;)</span>
+</pre></div>
+</div>
+<p>Double:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">mySplitext</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="p">(</span><span class="s">&#39;double&#39;</span><span class="p">,</span><span class="s">&#39;.py&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Configuration of the object to be replaced:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">DependencyInjection</span><span class="p">(</span><span class="n">mySplitext</span><span class="p">)</span> <span class="k">as</span> <span class="n">importing</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">splitext</span> <span class="c"># gets the original for double injection</span>
+</pre></div>
+</div>
+<p>mocked call:</p>
+<div class="last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">splitext</span><span class="p">(</span><span class="s">&#39;teste.py&#39;</span><span class="p">)</span> <span class="c"># double</span>
+<span class="go">(&#39;double&#39;, &#39;.py&#39;)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</li>
+<li><p class="first">Should restore original objects:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">importing</span><span class="o">.</span><span class="n">restore_object</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">splitext</span><span class="p">(</span><span class="s">&#39;teste.py&#39;</span><span class="p">)</span>
+<span class="go">(&#39;teste&#39;, &#39;.py&#39;)</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../../../_sources/ludibrio/ludibrio/specification/unit/dependencyinjection.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+  </body>
+</html>

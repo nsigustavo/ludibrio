@@ -1,0 +1,198 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Test Doubles - Overview for beginners by Hugo Lopes. &mdash; ludibrio v3.0.2 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '3.0.2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="top" title="ludibrio v3.0.2 documentation" href="../../../../index.html" />
+
+
+    <link rel="stylesheet" href="../../../../_static/css/global.css" type="text/css" charset="utf-8" />
+
+    <link rel="stylesheet" href="../../../../_static/css/python.css" type="text/css" charset="utf-8" />
+
+
+
+  </head>
+  <body>
+
+    <div class="menu">
+        <a href="../../../../index.html">
+            <img src="../../../../_static/img/_home.png" />
+        </a>
+        <a href="../../../../documentation.html">
+            <img src="../../../../_static/img/_documentacao.png" />
+        </a>
+        <a href="../../../../download.html">
+            <img src="../../../../_static/img/_download.png" />
+        </a>
+        <a href="../../../../getting_involved.html">
+            <img src="../../../../_static/img/_programando.png" />
+        </a>
+        <a href="../../../../search.html">
+            <img src="../../../../_static/img/_busca.png" />
+        </a>
+    </div>
+
+<div id="searchbox" style="display: none">
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" class="text" />
+      <input type="submit" value="Go" class="submit" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="test-doubles-overview-for-beginners-by-hugo-lopes">
+<h1>Test Doubles - Overview for beginners by Hugo Lopes.<a class="headerlink" href="#test-doubles-overview-for-beginners-by-hugo-lopes" title="Permalink to this headline">¶</a></h1>
+<p>Test doubles are fake objects that simulate the behavior of a real object for testing purposes. Test doubles are used for:</p>
+<blockquote>
+<ul class="simple">
+<li>Make tests run faster</li>
+<li>Eliminate the need for previously implementing all collaborators</li>
+<li>Enable the use techniques like Behaviour-Driven Development, that are based on outside-in development cycles</li>
+<li>Minimize coupling between objects</li>
+<li>Increase code testability</li>
+</ul>
+</blockquote>
+<p>[1] Collaborators are objects that the unit under test depends for executing some behavior. For example, a relational-object mapper can be a collaborator of a unit under test that persists itself in relational databases.</p>
+<div class="section" id="controlled-inputs-and-outputs">
+<h2>Controlled inputs and outputs<a class="headerlink" href="#controlled-inputs-and-outputs" title="Permalink to this headline">¶</a></h2>
+<p>When testing a group of classes, it&#8217;s sometimes very difficult to focus in one problem at once. Test doubles tools help to keep focused on the implementation of the unit under test, beacuse doubles are put at work instead of the real collaborators. The kind of test double used to perform this role is the Stub.</p>
+<p>Another issue is when the assertions are the calls to the collaborators themselves. For example, when testing an object that make calls to a persistence abstraction layer and you want to ensure that the unit under test makes the expected calls. In these situations, in which the collaboration must be ensured, the suitable kind of test double is the Mock.</p>
+<div class="section" id="mocks">
+<h3>Mocks<a class="headerlink" href="#mocks" title="Permalink to this headline">¶</a></h3>
+<p>As said above, mocks are used when the order of the calls is relevant and/or when the call (or calls) itself is the expected behavior. In these cases, the test or specification must ensure what methods are being called, how many times and with which parameters.</p>
+<p>In the following example, the system under test is a mail server. The test goal is to ensure the correctness of the interaction between the mail server and the underlying mail library.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MailServer</span><span class="p">:</span>
+<span class="gp">... </span>   <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mail_sender</span><span class="p">):</span>
+<span class="gp">... </span>       <span class="bp">self</span><span class="o">.</span><span class="n">_mail_sender</span> <span class="o">=</span> <span class="n">mail_sender</span>
+<span class="gp">... </span>   <span class="k">def</span> <span class="nf">send_mail</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">from_</span><span class="p">,</span> <span class="n">to</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+<span class="gp">... </span>       <span class="bp">self</span><span class="o">.</span><span class="n">_mail_sender</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">from_address</span><span class="o">=</span><span class="n">from_</span><span class="p">,</span>
+<span class="gp">... </span>                              <span class="n">to_address</span><span class="o">=</span><span class="n">to</span><span class="p">,</span>
+<span class="gp">... </span>                              <span class="n">message_content</span><span class="o">=</span><span class="n">message</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ludibrio</span> <span class="kn">import</span> <span class="n">Mock</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">Mock</span><span class="p">()</span> <span class="k">as</span> <span class="n">mail_sender</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">mail_sender</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">from_address</span><span class="o">=</span><span class="s">&#39;me@domain.com&#39;</span><span class="p">,</span>
+<span class="gp">... </span>                     <span class="n">to_address</span><span class="o">=</span><span class="s">&#39;you@domain.com&#39;</span><span class="p">,</span>
+<span class="gp">... </span>                     <span class="n">message_content</span><span class="o">=</span><span class="s">&#39;Hi!&#39;</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="bp">None</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">server</span> <span class="o">=</span> <span class="n">MailServer</span><span class="p">(</span><span class="n">mail_sender</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">server</span><span class="o">.</span><span class="n">send_mail</span><span class="p">(</span><span class="n">from_</span><span class="o">=</span><span class="s">&#39;me@domain.com&#39;</span><span class="p">,</span>
+<span class="gp">... </span>                  <span class="n">to</span><span class="o">=</span><span class="s">&#39;you@domain.com&#39;</span><span class="p">,</span>
+<span class="gp">... </span>                  <span class="n">message</span><span class="o">=</span><span class="s">&#39;Hi!&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mail_sender</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>MailServer class&#8217; __init__ method receives the object responsible to send mails, i.e., the library that as the ability to send mails. This technique is called dependency injection [2], which can be constructor injection (as we did), setter injection or by parameter passing.</p>
+<p>The validate method ensure that send_mail method was called within mail_sender object, and received the correct parameters.</p>
+<p>Using mocks, the code under test doesn&#8217;t depend on any previous implementation of collaborators. They don&#8217;t need even exist. In fact, in the example above, at the moment that MailServer class is specified, there&#8217;s no any class for the mail_sender object. There&#8217;s no real mail server to be configured, nothing to shift the focus from the current task.</p>
+<p>Test doubles also minimize the time of running tests, since there&#8217;s none of the overhead associated to real collaborators as network connections or file access.</p>
+<p>[2]     <a class="reference external" href="http://jamesshore.com/Blog/Dependency-Injection-Demystified.html">http://jamesshore.com/Blog/Dependency-Injection-Demystified.html</a></p>
+</div>
+<div class="section" id="stubs">
+<h3>Stubs<a class="headerlink" href="#stubs" title="Permalink to this headline">¶</a></h3>
+<p>Stubs are test doubles programmed to provide inputs to and outputs from collaborators, but that don&#8217;t care if the collaborator&#8217;s methods are called or in which order the calls happen. The goal of using stubs is quite different to using mocks: with mocks, the programmed calls are themselves the assertions/expectations; with stubs, the programmed calls provide inputs and outputs from collaborators to unit under test.</p>
+<p>Stubs only return programmed answers for given calls, and nothing more. An example follows:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">string</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">current_date</span><span class="p">(</span><span class="n">format</span><span class="p">):</span>
+<span class="gp">... </span>   <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+<span class="gp">... </span>   <span class="n">template</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">Template</span><span class="p">(</span><span class="n">format</span><span class="p">)</span>
+<span class="gp">... </span>   <span class="k">return</span> <span class="n">template</span><span class="o">.</span><span class="n">substitute</span><span class="p">(</span><span class="n">year</span><span class="o">=</span><span class="n">now</span><span class="o">.</span><span class="n">year</span><span class="p">,</span>
+<span class="gp">... </span>                              <span class="n">month</span><span class="o">=</span><span class="n">now</span><span class="o">.</span><span class="n">month</span><span class="p">,</span>
+<span class="gp">... </span>                              <span class="n">day</span><span class="o">=</span><span class="n">now</span><span class="o">.</span><span class="n">day</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ludibrio</span> <span class="kn">import</span> <span class="n">Stub</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">Stub</span><span class="p">()</span> <span class="k">as</span> <span class="n">datetime</span><span class="p">:</span>
+<span class="gp">... </span>   <span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="gp">... </span>   <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+<span class="gp">... </span>   <span class="n">now</span><span class="o">.</span><span class="n">year</span> <span class="o">&gt;&gt;</span> <span class="mi">2010</span>
+<span class="gp">... </span>   <span class="n">now</span><span class="o">.</span><span class="n">month</span> <span class="o">&gt;&gt;</span> <span class="mi">6</span>
+<span class="gp">... </span>   <span class="n">now</span><span class="o">.</span><span class="n">day</span> <span class="o">&gt;&gt;</span> <span class="mi">7</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">current_date</span><span class="p">(</span><span class="s">&#39;$day/$month/$year&#39;</span><span class="p">)</span>
+<span class="go">&#39;7/6/2010&#39;</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">datetime</span><span class="o">.</span><span class="n">restore_import</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>In the example above, the system under test is the current_date function, that returns the current date, composed by day, month and year, in a configurable format.</p>
+<p>The stub replaces the return of datetime object&#8217;s now method, imported from datetime module, making it return 2010, 6 and 7 in, respectively, its year, month and day attributes.</p>
+<p>Thus, the goal is merely to return the programmed answers, with no care about the order of calls or even if methods or attributes are accessed.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Test Doubles - Overview for beginners by Hugo Lopes.</a><ul>
+<li><a class="reference internal" href="#controlled-inputs-and-outputs">Controlled inputs and outputs</a><ul>
+<li><a class="reference internal" href="#mocks">Mocks</a></li>
+<li><a class="reference internal" href="#stubs">Stubs</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../../../_sources/ludibrio/ludibrio/specification/functional/testdouble.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,3 @@
+
+.. include::
+    ludibrio/ludibrio/specification/unit/mock_msg_error.dt

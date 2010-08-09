@@ -1,0 +1,21 @@
+
+less_than_or_equal_to
+~~~~~~~~~~~~~~~~~~~~~
+
+Simply checks the given comparisons (<=)::
+
+    >>> from ludibrio import less_than_or_equal_to
+
+    >>> 0.9 == less_than_or_equal_to(1)
+    True
+    >>> 1 == less_than_or_equal_to(1)
+    True
+    >>> 2 == less_than_or_equal_to(1)
+    Traceback (most recent call last):
+        ...
+    ParameterException: 2 is not less than or equal to 1
+    >>> name = 'a'
+    >>> name == less_than_or_equal_to('b')
+    True
+    >>> name == less_than_or_equal_to('a')
+    True

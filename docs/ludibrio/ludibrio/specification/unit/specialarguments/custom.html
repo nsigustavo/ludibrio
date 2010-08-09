@@ -1,0 +1,121 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Custom matchers &mdash; ludibrio v3.0.2 documentation</title>
+    <link rel="stylesheet" href="../../../../../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../../',
+        VERSION:     '3.0.2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../../_static/doctools.js"></script>
+    <link rel="top" title="ludibrio v3.0.2 documentation" href="../../../../../index.html" />
+
+
+    <link rel="stylesheet" href="../../../../../_static/css/global.css" type="text/css" charset="utf-8" />
+
+    <link rel="stylesheet" href="../../../../../_static/css/python.css" type="text/css" charset="utf-8" />
+
+
+
+  </head>
+  <body>
+
+    <div class="menu">
+        <a href="../../../../../index.html">
+            <img src="../../../../../_static/img/_home.png" />
+        </a>
+        <a href="../../../../../documentation.html">
+            <img src="../../../../../_static/img/_documentacao.png" />
+        </a>
+        <a href="../../../../../download.html">
+            <img src="../../../../../_static/img/_download.png" />
+        </a>
+        <a href="../../../../../getting_involved.html">
+            <img src="../../../../../_static/img/_programando.png" />
+        </a>
+        <a href="../../../../../search.html">
+            <img src="../../../../../_static/img/_busca.png" />
+        </a>
+    </div>
+
+<div id="searchbox" style="display: none">
+    <form class="search" action="../../../../../search.html" method="get">
+      <input type="text" name="q" class="text" />
+      <input type="submit" value="Go" class="submit" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="custom-matchers">
+<h1>Custom matchers<a class="headerlink" href="#custom-matchers" title="Permalink to this headline">¶</a></h1>
+<p>Extending the Ludibrio with custom matchers is very easy. The function name must be the name of the matcher. The function must have 2 parameters and it must return True.</p>
+<p>In the example, when should fails, a message can be &#8220;4 is not the square root of 9&#8221;; in another way, if the fail is in a should_not, the message could be &#8220;3 is the square root of 9&#8221;, if the expectation was be_the_square_root_of(9) == 3. The example is below:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ludibrio</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="nd">@matcher</span>
+<span class="gp">... </span><span class="k">def</span> <span class="nf">the_square_root_of</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="kn">import</span> <span class="nn">math</span>
+<span class="gp">... </span>    <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">y</span><span class="p">):</span><span class="k">return</span> <span class="bp">True</span>
+<span class="gp">... </span>    <span class="k">raise</span> <span class="n">ParameterException</span><span class="p">(</span><span class="s">&quot;</span><span class="si">%r</span><span class="s"> is not the square root of </span><span class="si">%r</span><span class="s">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="mi">3</span> <span class="o">==</span> <span class="n">the_square_root_of</span><span class="p">(</span><span class="mi">9</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="mi">2</span> <span class="o">==</span> <span class="n">the_square_root_of</span><span class="p">(</span><span class="mf">4.1</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+    <span class="o">...</span>
+<span class="nc">ParameterException</span>: <span class="n-Identifier">2 is not the square root of 4.09...</span>
+</pre></div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../../../../_sources/ludibrio/ludibrio/specification/unit/specialarguments/custom.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+  </body>
+</html>

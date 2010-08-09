@@ -5,8 +5,8 @@ from _testdouble import _TestDouble
 
 class Dummy(_TestDouble):
     """Dummy:
-        São objetos que não são utilizados diretamente pela unidade sob teste.
-        Normalmente paramentros que somente são repassados
+        Objects that are not used directly by the unit under test. Usually,
+        dummies are parameters that are merely passed on.
     """
     def __methodCalled__(self, *args, **kargs):
         return self
@@ -31,5 +31,12 @@ class Dummy(_TestDouble):
             return object.__getattribute__(self, x)
         else:
             return self
-
+            
+    def __getattribute__(self, x):
+        if x == '__class__':
+            return self.__kargs__.get('type', type(self))
+        elif x in dir(Dummy):
+            return object.__getattribute__(self, x)
+        else:
+            return self
 

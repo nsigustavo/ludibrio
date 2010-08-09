@@ -1,0 +1,475 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Parameter matching &mdash; ludibrio v3.0.2 documentation</title>
+    <link rel="stylesheet" href="_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '3.0.2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="ludibrio v3.0.2 documentation" href="index.html" />
+    <link rel="next" title="Stubs" href="stub.html" />
+    <link rel="prev" title="Sample Mock unordered" href="mock_unordered.html" />
+
+
+    <link rel="stylesheet" href="_static/css/global.css" type="text/css" charset="utf-8" />
+
+    <link rel="stylesheet" href="_static/css/python.css" type="text/css" charset="utf-8" />
+
+
+
+  </head>
+  <body>
+
+    <div class="menu">
+        <a href="index.html">
+            <img src="_static/img/_home.png" />
+        </a>
+        <a href="documentation.html">
+            <img src="_static/img/_documentacao.png" />
+        </a>
+        <a href="download.html">
+            <img src="_static/img/_download.png" />
+        </a>
+        <a href="getting_involved.html">
+            <img src="_static/img/_programando.png" />
+        </a>
+        <a href="search.html">
+            <img src="_static/img/_busca.png" />
+        </a>
+    </div>
+
+<div id="searchbox" style="display: none">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" class="text" />
+      <input type="submit" value="Go" class="submit" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="parameter-matching">
+<h1>Parameter matching<a class="headerlink" href="#parameter-matching" title="Permalink to this headline">¶</a></h1>
+<p>Ludibrio offers a very flexible way to match parameters in method calls. In simple cases, parameters are matched using basic equality. For instance:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ludibrio</span> <span class="kn">import</span> <span class="o">*</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">Mock</span><span class="p">()</span> <span class="k">as</span> <span class="n">greeting</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">greeting</span><span class="o">.</span><span class="n">hello</span><span class="p">(</span><span class="s">&#39;Gustavo&#39;</span><span class="p">,</span> <span class="s">&#39;morning&#39;</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="s">&#39;Good morning, Gustavo&#39;</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">greeting</span><span class="o">.</span><span class="n">hello</span><span class="p">(</span><span class="s">&#39;Gustavo&#39;</span><span class="p">)</span>
+<span class="go">&#39;Good morning, Gustavo&#39;</span>
+</pre></div>
+</div>
+<p>In more interesting cases, a few special parameters may be used to define the expectation.</p>
+<p>As an example, the following code will record an expression which will match any method calls that take str as the second argument:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ludibrio.matcher</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">Mock</span><span class="p">()</span> <span class="k">as</span> <span class="n">greeting</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">greeting</span><span class="o">.</span><span class="n">hello</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">instance_of</span><span class="p">(</span><span class="nb">str</span><span class="p">),</span> <span class="nb">any</span><span class="p">())</span> <span class="o">&gt;&gt;</span> <span class="s">&#39;Hello, guy&#39;</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">greeting</span><span class="o">.</span><span class="n">hello</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&#39;bean&#39;</span><span class="p">,</span> <span class="s">&#39;morning&#39;</span><span class="p">)</span>
+<span class="go">&#39;Hello, guy&#39;</span>
+</pre></div>
+</div>
+<p>In Stub:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">Stub</span><span class="p">()</span> <span class="k">as</span> <span class="n">splitext</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">splitext</span>
+<span class="gp">... </span>    <span class="n">splitext</span><span class="p">(</span><span class="nb">any</span><span class="p">())</span> <span class="o">&gt;&gt;</span> <span class="p">[</span><span class="s">&#39;test&#39;</span><span class="p">,</span> <span class="s">&#39;.temp&#39;</span><span class="p">]</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">splitext</span><span class="p">(</span><span class="s">&quot;file.txt&quot;</span><span class="p">)</span>
+<span class="go">[&#39;test&#39;, &#39;.temp&#39;]</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">splitext</span><span class="p">(</span><span class="s">&quot;document.odt&quot;</span><span class="p">)</span>
+<span class="go">[&#39;test&#39;, &#39;.temp&#39;]</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">splitext</span><span class="o">.</span><span class="n">restore_import</span><span class="p">()</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">Stub</span><span class="p">()</span> <span class="k">as</span> <span class="n">test</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">test</span><span class="o">.</span><span class="n">method</span><span class="p">(</span><span class="nb">any</span><span class="p">(),</span> <span class="n">kind_of</span><span class="p">(</span><span class="nb">int</span><span class="p">))</span> <span class="o">&gt;&gt;</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">amount</span> <span class="o">==</span> <span class="mi">3</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">test</span><span class="o">.</span><span class="n">method</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">test</span><span class="o">.</span><span class="n">method</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">,</span><span class="mf">2.0</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+  <span class="c">...</span>
+<span class="nc">ParameterException</span>: <span class="n-Identifier">2.0 is not a kind of &lt;type &#39;int&#39;&gt;</span>
+</pre></div>
+</div>
+<div class="section" id="custom-matchers">
+<h2>Custom matchers<a class="headerlink" href="#custom-matchers" title="Permalink to this headline">¶</a></h2>
+<p>Extending the Ludibrio with custom matchers is very easy. The function name must be the name of the matcher. The function must have 2 parameters and it must return True.</p>
+<p>In the example, when should fails, a message can be &#8220;4 is not the square root of 9&#8221;; in another way, if the fail is in a should_not, the message could be &#8220;3 is the square root of 9&#8221;, if the expectation was be_the_square_root_of(9) == 3. The example is below:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ludibrio</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="nd">@matcher</span>
+<span class="gp">... </span><span class="k">def</span> <span class="nf">the_square_root_of</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="kn">import</span> <span class="nn">math</span>
+<span class="gp">... </span>    <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">y</span><span class="p">):</span><span class="k">return</span> <span class="bp">True</span>
+<span class="gp">... </span>    <span class="k">raise</span> <span class="n">ParameterException</span><span class="p">(</span><span class="s">&quot;</span><span class="si">%r</span><span class="s"> is not the square root of </span><span class="si">%r</span><span class="s">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="mi">3</span> <span class="o">==</span> <span class="n">the_square_root_of</span><span class="p">(</span><span class="mi">9</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="mi">2</span> <span class="o">==</span> <span class="n">the_square_root_of</span><span class="p">(</span><span class="mf">4.1</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+    <span class="o">...</span>
+<span class="nc">ParameterException</span>: <span class="n-Identifier">2 is not the square root of 4.09...</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="should-dsl-matchers">
+<h2>Should-DSL Matchers<a class="headerlink" href="#should-dsl-matchers" title="Permalink to this headline">¶</a></h2>
+<p>Below there are some explanations about the available matchers in should_dsl package.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ludibrio.matcher</span> <span class="kn">import</span> <span class="o">*</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="nb">any</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">any</span><span class="p">()</span> <span class="o">==</span> <span class="mi">171</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">any</span><span class="p">()</span> <span class="o">==</span> <span class="s">&#39;Foo&#39;</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">any</span><span class="p">()</span> <span class="o">==</span> <span class="s">&#39;anything&#39;</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<div class="section" id="equal-to">
+<h3>equal_to<a class="headerlink" href="#equal-to" title="Permalink to this headline">¶</a></h3>
+<p>Checks object equality (not identity):</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ludibrio.matcher</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="mi">1</span> <span class="o">==</span> <span class="n">equal_to</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="mi">2</span> <span class="o">==</span> <span class="n">equal_to</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+  <span class="c">...</span>
+<span class="nc">ParameterException</span>: <span class="n-Identifier">2 is not equal to 3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">name</span> <span class="o">=</span> <span class="s">&#39;dsl&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">name</span> <span class="o">==</span> <span class="n">equal_to</span><span class="p">(</span><span class="s">&#39;dsl&#39;</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="contains">
+<h3>contains<a class="headerlink" href="#contains" title="Permalink to this headline">¶</a></h3>
+<p>Verifies if an object is contains (contain) another. The contain and include matchers do exactly the same job:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ludibrio.matcher</span> <span class="kn">import</span> <span class="n">contains</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">contains</span><span class="p">(</span><span class="s">&quot;Hello&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s">&quot;Hello, Gustavo Rezende&quot;</span>
+<span class="go">True</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">contains</span><span class="p">(</span><span class="s">&quot;Hi&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s">&quot;Hello, Gustavo Rezende&quot;</span>
+<span class="gt">Traceback (most recent call last):</span>
+  <span class="c">...</span>
+<span class="nc">ParameterException</span>: <span class="n-Identifier">&#39;Hello, Gustavo Rezende&#39; is not contains &#39;Hi&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="into">
+<h3>into<a class="headerlink" href="#into" title="Permalink to this headline">¶</a></h3>
+<p>Verifies if an object is contained (into) another. The contain and include matchers do exactly the same job:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ludibrio.matcher</span> <span class="kn">import</span> <span class="n">into</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">into</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span> <span class="o">==</span> <span class="mi">1</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">into</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span> <span class="o">==</span> <span class="mi">5</span>
+<span class="gt">Traceback (most recent call last):</span>
+  <span class="c">...</span>
+<span class="nc">ParameterException</span>: <span class="n-Identifier">5 is not in [1, 2, 3]</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">into</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span> <span class="o">==</span> <span class="mi">3</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="ended-with">
+<h3>ended_with<a class="headerlink" href="#ended-with" title="Permalink to this headline">¶</a></h3>
+<p>Verifies if a string ends with a given suffix:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ludibrio.matcher</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="s">&#39;hello world&#39;</span> <span class="o">==</span> <span class="n">ended_with</span><span class="p">(</span><span class="s">&#39;world&#39;</span><span class="p">)</span>
+<span class="go">True</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="s">&#39;hello motto&#39;</span> <span class="o">==</span> <span class="n">ended_with</span><span class="p">(</span><span class="s">&#39;world&#39;</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+    <span class="o">...</span>
+<span class="nc">ParameterException</span>: <span class="n-Identifier">&#39;hello motto&#39; is not ended with &#39;world&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="started-with">
+<h3>started_with<a class="headerlink" href="#started-with" title="Permalink to this headline">¶</a></h3>
+<p>Verifies if a string starts with a given prefix:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ludibrio.matcher</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="s">&#39;hello world&#39;</span> <span class="o">==</span> <span class="n">started_with</span><span class="p">(</span><span class="s">&#39;hello&#39;</span><span class="p">)</span>
+<span class="go">True</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="s">&#39;Hi world&#39;</span> <span class="o">==</span> <span class="n">started_with</span><span class="p">(</span><span class="s">&#39;hello&#39;</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+    <span class="o">...</span>
+<span class="nc">ParameterException</span>: <span class="n-Identifier">&#39;Hi world&#39; is not started with &#39;hello&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="like">
+<h3>like<a class="headerlink" href="#like" title="Permalink to this headline">¶</a></h3>
+<p>Checks matching against a regular expression:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ludibrio.matcher</span> <span class="kn">import</span> <span class="n">like</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="s">&#39;Hello World&#39;</span> <span class="o">==</span> <span class="n">like</span><span class="p">(</span><span class="s">r&#39;Hello W.+&#39;</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="s">&#39;123 is a number&#39;</span> <span class="o">==</span> <span class="n">like</span><span class="p">(</span><span class="s">r&#39;^[12]+ is a number&#39;</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+    <span class="o">...</span>
+<span class="nc">ParameterException</span>: <span class="n-Identifier">&#39;123 is a number&#39; is not like &#39;^[12]+ is a number&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="equal-to-ignoring-case">
+<h3>equal_to_ignoring_case<a class="headerlink" href="#equal-to-ignoring-case" title="Permalink to this headline">¶</a></h3>
+<p>Checks equality of strings ignoring case:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ludibrio.matcher</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="s">&quot;I&#39;m specifying it&quot;</span> <span class="o">==</span> <span class="n">equal_to_ignoring_case</span><span class="p">(</span><span class="s">&quot;I&#39;M SPECIFYING it&quot;</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="s">&#39;I&#39;</span> <span class="o">==</span> <span class="n">equal_to_ignoring_case</span><span class="p">(</span><span class="s">&#39;i&#39;</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="s">&#39;i&#39;</span> <span class="o">==</span> <span class="n">equal_to_ignoring_case</span><span class="p">(</span><span class="s">&#39;I&#39;</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="s">&#39;I&#39;</span> <span class="o">==</span> <span class="n">equal_to_ignoring_case</span><span class="p">(</span><span class="s">&#39;I&#39;</span><span class="p">)</span>
+<span class="go">True</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="s">&#39;I&#39;</span> <span class="o">==</span> <span class="n">equal_to_ignoring_case</span><span class="p">(</span><span class="s">&#39;wi&#39;</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+    <span class="o">...</span>
+<span class="nc">ParameterException</span>: <span class="n-Identifier">&#39;I&#39; is not equal to &#39;wi&#39; ignoring case</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="s">&#39;I&#39;</span> <span class="o">==</span> <span class="n">equal_to_ignoring_case</span><span class="p">(</span><span class="s">&#39;iw&#39;</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+    <span class="o">...</span>
+<span class="nc">ParameterException</span>: <span class="n-Identifier">&#39;I&#39; is not equal to &#39;iw&#39; ignoring case</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="s">&#39;Atenção&#39;</span> <span class="o">==</span> <span class="n">equal_to_ignoring_case</span><span class="p">(</span><span class="s">&#39;ATENÇÃO&#39;</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="greater-than-or-equal-to">
+<h3>greater_than_or_equal_to<a class="headerlink" href="#greater-than-or-equal-to" title="Permalink to this headline">¶</a></h3>
+<p>Simply checks the given comparisons (&gt;=):</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ludibrios</span> <span class="kn">import</span> <span class="n">greater_than_or_equal_to</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="mi">1</span> <span class="o">==</span> <span class="n">greater_than_or_equal_to</span><span class="p">(</span><span class="mf">0.9</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="mi">1</span> <span class="o">==</span> <span class="n">greater_than_or_equal_to</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="mi">1</span> <span class="o">==</span> <span class="n">greater_than_or_equal_to</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+    <span class="o">...</span>
+<span class="nc">ParameterException</span>: <span class="n-Identifier">1 is not greater than or equal to 2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">name</span> <span class="o">=</span> <span class="s">&#39;b&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">name</span> <span class="o">==</span> <span class="n">greater_than_or_equal_to</span><span class="p">(</span><span class="s">&#39;a&#39;</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">name</span> <span class="o">==</span> <span class="n">greater_than_or_equal_to</span><span class="p">(</span><span class="s">&#39;b&#39;</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="less-than">
+<h3>less_than<a class="headerlink" href="#less-than" title="Permalink to this headline">¶</a></h3>
+<p>Simply checks the given comparisons (&lt;):</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ludibrio.matcher</span> <span class="kn">import</span> <span class="n">less_than</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="mf">0.9</span> <span class="o">==</span> <span class="n">less_than</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="mi">2</span> <span class="o">==</span> <span class="n">less_than</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+    <span class="o">...</span>
+<span class="nc">ParameterException</span>: <span class="n-Identifier">2 is not less than 2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="mi">2</span> <span class="o">==</span> <span class="n">less_than</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+    <span class="o">...</span>
+<span class="nc">ParameterException</span>: <span class="n-Identifier">2 is not less than 1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">name</span> <span class="o">=</span> <span class="s">&#39;a&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">name</span> <span class="o">==</span> <span class="n">less_than</span><span class="p">(</span><span class="s">&#39;b&#39;</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="less-than-or-equal-to">
+<h3>less_than_or_equal_to<a class="headerlink" href="#less-than-or-equal-to" title="Permalink to this headline">¶</a></h3>
+<p>Simply checks the given comparisons (&lt;=):</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ludibrio</span> <span class="kn">import</span> <span class="n">less_than_or_equal_to</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="mf">0.9</span> <span class="o">==</span> <span class="n">less_than_or_equal_to</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="mi">1</span> <span class="o">==</span> <span class="n">less_than_or_equal_to</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="mi">2</span> <span class="o">==</span> <span class="n">less_than_or_equal_to</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+    <span class="o">...</span>
+<span class="nc">ParameterException</span>: <span class="n-Identifier">2 is not less than or equal to 1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">name</span> <span class="o">=</span> <span class="s">&#39;a&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">name</span> <span class="o">==</span> <span class="n">less_than_or_equal_to</span><span class="p">(</span><span class="s">&#39;b&#39;</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">name</span> <span class="o">==</span> <span class="n">less_than_or_equal_to</span><span class="p">(</span><span class="s">&#39;a&#39;</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="in-any-order">
+<h3>in_any_order<a class="headerlink" href="#in-any-order" title="Permalink to this headline">¶</a></h3>
+<p>Check if a iterable includes all elements of another:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ludibrio.matcher</span> <span class="kn">import</span> <span class="n">in_any_order</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">==</span> <span class="n">in_any_order</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="go">True</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">==</span> <span class="n">in_any_order</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span>
+<span class="gt">Traceback (most recent call last):</span>
+    <span class="o">...</span>
+<span class="nc">ParameterException</span>: <span class="n-Identifier">[1, 2, 3] does not have in any order [3, 4]</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">==</span> <span class="n">in_any_order</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="go">True</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">==</span> <span class="n">in_any_order</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="gt">Traceback (most recent call last):</span>
+    <span class="o">...</span>
+<span class="nc">ParameterException</span>: <span class="n-Identifier">[1, 2, 3] does not have in any order (3, 4)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="s">&#39;should&#39;</span> <span class="o">==</span> <span class="n">in_any_order</span><span class="p">((</span><span class="s">&#39;s&#39;</span><span class="p">,</span> <span class="s">&#39;d&#39;</span><span class="p">,</span> <span class="s">&#39;l&#39;</span><span class="p">))</span>
+<span class="go">True</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="s">&#39;should&#39;</span> <span class="o">==</span> <span class="n">in_any_order</span><span class="p">((</span><span class="s">&#39;h&#39;</span><span class="p">,</span> <span class="s">&#39;a&#39;</span><span class="p">))</span>
+<span class="gt">Traceback (most recent call last):</span>
+    <span class="o">...</span>
+<span class="nc">ParameterException</span>: <span class="n-Identifier">&#39;should&#39; does not have in any order (&#39;h&#39;, &#39;a&#39;)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="instance-of">
+<h3>instance_of<a class="headerlink" href="#instance-of" title="Permalink to this headline">¶</a></h3>
+<p>Verifies if an object is of a given type:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ludibrio.matcher</span> <span class="kn">import</span> <span class="n">instance_of</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Foo</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="gp">... </span>   <span class="k">pass</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Bar</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="gp">... </span>   <span class="k">pass</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">foo</span> <span class="o">=</span> <span class="n">Foo</span><span class="p">()</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">foo</span> <span class="o">==</span> <span class="n">instance_of</span><span class="p">(</span><span class="n">Foo</span><span class="p">)</span>
+<span class="go">True</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">foo</span> <span class="o">==</span> <span class="n">instance_of</span><span class="p">(</span><span class="n">Bar</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+    <span class="o">...</span>
+<span class="nc">ParameterException</span>: <span class="n-Identifier">&lt;...Foo object at ...&gt; is not a instance of &lt;class &#39;...Bar&#39;&gt;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="kind-of">
+<h3>kind_of<a class="headerlink" href="#kind-of" title="Permalink to this headline">¶</a></h3>
+<p>Verifies if an object is of a given type:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ludibrio.matcher</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Foo</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span> <span class="k">pass</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Bar</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span> <span class="k">pass</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">foo</span> <span class="o">=</span> <span class="n">Foo</span><span class="p">()</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">foo</span> <span class="o">==</span> <span class="n">kind_of</span><span class="p">(</span><span class="n">Foo</span><span class="p">)</span>
+<span class="go">True</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">foo</span> <span class="o">==</span> <span class="n">kind_of</span><span class="p">(</span><span class="n">Bar</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+    <span class="o">...</span>
+<span class="nc">ParameterException</span>: <span class="n-Identifier">&lt;...Foo object at ...&gt; is not a kind of &lt;class &#39;...Bar&#39;&gt;</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Parameter matching</a><ul>
+<li><a class="reference internal" href="#custom-matchers">Custom matchers</a></li>
+<li><a class="reference internal" href="#should-dsl-matchers">Should-DSL Matchers</a><ul>
+<li><a class="reference internal" href="#equal-to">equal_to</a></li>
+<li><a class="reference internal" href="#contains">contains</a></li>
+<li><a class="reference internal" href="#into">into</a></li>
+<li><a class="reference internal" href="#ended-with">ended_with</a></li>
+<li><a class="reference internal" href="#started-with">started_with</a></li>
+<li><a class="reference internal" href="#like">like</a></li>
+<li><a class="reference internal" href="#equal-to-ignoring-case">equal_to_ignoring_case</a></li>
+<li><a class="reference internal" href="#greater-than-or-equal-to">greater_than_or_equal_to</a></li>
+<li><a class="reference internal" href="#less-than">less_than</a></li>
+<li><a class="reference internal" href="#less-than-or-equal-to">less_than_or_equal_to</a></li>
+<li><a class="reference internal" href="#in-any-order">in_any_order</a></li>
+<li><a class="reference internal" href="#instance-of">instance_of</a></li>
+<li><a class="reference internal" href="#kind-of">kind_of</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="mock_unordered.html"
+                        title="previous chapter">Sample Mock unordered</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="stub.html"
+                        title="next chapter">Stubs</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/parameter_matching.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,105 @@
+Test Doubles - Overview for beginners by Hugo Lopes.
+====================================================
+
+Test doubles are fake objects that simulate the behavior of a real object for testing purposes. Test doubles are used for:
+
+    * Make tests run faster
+    * Eliminate the need for previously implementing all collaborators
+    * Enable the use techniques like Behaviour-Driven Development, that are based on outside-in development cycles
+    * Minimize coupling between objects
+    * Increase code testability
+
+[1] Collaborators are objects that the unit under test depends for executing some behavior. For example, a relational-object mapper can be a collaborator of a unit under test that persists itself in relational databases.
+
+
+Controlled inputs and outputs
+-----------------------------
+
+When testing a group of classes, it's sometimes very difficult to focus in one problem at once. Test doubles tools help to keep focused on the implementation of the unit under test, beacuse doubles are put at work instead of the real collaborators. The kind of test double used to perform this role is the Stub.
+
+Another issue is when the assertions are the calls to the collaborators themselves. For example, when testing an object that make calls to a persistence abstraction layer and you want to ensure that the unit under test makes the expected calls. In these situations, in which the collaboration must be ensured, the suitable kind of test double is the Mock.
+
+
+Mocks
+~~~~~
+
+As said above, mocks are used when the order of the calls is relevant and/or when the call (or calls) itself is the expected behavior. In these cases, the test or specification must ensure what methods are being called, how many times and with which parameters.
+
+In the following example, the system under test is a mail server. The test goal is to ensure the correctness of the interaction between the mail server and the underlying mail library.
+
+::
+
+    >>> class MailServer:
+    ...    def __init__(self, mail_sender):
+    ...        self._mail_sender = mail_sender
+    ...    def send_mail(self, from_, to, message):
+    ...        self._mail_sender.send(from_address=from_,
+    ...                               to_address=to,
+    ...                               message_content=message)
+
+::
+
+    >>> from ludibrio import Mock
+
+    >>> with Mock() as mail_sender:
+    ...     mail_sender.send(from_address='me@domain.com',
+    ...                      to_address='you@domain.com',
+    ...                      message_content='Hi!') >> None
+    >>> server = MailServer(mail_sender)
+    >>> server.send_mail(from_='me@domain.com',
+    ...                   to='you@domain.com',
+    ...                   message='Hi!')
+    >>> mail_sender.validate()
+
+
+MailServer class' __init__ method receives the object responsible to send mails, i.e., the library that as the ability to send mails. This technique is called dependency injection [2], which can be constructor injection (as we did), setter injection or by parameter passing.
+
+The validate method ensure that send_mail method was called within mail_sender object, and received the correct parameters.
+
+Using mocks, the code under test doesn't depend on any previous implementation of collaborators. They don't need even exist. In fact, in the example above, at the moment that MailServer class is specified, there's no any class for the mail_sender object. There's no real mail server to be configured, nothing to shift the focus from the current task.
+
+Test doubles also minimize the time of running tests, since there's none of the overhead associated to real collaborators as network connections or file access.
+
+[2]	http://jamesshore.com/Blog/Dependency-Injection-Demystified.html
+
+
+Stubs
+~~~~~
+
+Stubs are test doubles programmed to provide inputs to and outputs from collaborators, but that don't care if the collaborator's methods are called or in which order the calls happen. The goal of using stubs is quite different to using mocks: with mocks, the programmed calls are themselves the assertions/expectations; with stubs, the programmed calls provide inputs and outputs from collaborators to unit under test.
+
+Stubs only return programmed answers for given calls, and nothing more. An example follows::
+
+    >>> import string
+    >>> from datetime import datetime
+
+    >>> def current_date(format):
+    ...    now = datetime.now()
+    ...    template = string.Template(format)
+    ...    return template.substitute(year=now.year,
+    ...                               month=now.month,
+    ...                               day=now.day)
+
+::
+
+    >>> from ludibrio import Stub
+
+    >>> with Stub() as datetime:
+    ...    from datetime import datetime
+    ...    now = datetime.now()
+    ...    now.year >> 2010
+    ...    now.month >> 6
+    ...    now.day >> 7
+
+    >>> current_date('$day/$month/$year')
+    '7/6/2010'
+
+    >>> datetime.restore_import()
+
+
+In the example above, the system under test is the current_date function, that returns the current date, composed by day, month and year, in a configurable format.
+
+The stub replaces the return of datetime object's now method, imported from datetime module, making it return 2010, 6 and 7 in, respectively, its year, month and day attributes.
+
+Thus, the goal is merely to return the programmed answers, with no care about the order of calls or even if methods or attributes are accessed.
+

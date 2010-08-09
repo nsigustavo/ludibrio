@@ -1,0 +1,22 @@
+Example for Dependency Injection
+================================
+
+ludibrio/_importexample.py
+
+.. literalinclude::
+    ../../_importexample.py
+
+
+Usage::
+    
+    >>> from ludibrio  import Stub
+
+    >>> with Stub() as times:
+    ...     from os import times
+    ...     times() >> (0.31, 0.080000000000000002, 0.0, 0.0, 17186168.84)
+
+    >>> from ludibrio._importexample import tempo
+    >>> tempo()
+    17186168.84
+    
+    >>> times.restore_import() 

@@ -1,0 +1,310 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Dummy &mdash; ludibrio v3.0.2 documentation</title>
+    <link rel="stylesheet" href="_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '3.0.2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="ludibrio v3.0.2 documentation" href="index.html" />
+    <link rel="next" title="Stub proxy" href="stub_proxy.html" />
+    <link rel="prev" title="Stubs" href="stub.html" />
+
+
+    <link rel="stylesheet" href="_static/css/global.css" type="text/css" charset="utf-8" />
+
+    <link rel="stylesheet" href="_static/css/python.css" type="text/css" charset="utf-8" />
+
+
+
+  </head>
+  <body>
+
+    <div class="menu">
+        <a href="index.html">
+            <img src="_static/img/_home.png" />
+        </a>
+        <a href="documentation.html">
+            <img src="_static/img/_documentacao.png" />
+        </a>
+        <a href="download.html">
+            <img src="_static/img/_download.png" />
+        </a>
+        <a href="getting_involved.html">
+            <img src="_static/img/_programando.png" />
+        </a>
+        <a href="search.html">
+            <img src="_static/img/_busca.png" />
+        </a>
+    </div>
+
+<div id="searchbox" style="display: none">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" class="text" />
+      <input type="submit" value="Go" class="submit" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="dummy">
+<h1>Dummy<a class="headerlink" href="#dummy" title="Permalink to this headline">¶</a></h1>
+<p>Ludibrio provides dummy objects, in order to document the intention of programmer of using a double object that is not influenced on test. Any method call with any parameter of any attribute access on a dummy object results on another dummy. Dummies respond to all kind of collaboration, being useful in cases in which its behavior is irrelevant.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ludibrio.dummy</span> <span class="kn">import</span> <span class="n">Dummy</span>
+</pre></div>
+</div>
+<ol class="arabic">
+<li><p class="first">Should accept configuration of its representation:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Dummy</span><span class="p">()</span>
+<span class="go">Dummy Object</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Dummy</span><span class="p">(</span><span class="nb">repr</span><span class="o">=</span><span class="s">&quot;Objeto Idiota&quot;</span><span class="p">)</span>
+<span class="go">Objeto Idiota</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Should always return a Dummy, for any method call:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">dummy</span> <span class="o">=</span> <span class="n">Dummy</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dummy</span><span class="o">.</span><span class="n">executAnythingAndReturnDummyObject</span><span class="p">()</span>
+<span class="go">Dummy Object</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dummy</span><span class="o">.</span><span class="n">foo</span><span class="p">()</span>
+<span class="go">Dummy Object</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Should always return a Dummy, for any property call:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">dummy</span><span class="o">.</span><span class="n">bar</span>
+<span class="go">Dummy Object</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dummy</span><span class="o">.</span><span class="n">one</span><span class="o">.</span><span class="n">two</span><span class="o">.</span><span class="n">three</span>
+<span class="go">Dummy Object</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Should accept any mathematical or logical operation:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="mi">1</span> <span class="o">+</span> <span class="n">Dummy</span><span class="p">()</span>
+<span class="go">Dummy Object</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Dummy</span><span class="p">()</span> <span class="o">-</span><span class="mi">1</span>
+<span class="go">Dummy Object</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dummy</span> <span class="o">=</span> <span class="n">Dummy</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dummy</span> <span class="o">**</span> <span class="mi">22</span> <span class="ow">and</span> <span class="n">dummy</span> <span class="o">/</span> <span class="n">dummy</span>
+<span class="go">Dummy Object</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dummy</span> <span class="o">*</span> <span class="mi">69</span> <span class="ow">or</span> <span class="n">dummy</span> <span class="o">//</span> <span class="n">dummy</span> <span class="o">==</span> <span class="s">&quot;Anything&quot;</span>
+<span class="go">Dummy Object</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Should return a Dummy for any parameter passed to constructor:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Dummy</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mf">2.3</span><span class="p">,</span><span class="s">&quot;4&quot;</span><span class="p">,</span><span class="n">a</span><span class="o">=</span><span class="mf">5.6</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s">&quot;8&quot;</span><span class="p">)[</span><span class="o">...</span><span class="p">]</span>
+<span class="go">Dummy Object</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Should fake a string:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Dummy</span><span class="p">()</span> <span class="o">%</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s">&quot;Gustavo Rezende&quot;</span><span class="p">,</span> <span class="mf">2.8</span><span class="p">)</span>
+<span class="go">Dummy Object</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Should work in any context:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">execute_but_not_validated</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">x</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;teste&quot;</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">x</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">execute_but_not_validated</span><span class="p">(</span><span class="n">Dummy</span><span class="p">())</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Dummies result on 1, True or an iterator due to Python&#8217;s type transforms.</p>
+<blockquote>
+<ol class="arabic" start="8">
+<li><ol class="first arabic simple">
+<li>Should return a list containing a dummy object with list():</li>
+</ol>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">Dummy</span><span class="p">())</span>
+<span class="go">[Dummy Object]</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<ol class="arabic" start="8">
+<li><ol class="first arabic simple" start="2">
+<li>Should execute one iteration when asked to iterate:</li>
+</ol>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">Dummy</span><span class="p">():</span><span class="k">print</span> <span class="n">i</span>
+<span class="go">Dummy Object</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<ol class="arabic" start="8">
+<li><ol class="first arabic simple" start="3">
+<li>Any kind of Python call should return a dummy object:</li>
+</ol>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Dummy</span><span class="p">()[</span><span class="mi">4</span><span class="p">]</span>
+<span class="go">Dummy Object</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Dummy</span><span class="p">()[</span><span class="mi">2</span><span class="p">:</span><span class="mi">9</span><span class="p">]</span>
+<span class="go">Dummy Object</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<ol class="arabic" start="8">
+<li><ol class="first arabic simple" start="4">
+<li>Should return True when &#8220;in&#8221; is applied:</li>
+</ol>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="mi">8</span> <span class="ow">in</span> <span class="n">Dummy</span><span class="p">()</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<ol class="arabic" start="8">
+<li><ol class="first arabic simple" start="5">
+<li>Should return a dictionary having dummy objects as both key and value when dict() is applied:</li>
+</ol>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="nb">dict</span><span class="p">(</span><span class="n">Dummy</span><span class="p">())</span>
+<span class="go">{Dummy Object: Dummy Object}</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<ol class="arabic" start="8">
+<li><ol class="first arabic simple" start="6">
+<li>Should return its string representation:</li>
+</ol>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="nb">str</span><span class="p">(</span><span class="n">Dummy</span><span class="p">())</span>
+<span class="go">&#39;Dummy Object&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">str</span><span class="p">(</span><span class="n">Dummy</span><span class="p">(</span><span class="nb">str</span><span class="o">=</span><span class="s">&#39;dumb object&#39;</span><span class="p">))</span>
+<span class="go">&#39;dumb object&#39;</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<ol class="arabic" start="8">
+<li><ol class="first arabic simple" start="7">
+<li>Should return 1 for int():</li>
+</ol>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="nb">int</span><span class="p">(</span><span class="n">Dummy</span><span class="p">())</span>
+<span class="go">1</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<ol class="arabic" start="8">
+<li><ol class="first arabic simple" start="8">
+<li>Should return 1.0 for float():</li>
+</ol>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="nb">float</span><span class="p">(</span><span class="n">Dummy</span><span class="p">())</span>
+<span class="go">1.0</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<ol class="arabic" start="8">
+<li><ol class="first arabic simple" start="9">
+<li>Should return True for bool():</li>
+</ol>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="nb">bool</span><span class="p">(</span><span class="n">Dummy</span><span class="p">())</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</blockquote>
+</li>
+<li><p class="first">Should simulate a type when requested:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="nb">isinstance</span><span class="p">(</span><span class="n">Dummy</span><span class="p">(),</span> <span class="nb">str</span><span class="p">)</span>
+<span class="go">False</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">isinstance</span><span class="p">(</span><span class="n">Dummy</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">),</span> <span class="nb">str</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Should accept deletion of an element:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">del</span> <span class="n">Dummy</span><span class="p">()</span><span class="o">.</span><span class="n">anything</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Special methods like _enter_ and _exit_ used with &#8220;with&#8221; statement return a Dummy, like :</p>
+</li>
+</ol>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">Dummy</span><span class="p">()</span> <span class="k">as</span> <span class="n">d</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">d</span><span class="o">.</span><span class="n">foo</span><span class="p">()</span> <span class="o">&gt;&gt;</span> <span class="s">&#39;bar&#39;</span>
+<span class="go">Dummy Object</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">d</span><span class="o">.</span><span class="n">foo</span><span class="p">()</span>
+<span class="go">Dummy Object</span>
+</pre></div>
+</div>
+<p>To configure a method return for an object that responds to any interface, use Stub&#8217;s proxy for a dummy:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ludibrio</span> <span class="kn">import</span> <span class="n">Stub</span><span class="p">,</span> <span class="n">Dummy</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">Stub</span><span class="p">(</span><span class="n">proxy</span><span class="o">=</span><span class="n">Dummy</span><span class="p">())</span> <span class="k">as</span> <span class="n">d</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">d</span><span class="o">.</span><span class="n">foo</span><span class="p">()</span> <span class="o">&gt;&gt;</span> <span class="s">&#39;bar&#39;</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">d</span><span class="o">.</span><span class="n">foo</span><span class="p">()</span>
+<span class="go">&#39;bar&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">d</span><span class="o">.</span><span class="n">bar</span><span class="p">()</span>
+<span class="go">Dummy Object</span>
+</pre></div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="stub.html"
+                        title="previous chapter">Stubs</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="stub_proxy.html"
+                        title="next chapter">Stub proxy</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/dummy.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+  </body>
+</html>

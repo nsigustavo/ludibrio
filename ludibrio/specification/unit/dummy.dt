@@ -1,0 +1,147 @@
+Dummy
+=====
+
+Ludibrio provides dummy objects, in order to document the intention of programmer of using a double object that is not influenced on test. Any method call with any parameter of any attribute access on a dummy object results on another dummy. Dummies respond to all kind of collaboration, being useful in cases in which its behavior is irrelevant.
+
+    >>> from ludibrio.dummy import Dummy
+
+1. Should accept configuration of its representation::
+
+    >>> Dummy()
+    Dummy Object
+    >>> Dummy(repr="Objeto Idiota")
+    Objeto Idiota
+
+2. Should always return a Dummy, for any method call::
+
+    >>> dummy = Dummy()
+    >>> dummy.executAnythingAndReturnDummyObject()
+    Dummy Object
+    >>> dummy.foo()
+    Dummy Object
+
+3. Should always return a Dummy, for any property call::
+
+    >>> dummy.bar
+    Dummy Object
+    >>> dummy.one.two.three
+    Dummy Object
+
+4. Should accept any mathematical or logical operation::
+
+    >>> 1 + Dummy()
+    Dummy Object
+    >>> Dummy() -1
+    Dummy Object
+
+    >>> dummy = Dummy()
+    >>> dummy ** 22 and dummy / dummy
+    Dummy Object
+    >>> dummy * 69 or dummy // dummy == "Anything"
+    Dummy Object
+
+
+5. Should return a Dummy for any parameter passed to constructor::
+
+    >>> Dummy(1,2.3,"4",a=5.6, b=7, c="8")[...]
+    Dummy Object
+
+6. Should fake a string::
+
+    >>> Dummy() %(1, "Gustavo Rezende", 2.8)
+    Dummy Object
+
+7. Should work in any context::
+
+    >>> def execute_but_not_validated(x):
+    ...     x.write("teste")
+    ...     x.close()
+    >>> execute_but_not_validated(Dummy())
+
+8. Dummies result on 1, True or an iterator due to Python's type transforms.
+
+    8. 1. Should return a list containing a dummy object with list()::
+
+        >>> list(Dummy())
+        [Dummy Object]
+
+    8. 2. Should execute one iteration when asked to iterate::
+    
+        >>> for i in Dummy():print i
+        Dummy Object
+
+    8. 3. Any kind of Python call should return a dummy object::
+
+        >>> Dummy()[4]
+        Dummy Object
+        >>> Dummy()[2:9]
+        Dummy Object
+
+    8. 4. Should return True when "in" is applied::
+
+        >>> 8 in Dummy()
+        True
+
+    8. 5. Should return a dictionary having dummy objects as both key and value when dict() is applied::
+
+        >>> dict(Dummy())
+        {Dummy Object: Dummy Object}
+
+    8. 6. Should return its string representation::
+
+        >>> str(Dummy())
+        'Dummy Object'
+        >>> str(Dummy(str='dumb object'))
+        'dumb object'
+
+    8. 7. Should return 1 for int()::
+        >>> int(Dummy())
+        1
+
+    8. 8. Should return 1.0 for float()::
+
+        >>> float(Dummy())
+        1.0
+
+    8. 9. Should return True for bool()::
+
+        >>> bool(Dummy())
+        True
+
+9. Should simulate a type when requested::
+
+    >>> isinstance(Dummy(), str)
+    False
+
+    >>> isinstance(Dummy(type=str), str)
+    True
+
+10. Should accept deletion of an element::
+
+    >>> del Dummy().anything
+
+
+11. Special methods like _enter_ and _exit_ used with "with" statement return a Dummy, like :
+
+::
+
+    >>> with Dummy() as d:
+    ...     d.foo() >> 'bar'
+    Dummy Object
+
+    >>> d.foo()
+    Dummy Object
+
+To configure a method return for an object that responds to any interface, use Stub's proxy for a dummy::
+
+    >>> from ludibrio import Stub, Dummy
+    >>> with Stub(proxy=Dummy()) as d:
+    ...     d.foo() >> 'bar'
+    
+    >>> d.foo()
+    'bar'
+    >>> d.bar()
+    Dummy Object
+
+
+

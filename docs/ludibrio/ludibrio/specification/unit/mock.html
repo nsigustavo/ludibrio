@@ -1,0 +1,230 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Mock &mdash; ludibrio v3.0.2 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '3.0.2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="top" title="ludibrio v3.0.2 documentation" href="../../../../index.html" />
+
+
+    <link rel="stylesheet" href="../../../../_static/css/global.css" type="text/css" charset="utf-8" />
+
+    <link rel="stylesheet" href="../../../../_static/css/python.css" type="text/css" charset="utf-8" />
+
+
+
+  </head>
+  <body>
+
+    <div class="menu">
+        <a href="../../../../index.html">
+            <img src="../../../../_static/img/_home.png" />
+        </a>
+        <a href="../../../../documentation.html">
+            <img src="../../../../_static/img/_documentacao.png" />
+        </a>
+        <a href="../../../../download.html">
+            <img src="../../../../_static/img/_download.png" />
+        </a>
+        <a href="../../../../getting_involved.html">
+            <img src="../../../../_static/img/_programando.png" />
+        </a>
+        <a href="../../../../search.html">
+            <img src="../../../../_static/img/_busca.png" />
+        </a>
+    </div>
+
+<div id="searchbox" style="display: none">
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" class="text" />
+      <input type="submit" value="Go" class="submit" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="mock">
+<h1>Mock<a class="headerlink" href="#mock" title="Permalink to this headline">¶</a></h1>
+<p>Mocks are objects with programmed calls that are themselves the expectation. When the object under test is executed, all expectations defined on the mocks have necessarily to be accomplished or the specification will fail.</p>
+<blockquote>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ludibrio.mock</span> <span class="kn">import</span> <span class="n">Mock</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">Mock</span><span class="p">()</span> <span class="k">as</span> <span class="n">greetings</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">greetings</span><span class="o">.</span><span class="n">excuse_me</span><span class="p">()</span> <span class="o">&gt;&gt;</span> <span class="s">&#39;Com licença&#39;</span>
+<span class="gp">... </span>    <span class="n">greetings</span><span class="o">.</span><span class="n">hello</span><span class="p">(</span><span class="s">&#39;Gustavo&#39;</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="s">&#39;Ola, Gustavo&#39;</span>
+<span class="gp">... </span>    <span class="n">greetings</span><span class="o">.</span><span class="n">see_you_soon</span> <span class="o">&gt;&gt;</span> <span class="s">&#39;Até logo&#39;</span>
+<span class="gp">... </span>    <span class="n">greetings</span><span class="o">.</span><span class="n">see_you_soon</span> <span class="o">&gt;&gt;</span> <span class="s">&#39;Até logo, denovo&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">greetings</span><span class="o">.</span><span class="n">excuse_me</span><span class="p">()</span>
+<span class="go">Com licença</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">greetings</span><span class="o">.</span><span class="n">hello</span><span class="p">(</span><span class="s">&#39;Gustavo&#39;</span><span class="p">)</span>
+<span class="go">Ola, Gustavo</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">greetings</span><span class="o">.</span><span class="n">see_you_soon</span>
+<span class="go">Até logo</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">greetings</span><span class="o">.</span><span class="n">see_you_soon</span>
+<span class="go">Até logo, denovo</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">greetings</span><span class="o">.</span><span class="n">see_you_soon</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="c">...</span>
+<span class="nc">MockExpectationError</span>: <span class="n-Identifier">Mock Object received unexpected call:see_you_soon</span>
+<span class="go">Expected:</span>
+<span class="go">greetings.excuse_me() &gt;&gt; &#39;Com licença&#39;</span>
+<span class="go">greetings.hello(&#39;Gustavo&#39;) &gt;&gt; &#39;Ola, Gustavo&#39;</span>
+<span class="go">greetings.see_you_soon &gt;&gt; &#39;Até logo&#39;</span>
+<span class="go">greetings.see_you_soon &gt;&gt; &#39;Até logo, denovo&#39;</span>
+<span class="go">Got:</span>
+<span class="go">Stack trace (most recent call last)</span>
+<span class="go">  File &quot;&lt;doctest mock.dt[2]&gt;&quot;, line 1, in &lt;module&gt;</span>
+<span class="go">    print greetings.excuse_me()</span>
+<span class="go">  File &quot;&lt;doctest mock.dt[3]&gt;&quot;, line 1, in &lt;module&gt;</span>
+<span class="go">    print greetings.hello(&#39;Gustavo&#39;)</span>
+<span class="go">  File &quot;&lt;doctest mock.dt[4]&gt;&quot;, line 1, in &lt;module&gt;</span>
+<span class="go">    print greetings.see_you_soon</span>
+<span class="go">  File &quot;&lt;doctest mock.dt[5]&gt;&quot;, line 1, in &lt;module&gt;</span>
+<span class="go">    print greetings.see_you_soon</span>
+<span class="go">  File &quot;&lt;doctest mock.dt[6]&gt;&quot;, line 1, in &lt;module&gt;</span>
+<span class="go">    print greetings.see_you_soon</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">Mock</span><span class="p">()</span> <span class="k">as</span> <span class="n">listing</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">listing</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;&gt;</span> <span class="s">&#39;one&#39;</span>
+<span class="gp">... </span>    <span class="n">listing</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span> <span class="o">&gt;&gt;</span> <span class="p">[</span><span class="s">&#39;two&#39;</span><span class="p">,</span> <span class="s">&#39;three&#39;</span><span class="p">,</span> <span class="s">&#39;four&#39;</span><span class="p">]</span>
+<span class="gp">... </span>    <span class="n">listing</span><span class="p">[</span><span class="s">&#39;four&#39;</span><span class="p">]</span> <span class="o">&gt;&gt;</span> <span class="mi">4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">listing</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="go">one</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">listing</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span>
+<span class="go">[&#39;two&#39;, &#39;three&#39;, &#39;four&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">listing</span><span class="p">[</span><span class="s">&#39;four&#39;</span><span class="p">]</span>
+<span class="go">4</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">Mock</span><span class="p">()</span> <span class="k">as</span> <span class="nb">callable</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="nb">callable</span><span class="p">(</span><span class="n">two</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">callable</span><span class="p">(</span><span class="n">two</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="go">2</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">Mock</span><span class="p">()</span> <span class="k">as</span> <span class="n">operator</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">operator</span> <span class="o">*</span> <span class="mi">4</span> <span class="o">&gt;&gt;</span> <span class="mi">4</span>
+<span class="gp">... </span>    <span class="n">operator</span> <span class="o">+</span> <span class="mi">4</span> <span class="o">&gt;&gt;</span> <span class="mi">5</span>
+<span class="gp">... </span>    <span class="n">operator</span> <span class="o">**</span> <span class="mi">4</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">operator</span> <span class="o">*</span> <span class="mi">4</span>
+<span class="go">4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">operator</span> <span class="o">+</span> <span class="mi">4</span>
+<span class="go">5</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">operator</span> <span class="o">**</span> <span class="mi">4</span>
+<span class="go">1</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">Mock</span><span class="p">()</span> <span class="k">as</span> <span class="n">Greetings</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">greetings</span> <span class="o">=</span> <span class="n">Greetings</span><span class="p">(</span><span class="n">tree</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">greetings</span>
+<span class="go">Mock Object</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">Mock</span><span class="p">()</span> <span class="k">as</span> <span class="n">MySQLdb</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">con</span> <span class="o">=</span> <span class="n">MySQLdb</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&#39;server&#39;</span><span class="p">,</span> <span class="s">&#39;user&#39;</span><span class="p">,</span> <span class="s">&#39;password&#39;</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">con</span><span class="o">.</span><span class="n">select_db</span><span class="p">(</span><span class="s">&#39;database&#39;</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="bp">None</span>
+<span class="gp">... </span>    <span class="n">cursor</span> <span class="o">=</span> <span class="n">con</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+<span class="gp">... </span>    <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&#39;SOME SQL&#39;</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="bp">None</span>
+<span class="gp">... </span>    <span class="n">cursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span> <span class="o">&gt;&gt;</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">con</span> <span class="o">=</span> <span class="n">MySQLdb</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&#39;server&#39;</span><span class="p">,</span> <span class="s">&#39;user&#39;</span><span class="p">,</span> <span class="s">&#39;password&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">con</span><span class="o">.</span><span class="n">select_db</span><span class="p">(</span><span class="s">&#39;database&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cursor</span> <span class="o">=</span> <span class="n">con</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&#39;SOME SQL&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+<span class="go">[1, 2, 3, 4, 5]</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">Mock</span><span class="p">()</span> <span class="k">as</span> <span class="n">testeError</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">testeError</span><span class="o">.</span><span class="n">foo</span><span class="p">(</span><span class="s">&#39;bar&#39;</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="ne">ArithmeticError</span><span class="p">(</span><span class="s">&#39;test error&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">testeError</span><span class="o">.</span><span class="n">foo</span><span class="p">(</span><span class="s">&#39;bar&#39;</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="c">...</span>
+<span class="nc">ArithmeticError</span>: <span class="n-Identifier">test error</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">Mock</span><span class="p">()</span> <span class="k">as</span> <span class="n">count</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">count</span><span class="p">()</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span>
+<span class="gp">... </span>    <span class="n">count</span><span class="p">()</span> <span class="o">&gt;&gt;</span> <span class="mi">2</span>
+<span class="gp">... </span>    <span class="n">count</span><span class="p">()</span> <span class="o">&gt;&gt;</span> <span class="mi">3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">count</span><span class="p">()</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">count</span><span class="p">()</span>
+<span class="go">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">count</span><span class="p">()</span>
+<span class="go">3</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">credit_transfer</span><span class="p">(</span><span class="n">from_account</span><span class="p">,</span> <span class="n">to_account</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<span class="gp">... </span>   <span class="n">from_account</span><span class="o">.</span><span class="n">debit</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+<span class="gp">... </span>   <span class="n">to_account</span><span class="o">.</span><span class="n">credit</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">Mock</span><span class="p">()</span> <span class="k">as</span> <span class="n">from_account</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">from_account</span><span class="o">.</span><span class="n">debit</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="bp">None</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">Mock</span><span class="p">()</span> <span class="k">as</span> <span class="n">to_account</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">to_account</span><span class="o">.</span><span class="n">credit</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="bp">None</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">credit_transfer</span><span class="p">(</span><span class="n">from_account</span><span class="p">,</span> <span class="n">to_account</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+</pre></div>
+</div>
+</blockquote>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../../../_sources/ludibrio/ludibrio/specification/unit/mock.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+  </body>
+</html>

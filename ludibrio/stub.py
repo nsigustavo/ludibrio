@@ -46,7 +46,7 @@ class Stub(_TestDouble):
             return self._expectation_value(property, args, kargs)
 
     def __exit__(self, type, value, traceback):
-        self.__dependency_injection__.restoure_import()
+        self.__dependency_injection__.restore_import()
         self.__recording__ = STOPRECORD
 
     def __setattr__(self, attr, value):
@@ -55,8 +55,8 @@ class Stub(_TestDouble):
         else:
             self._property_called('__setattr__', args=[attr, value])
 
-    def _new_expectation(self, attr):
-        self.__expectation__.append(attr)
+    def _new_expectation(self, expectation):
+        self.__expectation__.append(expectation)
 
     def __rshift__(self, response):
             self.__expectation__[-1][3] = response
@@ -96,7 +96,7 @@ class Stub(_TestDouble):
         return self._property_called('__getattribute__', (x,), response=self)
     
     def __del__(self):
-        self.__dependency_injection__.restoure_object()
+        self.__dependency_injection__.restore_object()
     
-    def restoure_import(self):
-        self.__dependency_injection__.restoure_object()
+    def restore_import(self):
+        self.__dependency_injection__.restore_object()

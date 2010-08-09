@@ -1,0 +1,131 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Sample Mock unordered &mdash; ludibrio v3.0.2 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '3.0.2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="top" title="ludibrio v3.0.2 documentation" href="../../../../index.html" />
+
+
+    <link rel="stylesheet" href="../../../../_static/css/global.css" type="text/css" charset="utf-8" />
+
+    <link rel="stylesheet" href="../../../../_static/css/python.css" type="text/css" charset="utf-8" />
+
+
+
+  </head>
+  <body>
+
+    <div class="menu">
+        <a href="../../../../index.html">
+            <img src="../../../../_static/img/_home.png" />
+        </a>
+        <a href="../../../../documentation.html">
+            <img src="../../../../_static/img/_documentacao.png" />
+        </a>
+        <a href="../../../../download.html">
+            <img src="../../../../_static/img/_download.png" />
+        </a>
+        <a href="../../../../getting_involved.html">
+            <img src="../../../../_static/img/_programando.png" />
+        </a>
+        <a href="../../../../search.html">
+            <img src="../../../../_static/img/_busca.png" />
+        </a>
+    </div>
+
+<div id="searchbox" style="display: none">
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" class="text" />
+      <input type="submit" value="Go" class="submit" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="sample-mock-unordered">
+<h1>Sample Mock unordered<a class="headerlink" href="#sample-mock-unordered" title="Permalink to this headline">¶</a></h1>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ludibrio</span> <span class="kn">import</span> <span class="n">Mock</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">Mock</span><span class="p">(</span><span class="n">ordered</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">greetings</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">greetings</span><span class="o">.</span><span class="n">excuse_me</span><span class="p">()</span> <span class="o">&gt;&gt;</span> <span class="s">&#39;Com licença&#39;</span>
+<span class="gp">... </span>    <span class="n">greetings</span><span class="o">.</span><span class="n">hello</span><span class="p">(</span><span class="s">&#39;Gustavo&#39;</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="s">&#39;Ola, Gustavo&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">greetings</span><span class="o">.</span><span class="n">hello</span><span class="p">(</span><span class="s">&#39;Gustavo&#39;</span><span class="p">)</span>
+<span class="go">Ola, Gustavo</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">greetings</span><span class="o">.</span><span class="n">excuse_me</span><span class="p">()</span>
+<span class="go">Com licença</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">greetings</span><span class="o">.</span><span class="n">hello</span><span class="p">(</span><span class="s">&#39;Gustavo&#39;</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="c">...</span>
+<span class="nc">MockExpectationError</span>: <span class="n-Identifier">Mock Object received unexpected call:hello</span>
+<span class="go">Expected:</span>
+<span class="go">greetings.excuse_me() &gt;&gt; &#39;Com licença&#39;</span>
+<span class="go">greetings.hello(&#39;Gustavo&#39;) &gt;&gt; &#39;Ola, Gustavo&#39;</span>
+<span class="go">Got:</span>
+<span class="go">Stack trace (most recent call last)</span>
+<span class="go">  File &quot;&lt;doctest mock_unordered.dt[2]&gt;&quot;, line 1, in &lt;module&gt;</span>
+<span class="go">    print greetings.hello(&#39;Gustavo&#39;)</span>
+<span class="go">  File &quot;&lt;doctest mock_unordered.dt[3]&gt;&quot;, line 1, in &lt;module&gt;</span>
+<span class="go">    print greetings.excuse_me()</span>
+<span class="go">  File &quot;&lt;doctest mock_unordered.dt[4]&gt;&quot;, line 1, in &lt;module&gt;</span>
+<span class="go">    print greetings.hello(&#39;Gustavo&#39;)</span>
+</pre></div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../../../_sources/ludibrio/ludibrio/specification/unit/mock_unordered.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+  </body>
+</html>

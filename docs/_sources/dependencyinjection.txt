@@ -1,0 +1,7 @@
+
+.. include::
+    ludibrio/ludibrio/specification/unit/mock_and_stub_dependencyinjection.dt
+
+.. include::
+    ludibrio/ludibrio/specification/unit/dependencyinjection_importforadocontexto.dt
+

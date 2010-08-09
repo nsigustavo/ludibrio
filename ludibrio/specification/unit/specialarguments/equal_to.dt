@@ -1,0 +1,18 @@
+
+equal_to
+~~~~~~~~
+
+Checks object equality (not identity)::
+
+
+    >>> from ludibrio.matcher import *
+
+    >>> 1 == equal_to(1)
+    True
+    >>> 2 == equal_to(3)
+    Traceback (most recent call last):
+      ...
+    ParameterException: 2 is not equal to 3
+    >>> name = 'dsl'
+    >>> name == equal_to('dsl')
+    True

@@ -1,0 +1,81 @@
+Stubs
+=====
+
+Stubs are test doubles programmed to provide inputs to and outputs from collaborators, but that don't care if the collaborator's methods are called or in which order the calls happen. The goal of using stubs is quite different to using mocks: with mocks, the programmed calls are themselves the assertions/expectations; with stubs, the programmed calls provide inputs and outputs from collaborators to unit under test.
+
+
+>>> from ludibrio.stub import Stub
+
+
+1. Stubs provide canned answers to calls made during the test.
+    >>> with Stub() as x:
+    ...     x.anything() >> 'response'
+
+    >>> x.anything()
+    'response'
+
+    >>> with Stub() as x:
+    ...     x + 1 >> 1
+    ...     x - 1 >> -1
+    ...     x.anything() >> 'response'
+    >>> x - 1
+    -1
+    >>> x + 1
+    1
+   >>> x.anything()
+   'response'
+
+
+2. Should return the values in the same sequence as the methods are called on the stub configuration. Subsequent calls will restart the cycle.
+
+    >>> with Stub() as count:
+    ...     count() >> 1
+    ...     count() >> 2
+    ...     count() >> 3
+    >>> count()
+    1
+    >>> count()
+    2
+    >>> count()
+    3
+    >>> count()
+    1
+    >>> count()
+    2
+    >>> count()
+    3
+
+3. Should support its string representation be changed by configuration.
+    >>> with Stub(repr='Greetings') as greetings:
+    ...     pass
+    >>> greetings
+    Greetings
+
+
+4. Should support both method and property configuration:
+    >>> with greetings as greetings:
+    ...     greetings.excuse_me() >> 'Com licença'
+    ...     greetings.hello('Gustavo') >> 'Ola, Gustavo'
+    ...     greetings.outrohello('Gustavo') >> 'Oi, Gustavo'
+    ...     greetings.hello('Gustavo', 'Diego') >> 'Ola, Gustavo e Diego'
+    ...     greetings.see_you_soon >> 'Até logo'
+
+    >>> print greetings.hello('Gustavo')
+    Ola, Gustavo
+    >>> print greetings.excuse_me()
+    Com licença
+    >>> print greetings.hello('Gustavo')
+    Ola, Gustavo
+    >>> print greetings.outrohello('Gustavo')
+    Oi, Gustavo
+    >>> print greetings.outrohello('Gustavo')
+    Oi, Gustavo
+    >>> print greetings.hello('Gustavo')
+    Ola, Gustavo
+    >>> print greetings.see_you_soon
+    Até logo
+    >>> print greetings.hello('Gustavo', 'Diego')
+    Ola, Gustavo e Diego
+    >>> print greetings.hello('Gustavo')
+    Ola, Gustavo
+
