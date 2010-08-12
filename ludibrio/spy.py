@@ -45,7 +45,13 @@ class verify(object):
                 self.spy.called_count([self._attr_called,
                                        self.args,
                                        self.kargs]))
+    @property
+    def before(self):        
+        return Before(self)
 
+    @property
+    def after(self):
+        return After(self)
 
 class Times(object):
 
@@ -79,6 +85,62 @@ class Times(object):
 
 times = Times()
 
-
-
+class Before(object):
+    def __init__(self, verify_object):
+        self.verify_object = verify_object
     
+    def __getattr__(self, attr):
+        self.attr_called = [attr]
+        return self
+
+    def __call__(self, *args, **kargs):
+        self.attr_called += [args, kargs]
+        
+        attr = self.verify_object._attr_called
+        args = self.verify_object.args
+        kargs = self.verify_object.kargs
+        
+        before = [attr, args, kargs]
+        after = self.attr_called    
+        calls = self.verify_object.spy.__calls__
+        try:
+            return calls.index(before) < calls.index(after)
+        except ValueError:
+            return False            
+
+class After(object):
+    def __init__(self, verify_object):
+        self.verify_object = verify_object
+    
+    def __getattr__(self, attr):
+        self.attr_called = [attr]
+        return self
+
+    def __call__(self, *args, **kargs):
+        self.attr_called += [args, kargs]
+        
+        attr = self.verify_object._attr_called
+        args = self.verify_object.args
+        kargs = self.verify_object.kargs
+        
+        before = [attr, args, kargs]
+        after = self.attr_called    
+        calls = self.verify_object.spy.__calls__
+        try:
+            return calls.index(before) > calls.index(after)
+        except ValueError:
+            return False            
+
+
+#class After(TimeCalled):
+#    def compare(self):
+#        try:..except
+
+#class Before(TimeCalled):
+#    def compare(self):
+#        try..except
+
+#class TimeCalled(object):
+#    ...
+#    def __call__(...)
+#        return self.compare(...)

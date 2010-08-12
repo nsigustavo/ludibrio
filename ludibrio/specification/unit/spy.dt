@@ -46,11 +46,11 @@ Spy provides indirect output verification::
     True
 
 
-    >>> verify(grettings) .welcome() .after .hi(name='beca')
+    >>> verify(greetings) .welcome() .before .hi(name='beca')
     True
     
-    >>> verify(grettings) .goodbye() .before .hi(name='beca')
-    True
+    >>> verify(greetings) .welcome() .after .hi(name='beca')
+    False
 
 
 

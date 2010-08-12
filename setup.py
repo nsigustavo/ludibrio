@@ -33,5 +33,6 @@ setup(name='ludibrio',
       # -*- Entry points: -*-
       """,
       setup_requires=['nose'],
+      test_suite='nose.collector',
       )
 
