@@ -44,11 +44,8 @@ Spy provides indirect output verification::
     False
     >>> verify (greetings).goodbye() .called(times <= 2)
     True
-
-
     >>> verify(greetings) .welcome() .before .hi(name='beca')
     True
-    
     >>> verify(greetings) .welcome() .after .hi(name='beca')
     False
 

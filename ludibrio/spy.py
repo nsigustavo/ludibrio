@@ -85,9 +85,15 @@ class Times(object):
 
 times = Times()
 
-class Before(object):
+class TimeCalled(object):
+    
     def __init__(self, verify_object):
         self.verify_object = verify_object
+        attr = self.verify_object._attr_called
+        args = self.verify_object.args
+        kargs = self.verify_object.kargs
+        self.calls = verify_object.spy.__calls__
+        self.before = [attr, args, kargs]
     
     def __getattr__(self, attr):
         self.attr_called = [attr]
@@ -95,52 +101,19 @@ class Before(object):
 
     def __call__(self, *args, **kargs):
         self.attr_called += [args, kargs]
-        
-        attr = self.verify_object._attr_called
-        args = self.verify_object.args
-        kargs = self.verify_object.kargs
-        
-        before = [attr, args, kargs]
-        after = self.attr_called    
-        calls = self.verify_object.spy.__calls__
+        self.after = self.attr_called
+        return self.compare()
+
+class Before(TimeCalled):
+    def compare(self):
         try:
-            return calls.index(before) < calls.index(after)
+            return self.calls.index(self.before) < self.calls.index(self.after)
         except ValueError:
-            return False            
+            return False
 
-class After(object):
-    def __init__(self, verify_object):
-        self.verify_object = verify_object
-    
-    def __getattr__(self, attr):
-        self.attr_called = [attr]
-        return self
-
-    def __call__(self, *args, **kargs):
-        self.attr_called += [args, kargs]
-        
-        attr = self.verify_object._attr_called
-        args = self.verify_object.args
-        kargs = self.verify_object.kargs
-        
-        before = [attr, args, kargs]
-        after = self.attr_called    
-        calls = self.verify_object.spy.__calls__
+class After(TimeCalled):
+    def compare(self):
         try:
-            return calls.index(before) > calls.index(after)
+            return self.calls.index(self.before) > self.calls.index(self.after)
         except ValueError:
-            return False            
-
-
-#class After(TimeCalled):
-#    def compare(self):
-#        try:..except
-
-#class Before(TimeCalled):
-#    def compare(self):
-#        try..except
-
-#class TimeCalled(object):
-#    ...
-#    def __call__(...)
-#        return self.compare(...)
+            return False         
