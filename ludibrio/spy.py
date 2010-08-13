@@ -1,8 +1,9 @@
 from ludibrio import Stub
 
+
 class Spy(Stub):
 
-    __calls__ = [] #[attr, args=[], kargs={}]
+    __calls__ = []
 
     def _expectation_value(self, attr, args=[], kargs={}):
         self.__calls__.append([attr, args, kargs])
@@ -53,6 +54,7 @@ class verify(object):
     def after(self):
         return After(self)
 
+
 class Times(object):
 
     def _handle(self, operation, expectation_value):
@@ -83,15 +85,16 @@ class Times(object):
     def verify(self, value):
         return self.operation(value, self.expectation_value)
 
+
 times = Times()
+
 
 class TimeCalled(object):
     
     def __init__(self, verify_object):
-        self.verify_object = verify_object
-        attr = self.verify_object._attr_called
-        args = self.verify_object.args
-        kargs = self.verify_object.kargs
+        attr = verify_object._attr_called
+        args = verify_object.args
+        kargs = verify_object.kargs
         self.calls = verify_object.spy.__calls__
         self.before = [attr, args, kargs]
     
@@ -104,12 +107,14 @@ class TimeCalled(object):
         self.after = self.attr_called
         return self.compare()
 
+
 class Before(TimeCalled):
     def compare(self):
         try:
             return self.calls.index(self.before) < self.calls.index(self.after)
         except ValueError:
             return False
+
 
 class After(TimeCalled):
     def compare(self):

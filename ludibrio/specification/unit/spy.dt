@@ -1,5 +1,5 @@
 
-Spy test Double.
+Spy Test Double.
 ==================
 
 Test Spy is used as an observation point for the indirect output of the tested code. May need to provide values in response to method calls, also captures the indirect outputs of the system and saves them for later verification by the test::
