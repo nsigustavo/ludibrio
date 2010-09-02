@@ -79,3 +79,11 @@ Stubs are test doubles programmed to provide inputs to and outputs from collabor
     >>> print greetings.hello('Gustavo')
     Ola, Gustavo
 
+
+
+    >>> with Stub() as testeError:
+    ...     testeError.foo('bar') >> ArithmeticError('test error')
+    >>> testeError.foo('bar')
+    Traceback (most recent call last):
+    ...
+    ArithmeticError: test error

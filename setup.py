@@ -3,7 +3,6 @@ import os
 
 version = '3.0.2'
 
-
 def read(rname):
     if os.path.isfile(rname):
         return file(os.path.join(os.path.dirname(__file__), rname)).read()

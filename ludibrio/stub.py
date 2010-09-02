@@ -66,7 +66,10 @@ class Stub(_TestDouble):
         for position, (attr_expectation, args_expectation, kargs_expectation, response) in enumerate(self.__expectation__):
             if (attr_expectation, args_expectation, kargs_expectation) == (attr, args, kargs):
                 self._to_the_end(position)
-                return response
+                if isinstance(response, Exception):
+	                raise response
+                else:
+	                return response 
         if self._has_proxy():
             return self._proxy(attr, args, kargs)
         self._attribute_expectation(attr, args, kargs)
