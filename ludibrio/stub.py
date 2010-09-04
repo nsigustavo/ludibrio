@@ -76,9 +76,10 @@ class Stub(_ProxyToAlias):
 
     def _attribute_expectation(self, attr, args, kargs):
         raise AttributeError(
-            "Stub Object received unexpected call. %s\n%s"%(
+            "\n%s\nStub Object received unexpected call: %s"%(
+                    self.__traceroute__.stack_trace(),
                     self._format_called(attr, args, kargs),
-                    self.__traceroute__.stack_trace()))
+					))
 
     def _proxy(self, attr, args, kargs):
         return getattr(self.__kargs__.get('proxy'), attr)(*args, **kargs)

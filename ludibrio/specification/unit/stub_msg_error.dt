@@ -14,13 +14,13 @@ Should raise an error when making non-configured calls::
     >>> print greetings.executeAnythingAndReturnError()
     Traceback (most recent call last):
     ...
-    AttributeError: Stub Object received unexpected call. executeAnythingAndReturnError
+    AttributeError: 
     Stack trace (most recent call last)
       File "<doctest stub_msg_error.dt[2]>", line 1, in <module>
         print greetings.called()
       File "<doctest stub_msg_error.dt[3]>", line 1, in <module>
         print greetings.executeAnythingAndReturnError()
-
+    Stub Object received unexpected call: executeAnythingAndReturnError
 
 Should raise an error if programmed calls are executed with incorrect parameters::
 
@@ -29,8 +29,8 @@ Should raise an error if programmed calls are executed with incorrect parameters
     >>> print greetings.hi('fulano')
     Traceback (most recent call last):
     ...
-    AttributeError: Stub Object received unexpected call. hi('fulano')
+    AttributeError: 
     Stack trace (most recent call last)
       File "<doctest stub_msg_error.dt[5]>", line 1, in <module>
         print greetings.hi('fulano')
-
+    Stub Object received unexpected call: hi('fulano')

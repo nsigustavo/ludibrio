@@ -21,3 +21,9 @@ def format_called(attr, args, kargs):
                     +['%s=%r'%(k, v) for k, v in kargs.items()])
     return "%s(%s)"%( attr, parameters)
 
+
+
+def _reindent(text, space_with=4):
+	lines = text.split("\n")
+	lines_indented = [" "*space_with+line for line in lines]
+	return '\n'.join(lines_indented)

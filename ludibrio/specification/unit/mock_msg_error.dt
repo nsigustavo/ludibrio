@@ -30,16 +30,17 @@ Sample of generation of error for Mock.
     >>> print greetings.hello('Gustavo Rezende')
     Traceback (most recent call last):
     ...
-    MockExpectationError: Mock Object received unexpected call:hello
-    Expected:
-    greetings.excuse_me() >> 'Com licença'
-    greetings.see_you_soon >> 'Até logo'
+    MockExpected: 
+      greetings.excuse_me() >> 'Com licença'
+      greetings.see_you_soon >> 'Até logo'
     Got:
     Stack trace (most recent call last)
       File "<doctest mock_msg_error.dt[5]>", line 1, in <module>
         print greetings.excuse_me()
       File "<doctest mock_msg_error.dt[6]>", line 1, in <module>
         print greetings.hello('Gustavo Rezende')
+    Mock Object received unexpected call:hello
+
 
 ::
 
@@ -48,11 +49,10 @@ Sample of generation of error for Mock.
     >>> greetings.excuse_me(name='Diego Manhaes')
     Traceback (most recent call last):
     ...
-    MockExpectationError: Mock Object received unexpected call:__call__(name='Diego Manhaes')
-    Expected:
-    greetings.excuse_me(name='gustavo') >> 'Com licença'
+    MockExpected: 
+      greetings.excuse_me(name='gustavo') >> 'Com licença'
     Got:
     Stack trace (most recent call last)
       File "<doctest mock_msg_error.dt[8]>", line 1, in <module>
         greetings.excuse_me(name='Diego Manhaes')
-
+    Mock Object received unexpected call:__call__(name='Diego Manhaes')

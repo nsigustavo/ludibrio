@@ -5,8 +5,7 @@ from sys import _getframe as getframe
 from _testdouble import _ProxyToAlias
 from dependencyinjection import DependencyInjection
 from traceroute import TraceRoute
-from ludibrio.helpers import format_called
-
+from ludibrio.helpers import format_called, _reindent
 STOPRECORD = False
 RECORDING = True
 
@@ -68,17 +67,19 @@ class Mock(_ProxyToAlias):
                 return self._call_mocked_unordered(attr, args, kargs)
         except (CallExpectation, IndexError):
             self.__dependency_injection__.restore_object()
-            raise MockExpectationError(self._unexpected_call_msg(attr, args, kargs))
+            raise MockExpected(self._unexpected_call_msg(attr, args, kargs))
 
     def _unexpected_call_msg(self, attr, args, kargs):
-        return ("Mock Object received unexpected call:%s\n"
-                "Expected:\n"
-                "%s\n"
+        return ("\n"
+				"%s\n"
                 "Got:\n"
-                "%s") % (
+                "%s\n"
+				"Mock Object received unexpected call:%s"
+                ) % (
+                    _reindent(self.__traceroute_expected__.stack_code(), 2),
+                    self.__traceroute__.stack_trace(),
                     format_called(attr, args, kargs),
-                    self.__traceroute_expected__.stack_code(),
-                    self.__traceroute__.stack_trace())
+					)
 
     def _is_ordered(self):
         return self.__kargs__.get('ordered', True)
@@ -146,6 +147,9 @@ class MockedCall(object):
 
 
 class MockExpectationError(AssertionError):
+    """Extends AssertionError for unittest compatibility"""
+
+class MockExpected(AssertionError):
     """Extends AssertionError for unittest compatibility"""
 
 class CallExpectation(AssertionError):
