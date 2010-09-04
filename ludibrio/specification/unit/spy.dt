@@ -48,6 +48,3 @@ Spy provides indirect output verification::
     True
     >>> verify(greetings) .welcome() .after .hi(name='beca')
     False
-
-
-

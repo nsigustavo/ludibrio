@@ -1,5 +1,5 @@
 
-class _TestDouble(object):
+class _ProxyToAlias(object):
 
     __kargs__ = {}
     __args__ = []

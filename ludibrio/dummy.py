@@ -1,9 +1,9 @@
 #-*- coding:utf-8 -*-
 
 from sys import _getframe as getframe
-from _testdouble import _TestDouble
+from _testdouble import _ProxyToAlias
 
-class Dummy(_TestDouble):
+class Dummy(_ProxyToAlias):
     """Dummy:
         Objects that are not used directly by the unit under test. Usually,
         dummies are parameters that are merely passed on.

@@ -1,10 +1,10 @@
 from inspect import getframeinfo, getmodule
 from sys import _getframe
 import traceback
-from ludibrio._testdouble import _TestDouble
+from ludibrio._testdouble import _ProxyToAlias
 from helpers import frame_out_of_context
 
-class TraceRoute(_TestDouble):
+class TraceRoute(_ProxyToAlias):
     def __init__(self):
         self.__traceback__= []
 

@@ -2,7 +2,7 @@
 
 from inspect import getframeinfo
 from sys import _getframe as getframe
-from _testdouble import _TestDouble
+from _testdouble import _ProxyToAlias
 from dependencyinjection import DependencyInjection
 from traceroute import TraceRoute
 from ludibrio.helpers import format_called
@@ -11,7 +11,7 @@ STOPRECORD = False
 RECORDING = True
 
 
-class Stub(_TestDouble):
+class Stub(_ProxyToAlias):
     """Stubs provides canned answers to calls made during the test.
     """
     __expectation__= [] # [(attribute, args, kargs),]
@@ -60,7 +60,7 @@ class Stub(_TestDouble):
 
     def __rshift__(self, response):
             self.__expectation__[-1][3] = response
-    __lshift__ = __rshift__
+    gives = __lshift__ = __rshift__
 
     def _expectation_value(self, attr, args=[], kargs={}):
         for position, (attr_expectation, args_expectation, kargs_expectation, response) in enumerate(self.__expectation__):

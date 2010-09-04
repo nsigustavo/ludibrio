@@ -2,7 +2,7 @@
 
 from inspect import getframeinfo 
 from sys import _getframe as getframe 
-from _testdouble import _TestDouble 
+from _testdouble import _ProxyToAlias
 from dependencyinjection import DependencyInjection
 from traceroute import TraceRoute
 from ludibrio.helpers import format_called
@@ -11,7 +11,7 @@ STOPRECORD = False
 RECORDING = True
 
 
-class Mock(_TestDouble):
+class Mock(_ProxyToAlias):
     """Mocks are what we are talking about here:
     objects pre-programmed with expectations which form a
     specification of the calls they are expected to receive.
@@ -58,7 +58,7 @@ class Mock(_TestDouble):
 
     def __rshift__(self, response):
             self.__expectation__[-1].set_response(response)
-    __lshift__ = __rshift__ 
+    gives = __lshift__ = __rshift__ 
 
     def _expectancy_recorded(self, attr, args=[], kargs={}):
         try:
@@ -67,6 +67,7 @@ class Mock(_TestDouble):
             else:
                 return self._call_mocked_unordered(attr, args, kargs)
         except (CallExpectation, IndexError):
+            self.__dependency_injection__.restore_object()
             raise MockExpectationError(self._unexpected_call_msg(attr, args, kargs))
 
     def _unexpected_call_msg(self, attr, args, kargs):
