@@ -4,7 +4,6 @@ from inspect import getframeinfo
 from sys import _getframe as getframe
 from _testdouble import _TestDouble
 from dependencyinjection import DependencyInjection
-from traceroute import TraceRoute
 from ludibrio.helpers import format_called
 
 STOPRECORD = False
@@ -18,11 +17,9 @@ class Stub(_TestDouble):
     __recording__ = RECORDING
     __last_property_called__ = None
     __dependency_injection__ = None
-    __traceroute__ = None
 
     def __enter__(self):
         self.__expectation__= []
-        self.__traceroute__ = TraceRoute()
         self.__recording__ = RECORDING
         self.__dependency_injection__ = DependencyInjection(double = self)
         return self
@@ -42,7 +39,6 @@ class Stub(_TestDouble):
             self._new_expectation([property, args, kargs, response])
             return self
         else:
-            self.__traceroute__.remember()
             return self._expectation_value(property, args, kargs)
 
     def __exit__(self, type, value, traceback):
@@ -73,9 +69,8 @@ class Stub(_TestDouble):
 
     def _attribute_expectation(self, attr, args, kargs):
         raise AttributeError(
-            "Stub Object received unexpected call. %s\n%s"%(
-                    self._format_called(attr, args, kargs),
-                    self.__traceroute__.stack_trace()))
+            "Stub Object received unexpected call. %s"%(
+                    self._format_called(attr, args, kargs)))
 
     def _proxy(self, attr, args, kargs):
         return getattr(self.__kargs__.get('proxy'), attr)(*args, **kargs)

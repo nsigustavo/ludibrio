@@ -2,44 +2,7 @@ Mock
 ====
 Mocks are objects with programmed calls that are themselves the expectation. When the object under test is executed, all expectations defined on the mocks have necessarily to be accomplished or the specification will fail.
 
-    >>> from ludibrio.mock import Mock
-
-    >>> with Mock() as greetings:
-    ...     greetings.excuse_me() >> 'Com licença'
-    ...     greetings.hello('Gustavo') >> 'Ola, Gustavo'
-    ...     greetings.see_you_soon >> 'Até logo'
-    ...     greetings.see_you_soon >> 'Até logo, denovo'
-    >>> print greetings.excuse_me()
-    Com licença
-    >>> print greetings.hello('Gustavo')
-    Ola, Gustavo
-    >>> print greetings.see_you_soon
-    Até logo
-    >>> print greetings.see_you_soon
-    Até logo, denovo
-    >>> print greetings.see_you_soon
-    Traceback (most recent call last):
-    ...
-    MockExpectationError: Mock Object received unexpected call:see_you_soon
-    Expected:
-    greetings.excuse_me() >> 'Com licença'
-    greetings.hello('Gustavo') >> 'Ola, Gustavo'
-    greetings.see_you_soon >> 'Até logo'
-    greetings.see_you_soon >> 'Até logo, denovo'
-    Got:
-    Stack trace (most recent call last)
-      File "<doctest mock.dt[2]>", line 1, in <module>
-        print greetings.excuse_me()
-      File "<doctest mock.dt[3]>", line 1, in <module>
-        print greetings.hello('Gustavo')
-      File "<doctest mock.dt[4]>", line 1, in <module>
-        print greetings.see_you_soon
-      File "<doctest mock.dt[5]>", line 1, in <module>
-        print greetings.see_you_soon
-      File "<doctest mock.dt[6]>", line 1, in <module>
-        print greetings.see_you_soon
-
-
+    >>> from ludibrio import Mock
     >>> with Mock() as listing:
     ...     listing[1] >> 'one'
     ...     listing[1:4] >> ['two', 'three', 'four']
@@ -116,4 +79,3 @@ Mocks are objects with programmed calls that are themselves the expectation. Whe
     ...     to_account.credit(100) >> None
 
     >>> credit_transfer(from_account, to_account, 100)
-

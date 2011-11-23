@@ -4,7 +4,6 @@ from inspect import getframeinfo
 from sys import _getframe as getframe 
 from _testdouble import _TestDouble 
 from dependencyinjection import DependencyInjection
-from traceroute import TraceRoute
 from ludibrio.helpers import format_called
 
 STOPRECORD = False
@@ -17,14 +16,11 @@ class Mock(_TestDouble):
     specification of the calls they are expected to receive.
     """
     __expectation__ =[]#[MockedCall(attribute, args, kargs),]
-    __recording__ = RECORDING 
-    __traceroute__ = None
-    __traceroute_expected__ = None
+    __recording__ = RECORDING
+    __last_property_called__ = None
     __dependency_injection__ = None
 
     def __enter__(self):
-        self.__traceroute__ = TraceRoute()
-        self.__traceroute_expected__ = TraceRoute()
         self.__expectation__ = []
         self.__recording__ = RECORDING
         self.__dependency_injection__ = DependencyInjection(double = self)
@@ -36,11 +32,9 @@ class Mock(_TestDouble):
 
     def _property_called(self, property, args=[], kargs={}):
         if self.__recording__:
-            self.__traceroute_expected__.remember()
             self._new_expectation(MockedCall(property, args = args, kargs = kargs, response = self))
             return self 
         else:
-            self.__traceroute__.remember()
             return self._expectancy_recorded(property, args, kargs)
 
     def __exit__(self, type, value, traceback):
@@ -70,14 +64,11 @@ class Mock(_TestDouble):
             raise MockExpectationError(self._unexpected_call_msg(attr, args, kargs))
 
     def _unexpected_call_msg(self, attr, args, kargs):
-        return ("Mock Object received unexpected call:%s\n"
-                "Expected:\n"
-                "%s\n"
-                "Got:\n"
-                "%s") % (
-                    format_called(attr, args, kargs),
-                    self.__traceroute_expected__.stack_code(),
-                    self.__traceroute__.stack_trace())
+        if attr == "__call__":
+            attribute = self.__last_property_called__
+        else:
+            attribute = attr
+        return "Mock Object received unexpected call:%s" % format_called(attribute, args, kargs)
 
     def _is_ordered(self):
         return self.__kargs__.get('ordered', True)
@@ -94,13 +85,13 @@ class Mock(_TestDouble):
         return call_mocked.call(attr, args, kargs)
 
     def __getattr__(self, x):
+        self.__last_property_called__ = x
         return self._property_called('__getattribute__',[x])
 
     def validate(self):
         self.__dependency_injection__.restore_object()
         if self.__expectation__:
-            raise MockExpectationError(
-                    self._call_waiting_msg())
+            raise MockExpectationError(self._call_waiting_msg())
 
     def __del__(self):
         self.__dependency_injection__.restore_object()
@@ -108,13 +99,13 @@ class Mock(_TestDouble):
             print  self._call_waiting_msg()
     
     def _call_waiting_msg(self):
-        return("Call waiting:\n"
-               "Expected:\n"
-               "%s\n"
-               "Got only:\n"
-               "%s") % (
-                    self.__traceroute_expected__.stack_code(),
-                    self.__traceroute__.stack_code())
+        call_wait = self.__expectation__.pop(0)
+        if call_wait.attribute == "__call__":
+            attribute = self.__last_property_called__
+        else:
+            attribute = call_wait.attribute
+        return "Call waiting: %s" % format_called(attribute, call_wait.args, call_wait.kargs)
+
 
 class MockedCall(object):
     def __init__(self, attribute, args=[], kargs={}, response = None):
