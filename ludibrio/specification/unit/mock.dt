@@ -79,3 +79,4 @@ Mocks are objects with programmed calls that are themselves the expectation. Whe
     ...     to_account.credit(100) >> None
 
     >>> credit_transfer(from_account, to_account, 100)
+

@@ -1,0 +1,16 @@
+
+
+>>> from ludibrio import Stub
+>>> class Test(object):
+...     var = {'a':1}
+...     def __getattr__(self, attr):
+...         return self.var[attr]
+...     b=2
+>>> teste = Test()
+>>> with Stub(proxy=teste) as teste:
+...     teste.b >> 3
+
+>>> teste.b
+3
+>>> teste.a
+1

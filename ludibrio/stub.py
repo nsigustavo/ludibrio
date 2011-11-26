@@ -73,7 +73,10 @@ class Stub(_TestDouble):
                     self._format_called(attr, args, kargs)))
 
     def _proxy(self, attr, args, kargs):
-        return getattr(self.__kargs__.get('proxy'), attr)(*args, **kargs)
+        proxy = self.__kargs__.get('proxy')
+        if attr in ['__getattribute__', '__getattr__'] :
+            return getattr(proxy, args[0])
+        return getattr(proxy, attr)(*args, **kargs)
 
     def _has_proxy(self):
         return self.__kargs__.has_key('proxy')
