@@ -6,7 +6,7 @@ version = '3.1.0'
 
 def read(rname):
     if os.path.isfile(rname):
-        return file(os.path.join(os.path.dirname(__file__), rname)).read()
+        return open(os.path.join(os.path.dirname(__file__), rname)).read()
     return ''
 
 
@@ -34,5 +34,6 @@ setup(name='ludibrio',
       """,
       setup_requires=['nose'],
       test_suite='nose.collector',
+      use_2to3=True,
       )
 
