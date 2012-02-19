@@ -1,5 +1,14 @@
 *~
-*pyc
-build
-dist
-ludibrio.egg-info
+
+# Python
+*.pyc
+/__pycache__/
+
+# setuptools / distribute
+/*.egg-info/
+/*.egg/
+/build/
+/dist/
+
+# Tox
+/.tox/
