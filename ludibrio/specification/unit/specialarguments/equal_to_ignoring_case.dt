@@ -28,6 +28,9 @@ Checks equality of strings ignoring case::
         ...
     ludibrio.matcher.ParameterException: 'I' is not equal to 'iw' ignoring case
 
-    >>> 'Atenção' == equal_to_ignoring_case('ATENÇÃO')
+    >>> u'Atenção' == equal_to_ignoring_case(u'ATENÇÃO')  # doctest: +SKIP
+    True
+
+    >>> u'Aten\xe7\xe3o' == equal_to_ignoring_case(u'ATEN\xc7\xc3O')
     True
 
