@@ -49,8 +49,8 @@ In Stub::
     ...     test.method(any(), kind_of(int)) >> None and amount == 3
 
     >>> test.method(1,2)
-    >>> test.method('',2.0)
+    >>> test.method('',2.0)  # doctest: +ELLIPSIS
     Traceback (most recent call last):
       ...
-    ludibrio.matcher.ParameterException: 2.0 is not a kind of <type 'int'>
+    ludibrio.matcher.ParameterException: 2.0 is not a kind of <... 'int'>
 
