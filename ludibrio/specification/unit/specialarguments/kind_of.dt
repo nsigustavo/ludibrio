@@ -17,7 +17,7 @@ Verifies if an object is of a given type::
     >>> foo == kind_of(Foo)
     True
 
-    >>> foo == kind_of(Bar)
+    >>> foo == kind_of(Bar)  # doctest: +ELLIPSIS
     Traceback (most recent call last):
         ...
     ludibrio.matcher.ParameterException: <...Foo object at ...> is not a kind of <class '...Bar'>
