@@ -2,6 +2,9 @@
 in_any_order
 ~~~~~~~~~~~~
 
+.. Python < 3 compatibility
+    >>> import ludibrio.specification.compat
+
 Check if a iterable includes all elements of another::
 
     >>> from ludibrio.matcher import in_any_order
@@ -12,7 +15,7 @@ Check if a iterable includes all elements of another::
     >>> [1, 2, 3] == in_any_order([3, 4])
     Traceback (most recent call last):
         ...
-    ParameterException: [1, 2, 3] does not have in any order [3, 4]
+    ludibrio.matcher.ParameterException: [1, 2, 3] does not have in any order [3, 4]
 
     >>> [1, 2, 3] == in_any_order((3, 1))
     True
@@ -20,7 +23,7 @@ Check if a iterable includes all elements of another::
     >>> [1, 2, 3] == in_any_order((3, 4))
     Traceback (most recent call last):
         ...
-    ParameterException: [1, 2, 3] does not have in any order (3, 4)
+    ludibrio.matcher.ParameterException: [1, 2, 3] does not have in any order (3, 4)
 
     >>> 'should' == in_any_order(('s', 'd', 'l'))
     True
@@ -28,5 +31,5 @@ Check if a iterable includes all elements of another::
     >>> 'should' == in_any_order(('h', 'a'))
     Traceback (most recent call last):
         ...
-    ParameterException: 'should' does not have in any order ('h', 'a')
+    ludibrio.matcher.ParameterException: 'should' does not have in any order ('h', 'a')
 

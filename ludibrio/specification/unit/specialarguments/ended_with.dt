@@ -2,6 +2,9 @@
 ended_with
 ~~~~~~~~~~
 
+.. Python < 3 compatibility
+    >>> import ludibrio.specification.compat
+
 Verifies if a string ends with a given suffix::
 
     >>> from ludibrio.matcher import *
@@ -12,5 +15,5 @@ Verifies if a string ends with a given suffix::
     >>> 'hello motto' == ended_with('world')
     Traceback (most recent call last):
         ...
-    ParameterException: 'hello motto' is not ended with 'world'
+    ludibrio.matcher.ParameterException: 'hello motto' is not ended with 'world'
 

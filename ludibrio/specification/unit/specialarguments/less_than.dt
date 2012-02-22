@@ -2,6 +2,9 @@
 less_than
 ~~~~~~~~~
 
+.. Python < 3 compatibility
+    >>> import ludibrio.specification.compat
+
 Simply checks the given comparisons (<)::
 
     >>> from ludibrio.matcher import less_than
@@ -11,11 +14,11 @@ Simply checks the given comparisons (<)::
     >>> 2 == less_than(2)
     Traceback (most recent call last):
         ...
-    ParameterException: 2 is not less than 2
+    ludibrio.matcher.ParameterException: 2 is not less than 2
     >>> 2 == less_than(1)
     Traceback (most recent call last):
         ...
-    ParameterException: 2 is not less than 1
+    ludibrio.matcher.ParameterException: 2 is not less than 1
     >>> name = 'a'
     >>> name == less_than('b')
     True

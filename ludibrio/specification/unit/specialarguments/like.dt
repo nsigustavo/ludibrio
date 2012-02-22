@@ -2,6 +2,9 @@
 like
 ~~~~
 
+.. Python < 3 compatibility
+    >>> import ludibrio.specification.compat
+
 Checks matching against a regular expression::
 
     >>> from ludibrio.matcher import like
@@ -11,4 +14,4 @@ Checks matching against a regular expression::
     >>> '123 is a number' == like(r'^[12]+ is a number')
     Traceback (most recent call last):
         ...
-    ParameterException: '123 is a number' is not like '^[12]+ is a number'
+    ludibrio.matcher.ParameterException: '123 is a number' is not like '^[12]+ is a number'

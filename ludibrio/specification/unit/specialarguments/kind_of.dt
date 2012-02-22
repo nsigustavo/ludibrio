@@ -2,6 +2,9 @@
 kind_of
 ~~~~~~~
 
+.. Python < 3 compatibility
+    >>> import ludibrio.specification.compat
+
 Verifies if an object is of a given type::
 
     >>> from ludibrio.matcher import *
@@ -17,5 +20,5 @@ Verifies if an object is of a given type::
     >>> foo == kind_of(Bar)
     Traceback (most recent call last):
         ...
-    ParameterException: <...Foo object at ...> is not a kind of <class '...Bar'>
+    ludibrio.matcher.ParameterException: <...Foo object at ...> is not a kind of <class '...Bar'>
 

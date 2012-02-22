@@ -2,6 +2,9 @@
 equal_to
 ~~~~~~~~
 
+.. Python < 3 compatibility
+    >>> import ludibrio.specification.compat
+
 Checks object equality (not identity)::
 
 
@@ -12,7 +15,7 @@ Checks object equality (not identity)::
     >>> 2 == equal_to(3)
     Traceback (most recent call last):
       ...
-    ParameterException: 2 is not equal to 3
+    ludibrio.matcher.ParameterException: 2 is not equal to 3
     >>> name = 'dsl'
     >>> name == equal_to('dsl')
     True

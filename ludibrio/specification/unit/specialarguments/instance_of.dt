@@ -2,6 +2,9 @@
 instance_of
 ~~~~~~~~~~~
 
+.. Python < 3 compatibility
+    >>> import ludibrio.specification.compat
+
 Verifies if an object is of a given type::
 
     >>> from ludibrio.matcher import instance_of
@@ -18,5 +21,5 @@ Verifies if an object is of a given type::
     >>> foo == instance_of(Bar)
     Traceback (most recent call last):
         ...
-    ParameterException: <...Foo object at ...> is not a instance of <class '...Bar'>
+    ludibrio.matcher.ParameterException: <...Foo object at ...> is not a instance of <class '...Bar'>
 

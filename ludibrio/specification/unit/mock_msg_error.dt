@@ -1,6 +1,9 @@
 Sample of generation of error for Mock.
 =======================================
 
+.. Python < 3 compatibility
+    >>> import ludibrio.specification.compat
+
 ::
 
     >>> from ludibrio import Mock
@@ -13,7 +16,7 @@ Sample of generation of error for Mock.
     ... 
     Traceback (most recent call last):
     ...
-    MockExpectationError: Call waiting: notcalled
+    ludibrio.mock.MockExpectationError: Call waiting: notcalled
 
 
 ::
@@ -26,7 +29,7 @@ Sample of generation of error for Mock.
     >>> print greetings.hello('Gustavo Rezende')
     Traceback (most recent call last):
     ...
-    MockExpectationError: Mock Object received unexpected call:hello
+    ludibrio.mock.MockExpectationError: Mock Object received unexpected call:hello
 
 
 ::
@@ -36,4 +39,4 @@ Sample of generation of error for Mock.
     >>> greetings.excuse_me(name='Diego Manhaes')
     Traceback (most recent call last):
     ...
-    MockExpectationError: Mock Object received unexpected call:excuse_me(name='Diego Manhaes')
+    ludibrio.mock.MockExpectationError: Mock Object received unexpected call:excuse_me(name='Diego Manhaes')

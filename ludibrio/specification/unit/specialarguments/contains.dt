@@ -2,6 +2,9 @@
 contains
 ~~~~~~~~
 
+.. Python < 3 compatibility
+    >>> import ludibrio.specification.compat
+
 Verifies if an object is contains (contain) another. The contain and include matchers do exactly the same job::
 
     >>> from ludibrio.matcher import contains
@@ -12,5 +15,5 @@ Verifies if an object is contains (contain) another. The contain and include mat
     >>> contains("Hi") == "Hello, Gustavo Rezende"
     Traceback (most recent call last):
       ...
-    ParameterException: 'Hello, Gustavo Rezende' is not contains 'Hi'
+    ludibrio.matcher.ParameterException: 'Hello, Gustavo Rezende' is not contains 'Hi'
 

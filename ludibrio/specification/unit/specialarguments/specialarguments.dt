@@ -1,6 +1,9 @@
 Parameter matching
 ==================
 
+.. Python < 3 compatibility
+    >>> import ludibrio.specification.compat
+
 Ludibrio offers a very flexible way to match parameters in method calls. In simple cases, parameters are matched using basic equality. For instance::
 
     >>> from ludibrio import *
@@ -49,5 +52,5 @@ In Stub::
     >>> test.method('',2.0)
     Traceback (most recent call last):
       ...
-    ParameterException: 2.0 is not a kind of <type 'int'>
+    ludibrio.matcher.ParameterException: 2.0 is not a kind of <type 'int'>
 
