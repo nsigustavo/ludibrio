@@ -1,6 +1,9 @@
 into
 ~~~~
 
+.. Python < 3 compatibility
+    >>> import ludibrio.specification.compat
+
 Verifies if an object is contained (into) another. The contain and include matchers do exactly the same job::
 
 
@@ -11,7 +14,7 @@ Verifies if an object is contained (into) another. The contain and include match
     >>> into([1,2,3]) == 5
     Traceback (most recent call last):
       ...
-    ParameterException: 5 is not in [1, 2, 3]
+    ludibrio.matcher.ParameterException: 5 is not in [1, 2, 3]
 
     >>> into([1,2,3]) == 3
     True

@@ -2,6 +2,9 @@
 Spy Test Double.
 ==================
 
+.. Python < 3 compatibility
+    >>> import ludibrio.specification.compat
+
 Test Spy is used as an observation point for the indirect output of the tested code. May need to provide values in response to method calls, also captures the indirect outputs of the system and saves them for later verification by the test::
 
     >>> from ludibrio import Spy, verify, times
@@ -33,26 +36,26 @@ Spy provides indirect output verification::
     >>> verify (greetings).goodbye() .called(times == 2)
     Traceback (most recent call last):
     ...
-    SpyExpectationError: Spy expected goodbye() 2 times but received 1
+    ludibrio.spy.SpyExpectationError: Spy expected goodbye() 2 times but received 1
 
     >>> verify (greetings).hello() .called(times == 1)
     Traceback (most recent call last):
     ...
-    SpyExpectationError: Spy expected hello() 1 times but received 0
+    ludibrio.spy.SpyExpectationError: Spy expected hello() 1 times but received 0
 
     >>> verify (greetings).hi(name='beca') .called(times == 2)
 
     >>> verify (greetings).hi(name='beca') .called(times > 3)
     Traceback (most recent call last):
     ...
-    SpyExpectationError: Spy expected hi(name='beca') more than 3 times but received 2
+    ludibrio.spy.SpyExpectationError: Spy expected hi(name='beca') more than 3 times but received 2
 
     >>> verify (greetings).welcome() .called(times <= 1)
     
     >>> verify (greetings).welcome() .called(times >= 2)
     Traceback (most recent call last):
     ...
-    SpyExpectationError: Spy expected welcome() more than or equal to 2 times but received 1
+    ludibrio.spy.SpyExpectationError: Spy expected welcome() more than or equal to 2 times but received 1
 
     >>> verify (greetings).goodbye() .called(times <= 2)
 
@@ -61,9 +64,9 @@ Spy provides indirect output verification::
     >>> verify(greetings) .goodbye() .before .hi(name='beca')
     Traceback (most recent call last):
     ...
-    SpyExpectationError: Spy expected goodbye() called before hi(name='beca')
+    ludibrio.spy.SpyExpectationError: Spy expected goodbye() called before hi(name='beca')
 
     >>> verify(greetings) .welcome() .after .hi(name='beca')
     Traceback (most recent call last):
     ...
-    SpyExpectationError: Spy expected welcome() called after hi(name='beca')
+    ludibrio.spy.SpyExpectationError: Spy expected welcome() called after hi(name='beca')

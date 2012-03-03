@@ -2,6 +2,9 @@
 equal_to_ignoring_case
 ~~~~~~~~~~~~~~~~~~~~~~
 
+.. Python < 3 compatibility
+    >>> import ludibrio.specification.compat
+
 Checks equality of strings ignoring case::
 
     >>> from ludibrio.matcher import *
@@ -18,13 +21,16 @@ Checks equality of strings ignoring case::
     >>> 'I' == equal_to_ignoring_case('wi')
     Traceback (most recent call last):
         ...
-    ParameterException: 'I' is not equal to 'wi' ignoring case
+    ludibrio.matcher.ParameterException: 'I' is not equal to 'wi' ignoring case
 
     >>> 'I' == equal_to_ignoring_case('iw')
     Traceback (most recent call last):
         ...
-    ParameterException: 'I' is not equal to 'iw' ignoring case
+    ludibrio.matcher.ParameterException: 'I' is not equal to 'iw' ignoring case
 
-    >>> 'Atenção' == equal_to_ignoring_case('ATENÇÃO')
+    >>> u'Atenção' == equal_to_ignoring_case(u'ATENÇÃO')  # doctest: +SKIP
+    True
+
+    >>> u'Aten\xe7\xe3o' == equal_to_ignoring_case(u'ATEN\xc7\xc3O')
     True
 

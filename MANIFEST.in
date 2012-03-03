@@ -1,0 +1,5 @@
+include README.rst
+include tox.ini
+recursive-include docs/_sources *.txt
+recursive-include docs/_static *
+recursive-include ludibrio/specification *.dt

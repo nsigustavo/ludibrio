@@ -2,6 +2,9 @@
 Custom matchers
 ---------------
 
+.. Python < 3 compatibility
+    >>> import ludibrio.specification.compat
+
 Extending the Ludibrio with custom matchers is very easy. The function name must be the name of the matcher. The function must have 2 parameters and it must return True. 
 
 In the example, when should fails, a message can be "4 is not the square root of 9"; in another way, if the fail is in a should_not, the message could be "3 is the square root of 9", if the expectation was be_the_square_root_of(9) == 3. The example is below::
@@ -13,10 +16,10 @@ In the example, when should fails, a message can be "4 is not the square root of
     ... def the_square_root_of(x, y):
     ...     import math
     ...     if x == math.sqrt(y):return True
-    ...     raise ParameterException("%r is not the square root of %r"%(x, y))
+    ...     raise ParameterException("%s is not the square root of %s"%(x, y))
     >>> 3 == the_square_root_of(9)
     True
     >>> 2 == the_square_root_of(4.1)
     Traceback (most recent call last):
         ...
-    ParameterException: 2 is not the square root of 4.1...
+    ludibrio.matcher.ParameterException: 2 is not the square root of 4.1

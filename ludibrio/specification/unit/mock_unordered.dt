@@ -1,6 +1,9 @@
 Sample Mock unordered
 =====================
 
+.. Python < 3 compatibility
+    >>> import ludibrio.specification.compat
+
 ::
 
     >>> from ludibrio import Mock
@@ -17,4 +20,4 @@ Sample Mock unordered
     >>> print greetings.hello('Gustavo')
     Traceback (most recent call last):
     ...
-    MockExpectationError: Mock Object received unexpected call:hello
+    ludibrio.mock.MockExpectationError: Mock Object received unexpected call:hello

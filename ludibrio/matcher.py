@@ -89,7 +89,7 @@ def like(string, regex):
 
 @matcher
 def equal_to_ignoring_case(x, y):
-    if unicode(x, 'utf-8').lower() == unicode(y, 'utf-8').lower():
+    if unicode(x).lower() == unicode(y).lower():
         return True
     raise ParameterException("%r is not equal to %r ignoring case"%(x, y))
 

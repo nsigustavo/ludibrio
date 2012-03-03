@@ -84,8 +84,12 @@ Ludibrio provides dummy objects, in order to document the intention of programme
 
     8. 5. Should return a dictionary having dummy objects as both key and value when dict() is applied::
 
-        >>> dict(Dummy())
+        >>> dict(Dummy())  # doctest: +SKIP
         {Dummy Object: Dummy Object}
+
+    .. warning::
+        Using Dummy() as a dictionary key is not reliable, and will raise
+        TypeError in Python 3+.
 
     8. 6. Should return its string representation::
 
