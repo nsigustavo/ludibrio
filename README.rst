@@ -3,9 +3,10 @@ Welcome to ludibrio
 
 .. image:: http://ludibriar.appspot.com/_static/img/logo.png
 
-:Author: * Gustavo Rezende <nsigustavo@gmail.com>
+:Author: Grupo http://koribé.com
 
-:Contributors: * Diego Pinheiro <me@dmpinheiro.net>
+:Contributors: * Gustavo Rezende <nsigustavo@gmail.com>
+               * Diego Pinheiro <me@dmpinheiro.net>
                * Hugo Lopes <hltbra@gmail.com>
                * Rodrigo Manhães <rmanhaes@gmail.com>
                * Rebeca Motta <becacmotta@gmail.com>
