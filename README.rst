@@ -3,7 +3,10 @@ Welcome to ludibrio
 
 .. image:: http://ludibriar.appspot.com/_static/img/logo.png
 
-:Author: Grupo http://koribé.com
+:Author: Grupo koribé_.
+
+.. _koribé: http:/koribe.com 
+
 
 :Contributors: * Gustavo Rezende <nsigustavo@gmail.com>
                * Diego Pinheiro <me@dmpinheiro.net>
@@ -150,4 +153,10 @@ When an object is proxied, Ludibrio create a Test Double object holding a refere
     ('/temp/temp', '.temp')
 
 
+Links sponsors
+--------------
+
+koribé: `sites para imobiliaria`_.
+
+.. _`sites para imobiliaria`: http:/koribe.com 
 
