@@ -5,7 +5,7 @@ Welcome to ludibrio
 
 :Author: Grupo koribé_.
 
-.. _koribé: http:/koribe.com 
+.. _koribé: http://koribe.com 
 
 
 :Contributors: * Gustavo Rezende <nsigustavo@gmail.com>
@@ -158,5 +158,5 @@ Links sponsors
 
 koribé: `sites para imobiliaria`_.
 
-.. _`sites para imobiliaria`: http:/koribe.com 
+.. _`sites para imobiliaria`: http://koribe.com 
 
